@@ -64,21 +64,29 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        try {
+            setContentView(R.layout.activity_main)
 
-        appPrefs = getSharedPreferences("app_settings_prefs", Context.MODE_PRIVATE)
-        initEngines()
-        bindViews()
-        setupTabSwitching()
-        setupDashboardControls()
-        setupStrategyTab()
-        setupClanTab()
-        setupAiProviderTab()
+            appPrefs = getSharedPreferences("app_settings_prefs", Context.MODE_PRIVATE)
+            initEngines()
+            bindViews()
+            setupTabSwitching()
+            setupDashboardControls()
+            setupStrategyTab()
+            setupClanTab()
+            setupAiProviderTab()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        updatePermissionButtonStates()
+        try {
+            updatePermissionButtonStates()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun initEngines() {
