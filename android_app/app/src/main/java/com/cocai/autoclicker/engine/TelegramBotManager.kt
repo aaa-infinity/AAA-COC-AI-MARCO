@@ -71,10 +71,11 @@ class TelegramBotManager(
 
         thread {
             while (isPolling) {
+                var conn: HttpURLConnection? = null
                 try {
                     val urlStr = "https://api.telegram.org/bot$botToken/getUpdates?offset=${lastUpdateId + 1}&timeout=15"
                     val url = URL(urlStr)
-                    val conn = url.openConnection() as HttpURLConnection
+                    conn = url.openConnection() as HttpURLConnection
                     conn.connectTimeout = 20000
                     conn.readTimeout = 20000
 
@@ -100,10 +101,11 @@ class TelegramBotManager(
                             }
                         }
                     }
-                    conn.disconnect()
                 } catch (e: Exception) {
                     Log.w("TelegramBot", "Polling transient error: ${e.message}")
                     Thread.sleep(3000L)
+                } finally {
+                    conn?.disconnect()
                 }
             }
         }

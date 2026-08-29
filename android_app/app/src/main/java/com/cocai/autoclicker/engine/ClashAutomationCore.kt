@@ -355,6 +355,22 @@ class ClashAutomationCore(
         pauseForCooldown(cooldownMs = 900000L) // 15 minutes = 900,000 ms
     }
 
+    /**
+     * Handles Supercell "Connection Lost" / "Client Out of Sync" Reload
+     */
+    fun handleGameDisconnectOrCrash() {
+        updateStatus("🔄 [DISCONNECT] Reloading Clash of Clans...")
+        accessibilityService.performPercentageTap(PointF(0.500f, 0.600f)) {
+            handler.postDelayed({
+                if (isRunning) {
+                    zoomOutAndResetCamera {
+                        executeVillageRoutine()
+                    }
+                }
+            }, 6000L)
+        }
+    }
+
     private fun pauseForCooldown(cooldownMs: Long) {
         handler.removeCallbacksAndMessages(null)
         handler.postDelayed({
