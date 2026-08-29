@@ -41,6 +41,7 @@ class AriAiAgent(
     val geometryEngine = ComplexBaseGeometryEngine(accessibilityService)
     val gigaProtection = TownHallGigaProtectionEngine(accessibilityService)
     val neuralVision = OnDeviceNeuralVisionEngine(context)
+    val deadBaseHunter = DeadBaseCollectorHunter()
 
     var isAgentActive: Boolean = false
         private set
@@ -166,8 +167,19 @@ class AriAiAgent(
     private fun executeProRaid() {
         Log.i("AriAiAgent", "⚔️ [MATCHMAKING] Searching for 500k+ Gold & Elixir bases...")
         matchmaker.findTargetBase(LootRequirement(minGold = 500000L, minElixir = 500000L)) {
-            scheduleNextStep(800L) {
+            scheduleNextStep(700L) {
+                val profile = deadBaseHunter.analyzeLootDistribution(650000L, 650000L, 5000L)
                 val plan = tacticsEngine.computeTacticalPlan()
+
+                if (profile.distribution == BaseLootDistribution.DEAD_BASE_OUTSIDE_COLLECTORS && currentStrategy == CocStrategy.SNEAKY_GOBLIN_ORE_FARM) {
+                    // Surgical perimeter collector harvest
+                    accessibilityService.performTap(200f, 980f)
+                    accessibilityService.performMultiTouchTaps(profile.perimeterDropZones)
+                    scheduleNextStep(14000L) {
+                        finishRaidAndReflect()
+                    }
+                    return@scheduleNextStep
+                }
 
                 when (currentStrategy) {
                     CocStrategy.ROOT_RIDER_OVERGROWTH_SMASH -> {
