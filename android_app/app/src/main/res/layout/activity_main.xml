@@ -3,21 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#070B14">
+    android:background="#060913">
 
-    <!-- Top Header Banner with Logo & Title -->
+    <!-- Top Hero Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="12dp"
-        android:background="#0D1527"
+        android:padding="14dp"
+        android:background="#0C1322"
         android:gravity="center_vertical">
 
         <ImageView
             android:id="@+id/iv_app_logo"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:src="@drawable/app_logo"
             android:scaleType="fitCenter" />
 
@@ -25,7 +25,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="14dp"
             android:orientation="vertical">
 
             <TextView
@@ -33,46 +33,49 @@
                 android:layout_height="wrap_content"
                 android:text="Ai Marco coc"
                 android:textColor="#F59E0B"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                android:letterSpacing="0.05" />
+                android:letterSpacing="0.04" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Home Village AI Macro • YouTube Pro Meta • Multi-Touch"
+                android:text="Home Village AI • Anti-Ban Biometrics • Wall Maxer"
                 android:textColor="#38BDF8"
-                android:textSize="10sp" />
+                android:textSize="10.5sp" />
         </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#1E293B"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="4dp"
-            android:text="PRO UNLOCKED"
-            android:textColor="#10B981"
-            android:textSize="9sp"
+            android:background="@drawable/bg_pill_badge"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="5dp"
+            android:text="PRO V7.0"
+            android:textColor="#34D399"
+            android:textSize="10sp"
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- 4-Tab Navigation Bar -->
+    <!-- Modern Segmented Tab Bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="44dp"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginVertical="8dp"
         android:orientation="horizontal"
-        android:background="#0A101D">
+        android:background="@drawable/bg_tab_bar"
+        android:padding="3dp">
 
         <Button
             android:id="@+id/tab_btn_dashboard"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#2563EB"
+            android:background="@drawable/bg_tab_active_pill"
             android:text="🏰 DASHBOARD"
             android:textColor="#FFFFFF"
-            android:textSize="9sp"
+            android:textSize="9.5sp"
             android:textStyle="bold"
             android:padding="0dp" />
 
@@ -81,10 +84,10 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#131C2E"
+            android:background="@android:color/transparent"
             android:text="⚔️ PRO META"
             android:textColor="#94A3B8"
-            android:textSize="9sp"
+            android:textSize="9.5sp"
             android:textStyle="bold"
             android:padding="0dp" />
 
@@ -93,10 +96,10 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#131C2E"
-            android:text="🏡 VILLAGE &amp; CLAN"
+            android:background="@android:color/transparent"
+            android:text="🏡 VILLAGE"
             android:textColor="#94A3B8"
-            android:textSize="9sp"
+            android:textSize="9.5sp"
             android:textStyle="bold"
             android:padding="0dp" />
 
@@ -105,10 +108,10 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#131C2E"
+            android:background="@android:color/transparent"
             android:text="🧠 VISION AI"
             android:textColor="#94A3B8"
-            android:textSize="9sp"
+            android:textSize="9.5sp"
             android:textStyle="bold"
             android:padding="0dp" />
     </LinearLayout>
@@ -123,7 +126,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- TAB 1: DASHBOARD -->
+            <!-- ==================== TAB 1: DASHBOARD ==================== -->
             <LinearLayout
                 android:id="@+id/tab_content_dashboard"
                 android:layout_width="match_parent"
@@ -135,115 +138,118 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#131C2E"
+                    android:background="@drawable/bg_card_cyber_active"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="14dp"
+                    android:layout_marginBottom="12dp">
 
                     <TextView
                         android:id="@+id/tv_accessibility_status"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Accessibility Service: CHECKING..."
+                        android:text="🛡️ Accessibility Service: ACTIVE"
                         android:textColor="#F59E0B"
-                        android:textSize="12sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_memory_stats"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="⚡ Anti-Ban: 2D Gaussian Jitter • Log-Normal Latency • Volume Down Panic"
+                        android:textColor="#94A3B8"
+                        android:textSize="11sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_marginTop="8dp">
+                        android:layout_marginTop="10dp">
 
                         <Button
                             android:id="@+id/btn_grant_accessibility"
                             android:layout_width="0dp"
                             android:layout_height="40dp"
                             android:layout_weight="1"
-                            android:backgroundTint="#2563EB"
-                            android:text="1. Accessibility"
+                            android:background="@drawable/bg_btn_primary"
+                            android:text="ACCESSIBILITY"
                             android:textColor="#FFFFFF"
-                            android:textSize="10sp" />
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
 
                         <Button
                             android:id="@+id/btn_grant_overlay"
                             android:layout_width="0dp"
                             android:layout_height="40dp"
                             android:layout_weight="1"
-                            android:layout_marginStart="6dp"
-                            android:backgroundTint="#2563EB"
-                            android:text="2. Overlay"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/bg_btn_emerald"
+                            android:text="OVERLAY PERM"
                             android:textColor="#FFFFFF"
-                            android:textSize="10sp" />
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Launch Floating Controller Button -->
-                <Button
-                    android:id="@+id/btn_start_floating_hud"
-                    android:layout_width="match_parent"
-                    android:layout_height="52dp"
-                    android:layout_marginTop="10dp"
-                    android:backgroundTint="#10B981"
-                    android:text="🚀 START MACRO &amp; LAUNCH CLASH OF CLANS"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <!-- Multi-Touch Engine Card -->
+                <!-- Hero Start Button Card -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="#131C2E"
+                    android:background="@drawable/bg_card_cyber"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="14dp"
+                    android:layout_marginBottom="12dp">
+
+                    <Button
+                        android:id="@+id/btn_start_floating_hud"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:background="@drawable/bg_btn_gold"
+                        android:text="🚀 START AI CONTROLLER"
+                        android:textColor="#0F172A"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.04" />
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🖐️ Multi-Touch Gestures &amp; Panic Stop"
-                        android:textColor="#10B981"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="• 4-Finger Wave: Simultaneous dragon &amp; balloon line drop&#10;• 2-Finger Funnel: King &amp; Queen corner drops in 1ms&#10;• 🚨 Panic Stop: Press Volume Down key to halt instantly"
-                        android:textColor="#E2E8F0"
-                        android:textSize="11sp" />
+                        android:layout_marginTop="6dp"
+                        android:gravity="center"
+                        android:text="Launches Floating Overlay &amp; Clash of Clans automatically"
+                        android:textColor="#64748B"
+                        android:textSize="10.5sp" />
                 </LinearLayout>
 
-                <!-- Supervisor & Stats Card -->
+                <!-- Telemetry Stats Card -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="#131C2E"
+                    android:background="@drawable/bg_card_cyber"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="14dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📊 Home Village Battle Statistics &amp; AI Memory"
+                        android:text="📊 HOME VILLAGE TELEMETRY"
                         android:textColor="#38BDF8"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/tv_memory_stats"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
-                        android:text="Total Raids: 0 | Win Rate: 100% | Optimal Angle: BOTTOM_LEFT&#10;Auto-Crash &amp; Sync Recovery: ON | 265+ Assets: LOADED"
+                        android:text="• Pure Home Village 24/7 Loot Farming\n• Dedicated Free Builder Wall Upgrade Dump\n• 4-Finger Multi-Touch Deployment &amp; Giga Protection\n• Automatic Multi-Account Supercell ID Rotation"
                         android:textColor="#E2E8F0"
-                        android:textSize="11sp" />
+                        android:textSize="11.5sp"
+                        android:lineSpacingExtra="3dp" />
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- TAB 2: STRATEGY & TACTICS (YOUTUBE PRO META) -->
+            <!-- ==================== TAB 2: PRO META STRATEGY ==================== -->
             <LinearLayout
                 android:id="@+id/tab_content_strategy"
                 android:layout_width="match_parent"
@@ -251,47 +257,37 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="⚔️ YouTube Pro Meta Strategies (2026)"
-                    android:textColor="#F59E0B"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <!-- Strategy Picker -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Select Pro Meta Strategy:"
-                    android:textColor="#F8FAFC"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
-
-                <Spinner
-                    android:id="@+id/spinner_strategy_picker"
-                    android:layout_width="match_parent"
-                    android:layout_height="42dp"
-                    android:layout_marginTop="4dp"
-                    android:background="#1E293B" />
-
-                <!-- Strategy Details Card -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="#131C2E"
+                    android:background="@drawable/bg_card_cyber_active"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="14dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="⚔️ SELECT META STRATEGY"
+                        android:textColor="#F59E0B"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/spinner_strategy_picker"
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/bg_input_field"
+                        android:padding="8dp" />
 
                     <TextView
                         android:id="@+id/tv_strategy_source"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🎥 Judo Sloth / Itzu CWL Championship Meta"
-                        android:textColor="#F59E0B"
-                        android:textSize="12sp"
+                        android:layout_marginTop="10dp"
+                        android:text="🎥 Source: Pro Clash World Championship"
+                        android:textColor="#38BDF8"
+                        android:textSize="11sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -299,56 +295,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Overgrowth freezes 40% of the base while Root Riders crush walls, followed by Valkyrie rage blitz."
-                        android:textColor="#E2E8F0"
-                        android:textSize="11sp" />
+                        android:text="Deploys Root Riders with Valkyries behind an Overgrowth Spell and Grand Warden Eternal Tome protection."
+                        android:textColor="#CBD5E1"
+                        android:textSize="11.5sp" />
 
                     <TextView
                         android:id="@+id/tv_strategy_comp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="Army: 8x Root Rider, 10x Valkyrie, 3x App Warden\nSpells: 2x Overgrowth, 3x Rage, 2x Freeze\nHero Equip: Giant Gauntlet, Frozen Arrow, Eternal Tome"
-                        android:textColor="#38BDF8"
-                        android:textSize="10sp" />
-                </LinearLayout>
-
-                <!-- Minimum Loot Filters -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="#131C2E"
-                    android:orientation="vertical"
-                    android:padding="12dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="💰 Smart Matchmaking &amp; Loot Filters"
-                        android:textColor="#38BDF8"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="Min Gold: 450,000 | Min Elixir: 450,000 | Min Dark: 3,500"
-                        android:textColor="#E2E8F0"
+                        android:layout_marginTop="8dp"
+                        android:text="Army: 8 Root Riders, 10 Valkyries, 2 Apprentices, 4 Healers"
+                        android:textColor="#94A3B8"
                         android:textSize="11sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Smart Nexting: AUTO (Skips poor bases automatically)"
-                        android:textColor="#10B981"
-                        android:textSize="10sp" />
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- TAB 3: HOME VILLAGE & CLAN AUTOMATION -->
+            <!-- ==================== TAB 3: VILLAGE & CLAN ==================== -->
             <LinearLayout
                 android:id="@+id/tab_content_clan"
                 android:layout_width="match_parent"
@@ -356,107 +318,79 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🏡 Home Village &amp; Clan Automation Suite"
-                    android:textColor="#38BDF8"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <!-- Clan Tools Card -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="#131C2E"
+                    android:background="@drawable/bg_card_cyber"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="14dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🤝 Clan Chat Auto-Donate &amp; CC Request"
-                        android:textColor="#F59E0B"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                    <Button
-                        android:id="@+id/btn_trigger_donate_now"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="8dp"
-                        android:backgroundTint="#2563EB"
-                        android:text="🤝 RUN AUTO-DONATE SCAN NOW"
-                        android:textColor="#FFFFFF"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
-
-                    <Button
-                        android:id="@+id/btn_trigger_cc_request"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="6dp"
-                        android:backgroundTint="#6366F1"
-                        android:text="🛡️ REQUEST CLAN CASTLE REINFORCEMENTS"
-                        android:textColor="#FFFFFF"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <!-- Base Maintenance Card -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="#131C2E"
-                    android:orientation="vertical"
-                    android:padding="12dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="💎 Base Maintenance &amp; Wall Upgrades"
-                        android:textColor="#10B981"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                    <Button
-                        android:id="@+id/btn_trigger_upgrade_walls"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="8dp"
-                        android:backgroundTint="#3B82F6"
-                        android:text="🧱 AUTO-UPGRADE WALLS (RESOURCE DUMP)"
-                        android:textColor="#FFFFFF"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
-
-                    <Button
-                        android:id="@+id/btn_trigger_clean_obstacles"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="6dp"
-                        android:backgroundTint="#10B981"
-                        android:text="💎 CLEAN GEM BOXES &amp; OBSTACLES NOW"
-                        android:textColor="#FFFFFF"
-                        android:textSize="11sp"
+                        android:text="⚡ ONE-TAP MACRO ROUTINES"
+                        android:textColor="#38BDF8"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
 
                     <Button
                         android:id="@+id/btn_trigger_collect_loot"
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="6dp"
-                        android:backgroundTint="#F59E0B"
-                        android:text="💰 COLLECT MINES, DRILLS &amp; TREASURY"
-                        android:textColor="#070B14"
-                        android:textSize="11sp"
+                        android:layout_height="42dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/bg_btn_gold"
+                        android:text="💰 COLLECT MINES &amp; TREASURY"
+                        android:textColor="#0F172A"
+                        android:textSize="11.5sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btn_trigger_upgrade_walls"
+                        android:layout_width="match_parent"
+                        android:layout_height="42dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/bg_btn_emerald"
+                        android:text="🧱 DUMP LOOT INTO WALLS"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11.5sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btn_trigger_donate_now"
+                        android:layout_width="match_parent"
+                        android:layout_height="42dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/bg_btn_primary"
+                        android:text="🤝 AUTO-DONATE TO CLAN"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11.5sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btn_trigger_cc_request"
+                        android:layout_width="match_parent"
+                        android:layout_height="42dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/bg_btn_dark"
+                        android:text="🛡️ REQUEST CC TROOPS"
+                        android:textColor="#E2E8F0"
+                        android:textSize="11.5sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btn_trigger_clean_obstacles"
+                        android:layout_width="match_parent"
+                        android:layout_height="42dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/bg_btn_dark"
+                        android:text="💎 CLEAR GEM BOXES &amp; OBSTACLES"
+                        android:textColor="#E2E8F0"
+                        android:textSize="11.5sp"
                         android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- TAB 4: VISION AI & ASSETS -->
+            <!-- ==================== TAB 4: VISION AI & ENGINE ==================== -->
             <LinearLayout
                 android:id="@+id/tab_content_ai"
                 android:layout_width="match_parent"
@@ -464,141 +398,86 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🧠 Multimodal Vision AI &amp; 265+ Asset Hub"
-                    android:textColor="#38BDF8"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <!-- Provider Selector -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Select AI Provider:"
-                    android:textColor="#F8FAFC"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
-
-                <Spinner
-                    android:id="@+id/spinner_provider"
-                    android:layout_width="match_parent"
-                    android:layout_height="42dp"
-                    android:layout_marginTop="4dp"
-                    android:background="#1E293B" />
-
-                <!-- API Key Input + Add Button -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Add API Key (Free tier supported):"
-                    android:textColor="#F8FAFC"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="4dp">
-
-                    <EditText
-                        android:id="@+id/et_api_key_input"
-                        android:layout_width="0dp"
-                        android:layout_height="42dp"
-                        android:layout_weight="1"
-                        android:background="#1E293B"
-                        android:hint="Paste API Key here..."
-                        android:textColor="#F8FAFC"
-                        android:textColorHint="#64748B"
-                        android:paddingHorizontal="10dp"
-                        android:textSize="11sp"
-                        android:inputType="textPassword" />
-
-                    <Button
-                        android:id="@+id/btn_add_api_key"
-                        android:layout_width="wrap_content"
-                        android:layout_height="42dp"
-                        android:layout_marginStart="6dp"
-                        android:backgroundTint="#10B981"
-                        android:text="+ ADD"
-                        android:textColor="#FFFFFF"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tv_active_keys_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="API Key Pool: 0 Key(s) Loaded (Auto-Rotation Active)"
-                    android:textColor="#10B981"
-                    android:textSize="11sp" />
-
-                <!-- Live Model Discovery -->
-                <Button
-                    android:id="@+id/btn_fetch_models"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="10dp"
-                    android:backgroundTint="#6366F1"
-                    android:text="🔄 FETCH LIVE MODELS"
-                    android:textColor="#FFFFFF"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
-
-                <Spinner
-                    android:id="@+id/spinner_live_models"
-                    android:layout_width="match_parent"
-                    android:layout_height="42dp"
-                    android:layout_marginTop="4dp"
-                    android:background="#1E293B" />
-
-                <!-- Screenshot-to-Code Tester -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="#131C2E"
+                    android:background="@drawable/bg_card_cyber_active"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="14dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📸 Screenshot-to-Code Vision Engine"
+                        android:text="🧠 ON-DEVICE NEURAL VISION ENGINE"
                         android:textColor="#F59E0B"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                    <Button
-                        android:id="@+id/btn_test_vision"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="8dp"
-                        android:backgroundTint="#F59E0B"
-                        android:text="⚡ TEST SCREENSHOT VISION AI"
-                        android:textColor="#070B14"
-                        android:textSize="11sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tv_vision_status"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:background="#070B14"
-                        android:padding="8dp"
-                        android:text="Vision Status: Ready. 265+ Supercell Datamined Assets active."
-                        android:textColor="#E2E8F0"
-                        android:textSize="10sp"
-                        android:fontFamily="monospace" />
-                </LinearLayout>
+                        android:layout_marginTop="4dp"
+                        android:text="✓ 12.0 MB Quantized TFLite Model Online\n✓ 285+ High-Res Supercell Building Templates Loaded"
+                        android:textColor="#34D399"
+                        android:textSize="11.5sp" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Cloud LLM Key Rotation (Optional):"
+                        android:textColor="#94A3B8"
+                        android:textSize="11sp" />
+
+                    <Spinner
+                        android:id="@+id/spinner_provider"
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:layout_marginTop="4dp"
+                        android:background="@drawable/bg_input_field"
+                        android:padding="8dp" />
+
+                    <Spinner
+                        android:id="@+id/spinner_live_models"
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/bg_input_field"
+                        android:padding="8dp" />
+
+                    <EditText
+                        android:id="@+id/et_api_key_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/bg_input_field"
+                        android:hint="Paste Gemini / Groq / OpenRouter API Key"
+                        android:textColor="#FFFFFF"
+                        android:textColorHint="#64748B"
+                        android:paddingHorizontal="10dp"
+                        android:textSize="12sp" />
+
+                    <Button
+                        android:id="@+id/btn_add_api_key"
+                        android:layout_width="match_parent"
+                        android:layout_height="42dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/bg_btn_primary"
+                        android:text="+ ADD KEY TO POOL"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11.5sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_active_keys_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="Active Keys in Pool: 0"
+                        android:textColor="#94A3B8"
+                        android:textSize="11sp" />
+                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>

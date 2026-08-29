@@ -142,8 +142,13 @@ class MainActivity : Activity() {
         fun selectTab(idx: Int) {
             for (i in contents.indices) {
                 contents[i].visibility = if (i == idx) View.VISIBLE else View.GONE
-                buttons[i].setBackgroundColor(if (i == idx) 0xFF2563EB.toInt() else 0xFF131C2E.toInt())
-                buttons[i].setTextColor(if (i == idx) 0xFFFFFFFF.toInt() else 0xFF94A3B8.toInt())
+                if (i == idx) {
+                    buttons[i].setBackgroundResource(R.drawable.bg_tab_active_pill)
+                    buttons[i].setTextColor(0xFFFFFFFF.toInt())
+                } else {
+                    buttons[i].setBackgroundColor(0x00000000)
+                    buttons[i].setTextColor(0xFF94A3B8.toInt())
+                }
             }
         }
 
