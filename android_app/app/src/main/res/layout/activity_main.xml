@@ -40,7 +40,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Home Village AI Macro • Smart Matchmaker • Wall Dump"
+                android:text="Home Village AI Macro • YouTube Pro Meta • Multi-Touch"
                 android:textColor="#38BDF8"
                 android:textSize="10sp" />
         </LinearLayout>
@@ -82,7 +82,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="#131C2E"
-            android:text="⚔️ STRATEGY"
+            android:text="⚔️ PRO META"
             android:textColor="#94A3B8"
             android:textSize="9sp"
             android:textStyle="bold"
@@ -243,7 +243,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- TAB 2: STRATEGY & TACTICS -->
+            <!-- TAB 2: STRATEGY & TACTICS (YOUTUBE PRO META) -->
             <LinearLayout
                 android:id="@+id/tab_content_strategy"
                 android:layout_width="match_parent"
@@ -254,7 +254,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="⚔️ Home Village Tactical Army Strategies"
+                    android:text="⚔️ YouTube Pro Meta Strategies (2026)"
                     android:textColor="#F59E0B"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -264,7 +264,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Active Home Village Strategy:"
+                    android:text="Select Pro Meta Strategy:"
                     android:textColor="#F8FAFC"
                     android:textSize="11sp"
                     android:textStyle="bold" />
@@ -276,11 +276,48 @@
                     android:layout_marginTop="4dp"
                     android:background="#1E293B" />
 
+                <!-- Strategy Details Card -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="#131C2E"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:id="@+id/tv_strategy_source"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🎥 Judo Sloth / Itzu CWL Championship Meta"
+                        android:textColor="#F59E0B"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_strategy_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Overgrowth freezes 40% of the base while Root Riders crush walls, followed by Valkyrie rage blitz."
+                        android:textColor="#E2E8F0"
+                        android:textSize="11sp" />
+
+                    <TextView
+                        android:id="@+id/tv_strategy_comp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="Army: 8x Root Rider, 10x Valkyrie, 3x App Warden\nSpells: 2x Overgrowth, 3x Rage, 2x Freeze\nHero Equip: Giant Gauntlet, Frozen Arrow, Eternal Tome"
+                        android:textColor="#38BDF8"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
                 <!-- Minimum Loot Filters -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="10dp"
                     android:background="#131C2E"
                     android:orientation="vertical"
                     android:padding="12dp">

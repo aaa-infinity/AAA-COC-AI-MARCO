@@ -32,6 +32,9 @@ class MainActivity : Activity() {
     private lateinit var tvMemoryStats: TextView
     private lateinit var tvActiveKeysCount: TextView
     private lateinit var tvVisionStatus: TextView
+    private lateinit var tvStrategySource: TextView
+    private lateinit var tvStrategyDesc: TextView
+    private lateinit var tvStrategyComp: TextView
     private lateinit var etApiKeyInput: EditText
     private lateinit var spinnerProvider: Spinner
     private lateinit var spinnerLiveModels: Spinner
@@ -54,13 +57,6 @@ class MainActivity : Activity() {
         "https://api.groq.com",
         "https://openrouter.ai",
         "https://api.openai.com"
-    )
-
-    private val strategies = listOf(
-        "⚡ Home Village Zap Dragon Farming (4-Finger Multi-Touch)",
-        "⚡ Electro Dragon Core Wipeout",
-        "🐉 Dragon + Dragon Rider Smash",
-        "🏹 Sneaky Goblin Ore & Resource Sniping"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,6 +91,9 @@ class MainActivity : Activity() {
         tvMemoryStats = findViewById(R.id.tv_memory_stats)
         tvActiveKeysCount = findViewById(R.id.tv_active_keys_count)
         tvVisionStatus = findViewById(R.id.tv_vision_status)
+        tvStrategySource = findViewById(R.id.tv_strategy_source)
+        tvStrategyDesc = findViewById(R.id.tv_strategy_desc)
+        tvStrategyComp = findViewById(R.id.tv_strategy_comp)
         etApiKeyInput = findViewById(R.id.et_api_key_input)
         spinnerProvider = findViewById(R.id.spinner_provider)
         spinnerLiveModels = findViewById(R.id.spinner_live_models)
@@ -155,8 +154,19 @@ class MainActivity : Activity() {
     }
 
     private fun setupStrategyAndVillageTabs() {
-        val stratAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, strategies)
+        val stratNames = ProMetaStrategyHub.META_STRATEGIES.map { it.name }
+        val stratAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, stratNames)
         spinnerStrategyPicker.adapter = stratAdapter
+
+        spinnerStrategyPicker.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val strat = ProMetaStrategyHub.META_STRATEGIES.getOrElse(position) { ProMetaStrategyHub.META_STRATEGIES[0] }
+                tvStrategySource.text = "🎥 Source: ${strat.source}"
+                tvStrategyDesc.text = strat.description
+                tvStrategyComp.text = "Army: ${strat.armyComp.joinToString(", ")}\nSpells: ${strat.spells.joinToString(", ")}\nHero Equip: ${strat.heroEquipment.joinToString(", ")}"
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
 
         findViewById<Button>(R.id.btn_trigger_donate_now).setOnClickListener {
             val accService = AutoClickAccessibilityService.instance
