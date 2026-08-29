@@ -40,7 +40,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Multi-Touch • 260+ Real Assets • Self-Independent Supervisor"
+                android:text="Multi-Touch • 260+ Assets • Self-Independent Supervisor"
                 android:textColor="#38BDF8"
                 android:textSize="10sp" />
         </LinearLayout>
@@ -57,7 +57,7 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- Top Tab Bar -->
+    <!-- 4-Tab Navigation Bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="44dp"
@@ -70,10 +70,35 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="#2563EB"
-            android:text="🏰 BOT &amp; MULTI-TOUCH"
+            android:text="🏰 DASHBOARD"
             android:textColor="#FFFFFF"
-            android:textSize="11sp"
-            android:textStyle="bold" />
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:padding="0dp" />
+
+        <Button
+            android:id="@+id/tab_btn_strategy"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#131C2E"
+            android:text="⚔️ STRATEGY"
+            android:textColor="#94A3B8"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:padding="0dp" />
+
+        <Button
+            android:id="@+id/tab_btn_clan"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#131C2E"
+            android:text="🤝 CLAN &amp; BB"
+            android:textColor="#94A3B8"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:padding="0dp" />
 
         <Button
             android:id="@+id/tab_btn_ai"
@@ -81,23 +106,24 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="#131C2E"
-            android:text="🧠 VISION AI &amp; KEYS"
+            android:text="🧠 VISION AI"
             android:textColor="#94A3B8"
-            android:textSize="11sp"
-            android:textStyle="bold" />
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:padding="0dp" />
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="14dp">
+        android:padding="12dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- TAB 1 CONTENT: BOT DASHBOARD -->
+            <!-- TAB 1: DASHBOARD -->
             <LinearLayout
                 android:id="@+id/tab_content_dashboard"
                 android:layout_width="match_parent"
@@ -134,7 +160,7 @@
                             android:layout_height="40dp"
                             android:layout_weight="1"
                             android:backgroundTint="#2563EB"
-                            android:text="1. Grant Accessibility"
+                            android:text="1. Accessibility"
                             android:textColor="#FFFFFF"
                             android:textSize="10sp" />
 
@@ -145,7 +171,7 @@
                             android:layout_weight="1"
                             android:layout_marginStart="6dp"
                             android:backgroundTint="#2563EB"
-                            android:text="2. Grant Overlay"
+                            android:text="2. Overlay"
                             android:textColor="#FFFFFF"
                             android:textSize="10sp" />
                     </LinearLayout>
@@ -156,7 +182,7 @@
                     android:id="@+id/btn_start_floating_hud"
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="10dp"
                     android:backgroundTint="#10B981"
                     android:text="🚀 START MACRO &amp; LAUNCH CLASH OF CLANS"
                     android:textColor="#FFFFFF"
@@ -167,7 +193,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="10dp"
                     android:background="#131C2E"
                     android:orientation="vertical"
                     android:padding="12dp">
@@ -175,7 +201,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🖐️ Multi-Touch Gestures Engine"
+                        android:text="🖐️ Multi-Touch Gestures Engine (Active)"
                         android:textColor="#10B981"
                         android:textSize="12sp"
                         android:textStyle="bold" />
@@ -184,12 +210,73 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="• 4-Finger Wave: Simultaneous dragon &amp; balloon line drop&#10;• 2-Finger Funnel: King &amp; Queen corner drops in 1 millisecond&#10;• Multi-Line Swipes &amp; Smooth Pinch Zoom"
+                        android:text="• 4-Finger Wave: Simultaneous dragon &amp; balloon line drop&#10;• 2-Finger Funnel: King &amp; Queen corner drops in 1ms&#10;• Multi-Line Swipes &amp; Smooth Pinch Zoom"
                         android:textColor="#E2E8F0"
                         android:textSize="11sp" />
                 </LinearLayout>
 
-                <!-- Autonomous Supervisor & AI Memory Card -->
+                <!-- Supervisor & Stats Card -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="#131C2E"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📊 Live Battle Statistics &amp; AI Supervisor"
+                        android:textColor="#38BDF8"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_memory_stats"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="Total Raids: 0 | Win Rate: 100% | Optimal Angle: BOTTOM_LEFT&#10;Auto-Crash &amp; Sync Recovery: ON | 260+ Assets: LOADED"
+                        android:textColor="#E2E8F0"
+                        android:textSize="11sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- TAB 2: STRATEGY & TACTICS -->
+            <LinearLayout
+                android:id="@+id/tab_content_strategy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="⚔️ Tactical Attack &amp; Loot Filter Settings"
+                    android:textColor="#F59E0B"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <!-- Strategy Picker -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Active Army Strategy:"
+                    android:textColor="#F8FAFC"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <Spinner
+                    android:id="@+id/spinner_strategy_picker"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:layout_marginTop="4dp"
+                    android:background="#1E293B" />
+
+                <!-- Minimum Loot Filters -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -201,24 +288,105 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🛡️ Self-Independent Supervisor &amp; Auto-Healing"
+                        android:text="💰 Minimum Loot Filter Thresholds"
                         android:textColor="#38BDF8"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/tv_memory_stats"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
-                        android:text="• Auto-Crash &amp; Sync Error Recovery: ACTIVE&#10;• Clan Castle Auto-Request: READY&#10;• Obstacle &amp; Gem Box Cleaner: READY&#10;• 260+ Real Datamined Assets: LOADED"
+                        android:text="Min Gold: 500,000 | Min Elixir: 500,000 | Min Dark: 4,000"
                         android:textColor="#E2E8F0"
                         android:textSize="11sp" />
-                </LinearLayout>
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Air Sweeper Avoidance: AUTOMATIC (Attacks from Sweeper Back/Flank)"
+                        android:textColor="#10B981"
+                        android:textSize="10sp" />
+                </LinearLayout>
             </LinearLayout>
 
-            <!-- TAB 2 CONTENT: AI BRAIN & SCREENSHOT-TO-CODE -->
+            <!-- TAB 3: CLAN & BUILDER BASE -->
+            <LinearLayout
+                android:id="@+id/tab_content_clan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🤝 Autonomous Clan &amp; Builder Base Suite"
+                    android:textColor="#38BDF8"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <!-- Clan Tools Card -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="#131C2E"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🤝 Clan Chat Auto-Donate &amp; CC Request"
+                        android:textColor="#F59E0B"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btn_trigger_donate_now"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="8dp"
+                        android:backgroundTint="#2563EB"
+                        android:text="🤝 RUN AUTO-DONATE SCAN NOW"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Builder Base 2.0 Card -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="#131C2E"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="⛵ Builder Base 2.0 Instant Loop"
+                        android:textColor="#10B981"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btn_trigger_bb_loop"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="8dp"
+                        android:backgroundTint="#10B981"
+                        android:text="⛵ RUN BUILDER BASE ATTACK &amp; HARVEST"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- TAB 4: VISION AI & ASSETS -->
             <LinearLayout
                 android:id="@+id/tab_content_ai"
                 android:layout_width="match_parent"
@@ -229,24 +397,16 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🧠 Multimodal Vision AI &amp; Key Rotator"
+                    android:text="🧠 Multimodal Vision AI &amp; 260+ Asset Hub"
                     android:textColor="#38BDF8"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Powered by Screenshot-to-Code architecture. Real-time base entity detection &amp; tactical macro compilation."
-                    android:textColor="#94A3B8"
-                    android:textSize="11sp" />
 
                 <!-- Provider Selector -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="10dp"
                     android:text="Select AI Provider:"
                     android:textColor="#F8FAFC"
                     android:textSize="11sp"
@@ -321,15 +481,6 @@
                     android:textSize="11sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Selected Vision Model:"
-                    android:textColor="#F8FAFC"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
-
                 <Spinner
                     android:id="@+id/spinner_live_models"
                     android:layout_width="match_parent"
@@ -341,7 +492,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="10dp"
                     android:background="#131C2E"
                     android:orientation="vertical"
                     android:padding="12dp">
@@ -372,7 +523,7 @@
                         android:layout_marginTop="8dp"
                         android:background="#070B14"
                         android:padding="8dp"
-                        android:text="Vision Status: Ready. Drop screenshots in uploads/ folder or tap test."
+                        android:text="Vision Status: Ready. 260+ Supercell Datamined Assets active."
                         android:textColor="#E2E8F0"
                         android:textSize="10sp"
                         android:fontFamily="monospace" />

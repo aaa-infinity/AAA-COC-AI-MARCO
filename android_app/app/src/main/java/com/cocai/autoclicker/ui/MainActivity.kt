@@ -12,19 +12,20 @@ import android.provider.Settings
 import android.view.View
 import android.widget.*
 import com.cocai.autoclicker.R
-import com.cocai.autoclicker.engine.AiMemoryEngine
-import com.cocai.autoclicker.engine.ApiKeyRotator
-import com.cocai.autoclicker.engine.CrashTelemetryService
-import com.cocai.autoclicker.engine.LiveModelFetcher
-import com.cocai.autoclicker.engine.ScreenshotVisionEngine
+import com.cocai.autoclicker.engine.*
 import com.cocai.autoclicker.service.AutoClickAccessibilityService
 import com.cocai.autoclicker.service.FloatingOverlayService
 
 class MainActivity : Activity() {
 
     private lateinit var tabBtnDashboard: Button
+    private lateinit var tabBtnStrategy: Button
+    private lateinit var tabBtnClan: Button
     private lateinit var tabBtnAi: Button
+
     private lateinit var tabContentDashboard: View
+    private lateinit var tabContentStrategy: View
+    private lateinit var tabContentClan: View
     private lateinit var tabContentAi: View
 
     private lateinit var tvAccStatus: TextView
@@ -34,6 +35,7 @@ class MainActivity : Activity() {
     private lateinit var etApiKeyInput: EditText
     private lateinit var spinnerProvider: Spinner
     private lateinit var spinnerLiveModels: Spinner
+    private lateinit var spinnerStrategyPicker: Spinner
 
     private lateinit var keyRotator: ApiKeyRotator
     private lateinit var memoryEngine: AiMemoryEngine
@@ -54,11 +56,17 @@ class MainActivity : Activity() {
         "https://api.openai.com"
     )
 
+    private val strategies = listOf(
+        "⚡ Zap Dragon Farming (4-Finger Multi-Touch)",
+        "⚡ Electro Dragon Core Wipeout",
+        "🐉 Dragon + Dragon Rider Smash",
+        "🏹 Sneaky Goblin Ore Harvesting"
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Initialize Global Crash & Diagnostic Telemetry
         CrashTelemetryService.init(this)
 
         keyRotator = ApiKeyRotator(this)
@@ -67,14 +75,20 @@ class MainActivity : Activity() {
 
         initViews()
         setupTabSwitching()
+        setupStrategyAndClanTabs()
         setupAiProviderTab()
         updateKeyPoolCount()
     }
 
     private fun initViews() {
         tabBtnDashboard = findViewById(R.id.tab_btn_dashboard)
+        tabBtnStrategy = findViewById(R.id.tab_btn_strategy)
+        tabBtnClan = findViewById(R.id.tab_btn_clan)
         tabBtnAi = findViewById(R.id.tab_btn_ai)
+
         tabContentDashboard = findViewById(R.id.tab_content_dashboard)
+        tabContentStrategy = findViewById(R.id.tab_content_strategy)
+        tabContentClan = findViewById(R.id.tab_content_clan)
         tabContentAi = findViewById(R.id.tab_content_ai)
 
         tvAccStatus = findViewById(R.id.tv_accessibility_status)
@@ -84,6 +98,7 @@ class MainActivity : Activity() {
         etApiKeyInput = findViewById(R.id.et_api_key_input)
         spinnerProvider = findViewById(R.id.spinner_provider)
         spinnerLiveModels = findViewById(R.id.spinner_live_models)
+        spinnerStrategyPicker = findViewById(R.id.spinner_strategy_picker)
 
         findViewById<Button>(R.id.btn_grant_accessibility).setOnClickListener {
             startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
@@ -109,32 +124,64 @@ class MainActivity : Activity() {
 
             startService(Intent(this, FloatingOverlayService::class.java))
 
-            // Auto-Launch Clash of Clans Game
             val launchIntent = packageManager.getLaunchIntentForPackage("com.supercell.clashofclans")
             if (launchIntent != null) {
                 launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(launchIntent)
                 Toast.makeText(this, "🚀 Ai Marco coc: Launching Clash of Clans...", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "🚀 Ai Marco coc Controller Launched! Open Clash of Clans.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "🚀 Controller Launched! Open Clash of Clans.", Toast.LENGTH_SHORT).show()
                 moveTaskToBack(true)
             }
         }
     }
 
     private fun setupTabSwitching() {
-        tabBtnDashboard.setOnClickListener {
-            tabContentDashboard.visibility = View.VISIBLE
-            tabContentAi.visibility = View.GONE
-            tabBtnDashboard.setBackgroundColor(0xFF2563EB.toInt())
-            tabBtnAi.setBackgroundColor(0xFF1E293B.toInt())
+        val buttons = listOf(tabBtnDashboard, tabBtnStrategy, tabBtnClan, tabBtnAi)
+        val contents = listOf(tabContentDashboard, tabContentStrategy, tabContentClan, tabContentAi)
+
+        fun selectTab(idx: Int) {
+            for (i in contents.indices) {
+                contents[i].visibility = if (i == idx) View.VISIBLE else View.GONE
+                buttons[i].setBackgroundColor(if (i == idx) 0xFF2563EB.toInt() else 0xFF131C2E.toInt())
+                buttons[i].setTextColor(if (i == idx) 0xFFFFFFFF.toInt() else 0xFF94A3B8.toInt())
+            }
         }
 
-        tabBtnAi.setOnClickListener {
-            tabContentDashboard.visibility = View.GONE
-            tabContentAi.visibility = View.VISIBLE
-            tabBtnAi.setBackgroundColor(0xFF2563EB.toInt())
-            tabBtnDashboard.setBackgroundColor(0xFF1E293B.toInt())
+        tabBtnDashboard.setOnClickListener { selectTab(0) }
+        tabBtnStrategy.setOnClickListener { selectTab(1) }
+        tabBtnClan.setOnClickListener { selectTab(2) }
+        tabBtnAi.setOnClickListener { selectTab(3) }
+    }
+
+    private fun setupStrategyAndClanTabs() {
+        val stratAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, strategies)
+        spinnerStrategyPicker.adapter = stratAdapter
+
+        findViewById<Button>(R.id.btn_trigger_donate_now).setOnClickListener {
+            val accService = AutoClickAccessibilityService.instance
+            if (accService != null) {
+                val donate = AutoDonateEngine(accService)
+                Toast.makeText(this, "🤝 Scanning Clan Chat for troop requests...", Toast.LENGTH_SHORT).show()
+                donate.startAutoDonate {
+                    Toast.makeText(this, "✓ Auto-Donate complete!", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this, "Enable Accessibility Service first!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        findViewById<Button>(R.id.btn_trigger_bb_loop).setOnClickListener {
+            val accService = AutoClickAccessibilityService.instance
+            if (accService != null) {
+                val bb = BuilderBaseEngine(accService)
+                Toast.makeText(this, "⛵ Sailing to Builder Base 2.0...", Toast.LENGTH_SHORT).show()
+                bb.startBuilderBaseLoop {
+                    Toast.makeText(this, "✓ Builder Base raid complete!", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this, "Enable Accessibility Service first!", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -193,7 +240,7 @@ class MainActivity : Activity() {
                 providerUrl = url,
                 modelName = selectedModel,
                 onResult = { result ->
-                    tvVisionStatus.text = "✓ Game State: ${result.gameState}\n✓ Optimal Entry: ${result.recommendedEntrySide}\n✓ Zap Targets: ${result.zapTargets}\n✓ Action Plan: Ready"
+                    tvVisionStatus.text = "✓ Game State: ${result.gameState}\n✓ Optimal Entry: ${result.recommendedEntrySide}\n✓ Zap Targets: ${result.zapTargets}\n✓ 4-Finger Wave: Ready"
                 },
                 onError = { err ->
                     tvVisionStatus.text = "Vision Fallback: Heuristic model active (${err})"
@@ -204,7 +251,7 @@ class MainActivity : Activity() {
 
     private fun updateKeyPoolCount() {
         val keys = keyRotator.getAllKeys()
-        tvActiveKeysCount.text = "API Key Pool: ${keys.size} Key(s) Loaded (Auto-Rotation on 429 Active)"
+        tvActiveKeysCount.text = "API Key Pool: ${keys.size} Key(s) Loaded (Auto-Rotation Active)"
     }
 
     override fun onResume() {
@@ -217,6 +264,6 @@ class MainActivity : Activity() {
 
         val bestSide = memoryEngine.getOptimalEntrySide()
         val stats = memoryEngine.getSuccessStatistics()
-        tvMemoryStats.text = "Total Raids Learned: ${stats.optInt("total_raids", 0)} | Optimal Attack Angle: $bestSide\nWin Rate: ${stats.optString("win_rate", "100%")} | Auto Key Rotation: ACTIVE"
+        tvMemoryStats.text = "Raids Learned: ${stats.optInt("total_raids", 0)} | Optimal Attack Angle: $bestSide\nMulti-Touch: 4-FINGER | 260+ Real Assets: READY"
     }
 }
