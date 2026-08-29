@@ -23,6 +23,8 @@ class CocFarmingEngine(
     val multiTouch = MultiTouchDeployer(accessibilityService)
     val matchmaker = SmartMatchmakingEngine(accessibilityService)
     val wallUpgrader = WallUpgradeEngine(accessibilityService)
+    val buildingUpgrader = AutoBuildingUpgraderEngine(accessibilityService)
+    val dailyRewards = DailyRewardsCollectorEngine(accessibilityService)
     val telegramNotifier = TelegramNotifierService()
     val tacticsEngine = AdvancedTacticsEngine(accessibilityService)
     val battlePacing = BattlePacingEngine(accessibilityService)
@@ -41,7 +43,7 @@ class CocFarmingEngine(
     fun startEngine(strategy: CocStrategy = CocStrategy.ZAP_DRAGON_FARMING) {
         currentStrategy = strategy
         isRunning = true
-        Log.i("CocEngine", "Starting Home Village 24/7 Complex Pro AI Farming Engine: " + strategy.name)
+        Log.i("CocEngine", "Starting Home Village 24/7 Fully Upgraded Pro AI Engine: " + strategy.name)
         scheduleNextStep(800L) {
             runHomeVillageLoop()
         }
@@ -63,26 +65,31 @@ class CocFarmingEngine(
     }
 
     /**
-     * Complete Home Village 24/7 Autonomous Loop:
+     * Complete Home Village 24/7 Fully Autonomous Loop:
      * 1. Collect Mines, Pumps, Drills, Treasury, Ores
-     * 2. Auto Wall Upgrade (resource sink)
-     * 3. 0-Cost Quick Train Dragon/Root Rider Army
-     * 4. Smart Matchmaking & Nexting Loop (find rich base)
-     * 5. Smooth Multi-Phase Humanized Complex Deployment
-     * 6. Return Home & Loop
+     * 2. Claim Free Daily Trader Gift & Daily Ores
+     * 3. Auto-Upgrade Suggested Buildings & Walls (Resource sink)
+     * 4. 0-Cost Quick Train Army Preset
+     * 5. Smart Matchmaking & Nexting Loop (find rich base)
+     * 6. Smooth Multi-Phase Humanized Complex Battle
+     * 7. Return Home & Loop
      */
     private fun runHomeVillageLoop() {
-        Log.i("CocEngine", "=== [HOME VILLAGE] Collecting Resources & Daily Ores ===")
+        Log.i("CocEngine", "=== [HOME VILLAGE] Collecting Resources, Daily Ores & Trader Gifts ===")
 
         collectHomeVillageResources {
-            wallUpgrader.performWallUpgrades(wallsToUpgrade = 1) {
-                trainDragonArmy {
-                    when (currentStrategy) {
-                        CocStrategy.ROOT_RIDER_OVERGROWTH_SMASH -> executeRootRiderSmash()
-                        CocStrategy.ZAP_DRAGON_FARMING -> executeZapDragonAttack()
-                        CocStrategy.ELECTRO_DRAGON_SPAM -> executeElectroDragonAttack()
-                        CocStrategy.DRAGON_RIDER_SMASH -> executeDragonRiderAttack()
-                        CocStrategy.SNEAKY_GOBLIN_ORE_FARM -> executeSneakyGoblinAttack()
+            dailyRewards.collectAllDailyRewards {
+                buildingUpgrader.upgradeSuggestedBuilding {
+                    wallUpgrader.performWallUpgrades(wallsToUpgrade = 1) {
+                        trainDragonArmy {
+                            when (currentStrategy) {
+                                CocStrategy.ROOT_RIDER_OVERGROWTH_SMASH -> executeRootRiderSmash()
+                                CocStrategy.ZAP_DRAGON_FARMING -> executeZapDragonAttack()
+                                CocStrategy.ELECTRO_DRAGON_SPAM -> executeElectroDragonAttack()
+                                CocStrategy.DRAGON_RIDER_SMASH -> executeDragonRiderAttack()
+                                CocStrategy.SNEAKY_GOBLIN_ORE_FARM -> executeSneakyGoblinAttack()
+                            }
+                        }
                     }
                 }
             }

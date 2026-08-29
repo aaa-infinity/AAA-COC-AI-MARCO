@@ -22,10 +22,12 @@ def main():
     file_size_str = f"{file_size_mb:.2f} MB"
     print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id}...")
 
-    caption = f"""🐉 ⚔️ <b>Ai Marco coc v5.4 Released!</b>
-📦 <b>File:</b> Ai-Marco-coc-v5.4.apk ({file_size_str})
+    caption = f"""🐉 ⚔️ <b>Ai Marco coc v5.5 (Ultimate Upgrade) Released!</b>
+📦 <b>File:</b> Ai-Marco-coc-v5.5.apk ({file_size_str})
+🏗️ <b>Auto-Builder:</b> Upgrades suggested defenses & traps automatically
+🎁 <b>Daily Rewards:</b> Claims Free Trader Gifts & Star Bonus Ores
 🏆 <b>Complex AI Engine:</b> TH16/17 Root Rider Overgrowth & Giga Protection
-🛡️ <b>Clan Castle Defense Counter:</b> Auto Poison/Freeze on defending troops
+🛡️ <b>Clan Castle Counter:</b> Auto Poison/Freeze on defending troops
 🎮 <b>Smooth Battle Pacer:</b> 7-Phase Humanized Coordinated Deployment
 🖐️ <b>True Multi-Touch:</b> 4-Finger Line Wave & 2-Finger Funnel
 🧱 <b>Auto Wall Dump:</b> Upgrades walls automatically when gold is full
@@ -45,7 +47,7 @@ def main():
     body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"chat_id\"\r\n\r\n{chat_id}\r\n".encode("utf-8"))
     body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"parse_mode\"\r\n\r\nHTML\r\n".encode("utf-8"))
     body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"caption\"\r\n\r\n{caption}\r\n".encode("utf-8"))
-    body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"document\"; filename=\"Ai-Marco-coc-v5.4.apk\"\r\nContent-Type: application/vnd.android.package-archive\r\n\r\n".encode("utf-8"))
+    body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"document\"; filename=\"Ai-Marco-coc-v5.5.apk\"\r\nContent-Type: application/vnd.android.package-archive\r\n\r\n".encode("utf-8"))
     body.append(file_bytes)
     body.append(f"\r\n--{boundary}--\r\n".encode("utf-8"))
 
