@@ -23,8 +23,10 @@ def main():
     file_size_str = f"{file_size_mb:.2f} MB"
     print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id}...")
 
-    caption_text = f"""👑 🧠 <b>Ai Marco coc v9.0 (CognitivePeak Edition)</b>
-📦 <b>File:</b> Ai-Marco-coc-v9.0.apk ({file_size_str})
+    caption_text = f"""👑 ⚡ <b>Ai Marco coc v9.2 (CognitivePeak + API Key Test Ping Edition)</b>
+📦 <b>File:</b> Ai-Marco-coc-v9.2.apk ({file_size_str})
+⚡ <b>Live API Key Test Ping:</b> Instant round-trip latency &amp; validation check
+🔑 <b>Multi-Key Auto-Rotation:</b> Gemini, Groq, OpenRouter, DeepSeek key pools
 🧠 <b>Multi-Provider Vision Failover:</b> Gemini 2.0 -> OpenRouter -> Groq -> Local Neural
 🗺️ <b>Defense Heatmap &amp; Base DNA:</b> 64-bit spatial fingerprinting &amp; kill-zone avoidance
 🌊 <b>3-Phase Wave Funnel Orchestrator:</b> Outer clear -> 4-finger core push -> Hero equipment surge
@@ -47,7 +49,7 @@ def main():
         "-F", f"chat_id={chat_id}",
         "-F", "parse_mode=HTML",
         "-F", f"caption=<{caption_file}",
-        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v9.0.apk",
+        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v9.2.apk",
         f"https://api.telegram.org/bot{bot_token}/sendDocument"
     ]
 

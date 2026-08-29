@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var keyRotator: ApiKeyRotator
     private lateinit var memoryEngine: AiMemoryEngine
+    private val pingEngine = ApiKeyPingEngine()
 
     private lateinit var tabBtnDashboard: Button
     private lateinit var tabBtnStrategy: Button
@@ -34,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var etApiKeyInput: EditText
     private lateinit var tvActiveKeysCount: TextView
     private lateinit var tvVisionStatus: TextView
+    private lateinit var tvPingResult: TextView
 
     private val providers = arrayOf(
         "Google Gemini (Official / Recommended)",
@@ -85,6 +87,7 @@ class MainActivity : AppCompatActivity() {
         etApiKeyInput = findViewById(R.id.et_api_key_input)
         tvActiveKeysCount = findViewById(R.id.tv_active_keys_count)
         tvVisionStatus = findViewById(R.id.tv_vision_status)
+        tvPingResult = findViewById(R.id.tv_ping_result)
     }
 
     private fun setupDashboardControls() {
@@ -206,23 +209,81 @@ class MainActivity : AppCompatActivity() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, providers)
         spinnerProvider.adapter = adapter
 
-        val defaultModels = arrayOf("gemini-2.0-flash", "llama-3.3-70b", "deepseek-chat")
+        val defaultModels = arrayOf(
+            "gemini-2.0-flash",
+            "gemini-2.5-pro",
+            "llama-3.3-70b-versatile",
+            "google/gemma-4-31b-it:free",
+            "deepseek-chat"
+        )
         val modelAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, defaultModels)
         spinnerLiveModels.adapter = modelAdapter
 
+        // Add Key to Pool
         findViewById<Button>(R.id.btn_add_api_key).setOnClickListener {
             val key = etApiKeyInput.text.toString().trim()
             if (key.isNotEmpty()) {
                 keyRotator.addKey(key)
                 etApiKeyInput.text.clear()
                 updateKeyPoolCount()
-                Toast.makeText(this, "Key added to rotation pool!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "✓ Key added to auto-rotation pool!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Please paste an API key first", Toast.LENGTH_SHORT).show()
             }
         }
+
+        // Test Ping / Validate Key
+        findViewById<Button>(R.id.btn_ping_api_key).setOnClickListener {
+            val inputKey = etApiKeyInput.text.toString().trim()
+            val activeKey = if (inputKey.isNotEmpty()) inputKey else (keyRotator.getActiveKey() ?: "")
+
+            if (activeKey.isEmpty()) {
+                Toast.makeText(this, "Enter or add an API key to test ping!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val selectedModel = spinnerLiveModels.selectedItem?.toString() ?: "gemini-2.0-flash"
+            val selectedProviderIdx = spinnerProvider.selectedItemPosition
+
+            val providerUrl = when (selectedProviderIdx) {
+                0 -> "https://generativelanguage.googleapis.com/v1beta"
+                1 -> "https://api.groq.com/openai/v1"
+                2 -> "https://openrouter.ai/api/v1"
+                else -> "https://api.deepseek.com/v1"
+            }
+
+            tvPingResult.text = "⏳ Testing API connection to $selectedModel..."
+            tvPingResult.setTextColor(0xFFF59E0B.toInt())
+
+            pingEngine.pingProvider(
+                providerUrl = providerUrl,
+                apiKey = activeKey,
+                modelName = selectedModel,
+                onSuccess = { latency, msg ->
+                    tvPingResult.text = msg
+                    tvPingResult.setTextColor(0xFF34D399.toInt())
+                },
+                onError = { errMsg ->
+                    tvPingResult.text = errMsg
+                    tvPingResult.setTextColor(0xFFEF4444.toInt())
+                }
+            )
+        }
+
+        // Clear Key Pool
+        findViewById<Button>(R.id.btn_clear_keys).setOnClickListener {
+            keyRotator.clearAllKeys()
+            updateKeyPoolCount()
+            tvPingResult.text = "⚡ Status: Key pool cleared"
+            tvPingResult.setTextColor(0xFF94A3B8.toInt())
+            Toast.makeText(this, "Key pool cleared.", Toast.LENGTH_SHORT).show()
+        }
+
+        updateKeyPoolCount()
     }
 
     private fun updateKeyPoolCount() {
         val keys = keyRotator.getAllKeys()
-        tvActiveKeysCount.text = "API Key Pool: ${keys.size} Key(s) Loaded (Auto-Rotation Active)"
+        tvActiveKeysCount.text = "Active Keys in Pool: ${keys.size} Key(s) Loaded (Auto-Rotation Active)"
     }
 }

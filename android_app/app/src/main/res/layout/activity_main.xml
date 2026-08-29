@@ -2,69 +2,73 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#060913">
+    android:background="#0A0F1D"
+    android:orientation="vertical">
 
-    <!-- Top Hero Header -->
+    <!-- ==================== TOP CYBER HEADER ==================== -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="64dp"
+        android:background="#0F172A"
+        android:elevation="6dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="14dp"
-        android:background="#0C1322"
-        android:gravity="center_vertical">
+        android:paddingHorizontal="16dp">
 
-        <ImageView
-            android:id="@+id/iv_app_logo"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/app_logo"
-            android:scaleType="fitCenter" />
+        <TextView
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:background="@drawable/bg_pill_badge"
+            android:gravity="center"
+            android:text="👑"
+            android:textSize="18sp" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
             android:layout_weight="1"
-            android:layout_marginStart="14dp"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ai Marco coc"
-                android:textColor="#F59E0B"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.04" />
+                android:letterSpacing="0.04"
+                android:text="AI MARCO COC"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Home Village AI • Anti-Ban Biometrics • Wall Maxer"
+                android:text="CognitivePeak AI • Multi-Account &amp; Watchdog"
                 android:textColor="#38BDF8"
-                android:textSize="10.5sp" />
+                android:textSize="10.5sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <TextView
+            android:id="@+id/tv_header_status_badge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_pill_badge"
             android:paddingHorizontal="10dp"
-            android:paddingVertical="5dp"
-            android:text="PRO V7.0"
-            android:textColor="#34D399"
-            android:textSize="10sp"
+            android:paddingVertical="4dp"
+            android:text="v9.0 PRO"
+            android:textColor="#38BDF8"
+            android:textSize="11sp"
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- Modern Segmented Tab Bar -->
+    <!-- ==================== SEGMENTED TAB BAR ==================== -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="44dp"
+        android:layout_height="48dp"
         android:layout_marginHorizontal="12dp"
-        android:layout_marginVertical="8dp"
-        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
         android:background="@drawable/bg_tab_bar"
+        android:orientation="horizontal"
         android:padding="3dp">
 
         <Button
@@ -73,11 +77,10 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/bg_tab_active_pill"
-            android:text="🏰 DASHBOARD"
-            android:textColor="#FFFFFF"
-            android:textSize="9.5sp"
-            android:textStyle="bold"
-            android:padding="0dp" />
+            android:text="CONTROLLER"
+            android:textColor="#38BDF8"
+            android:textSize="11sp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/tab_btn_strategy"
@@ -85,11 +88,10 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:text="⚔️ PRO META"
+            android:text="STRATEGY"
             android:textColor="#94A3B8"
-            android:textSize="9.5sp"
-            android:textStyle="bold"
-            android:padding="0dp" />
+            android:textSize="11sp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/tab_btn_clan"
@@ -97,11 +99,10 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:text="🏡 VILLAGE"
+            android:text="VILLAGE"
             android:textColor="#94A3B8"
-            android:textSize="9.5sp"
-            android:textStyle="bold"
-            android:padding="0dp" />
+            android:textSize="11sp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/tab_btn_ai"
@@ -109,16 +110,18 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:text="🧠 VISION AI"
+            android:text="AI &amp; API"
             android:textColor="#94A3B8"
-            android:textSize="9.5sp"
-            android:textStyle="bold"
-            android:padding="0dp" />
+            android:textSize="11sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
+    <!-- ==================== TAB CONTENT CONTAINER ==================== -->
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
         android:padding="12dp">
 
         <LinearLayout
@@ -126,7 +129,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- ==================== TAB 1: DASHBOARD ==================== -->
+            <!-- ==================== TAB 1: CONTROLLER DASHBOARD ==================== -->
             <LinearLayout
                 android:id="@+id/tab_content_dashboard"
                 android:layout_width="match_parent"
@@ -134,38 +137,28 @@
                 android:orientation="vertical"
                 android:visibility="visible">
 
-                <!-- Service Status Card -->
+                <!-- System Permission Card -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_card_cyber_active"
+                    android:background="@drawable/bg_card_cyber"
                     android:orientation="vertical"
                     android:padding="14dp"
                     android:layout_marginBottom="12dp">
 
                     <TextView
-                        android:id="@+id/tv_accessibility_status"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🛡️ Accessibility Service: ACTIVE"
-                        android:textColor="#F59E0B"
-                        android:textSize="13sp"
+                        android:text="⚡ SYSTEM PERMISSIONS"
+                        android:textColor="#38BDF8"
+                        android:textSize="12sp"
                         android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tv_memory_stats"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="⚡ Anti-Ban: 2D Gaussian Jitter • Log-Normal Latency • Volume Down Panic"
-                        android:textColor="#94A3B8"
-                        android:textSize="11sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="10dp">
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
 
                         <Button
                             android:id="@+id/btn_grant_accessibility"
@@ -390,7 +383,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- ==================== TAB 4: VISION AI & ENGINE ==================== -->
+            <!-- ==================== TAB 4: VISION AI & API KEY MANAGER ==================== -->
             <LinearLayout
                 android:id="@+id/tab_content_ai"
                 android:layout_width="match_parent"
@@ -398,6 +391,35 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
+                <!-- On-Device AI Status Card -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_card_cyber"
+                    android:orientation="vertical"
+                    android:padding="14dp"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🧠 ON-DEVICE NEURAL VISION ENGINE"
+                        android:textColor="#34D399"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_vision_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="✓ 12.0 MB Quantized TFLite Model Online\n✓ 285+ Supercell Building Sprites Active\n✓ 0.0ms Local Latency (Zero Internet Needed)"
+                        android:textColor="#94A3B8"
+                        android:textSize="11.5sp"
+                        android:lineSpacingExtra="2dp" />
+                </LinearLayout>
+
+                <!-- Cloud LLM API Key & Ping Manager Card -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -408,25 +430,16 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🧠 ON-DEVICE NEURAL VISION ENGINE"
+                        android:text="🔑 CLOUD LLM KEY MANAGER &amp; TEST PING"
                         android:textColor="#F59E0B"
                         android:textSize="13sp"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/tv_vision_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="✓ 12.0 MB Quantized TFLite Model Online\n✓ 285+ High-Res Supercell Building Templates Loaded"
-                        android:textColor="#34D399"
-                        android:textSize="11.5sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="Cloud LLM Key Rotation (Optional):"
+                        android:layout_marginTop="10dp"
+                        android:text="Select AI Provider:"
                         android:textColor="#94A3B8"
                         android:textSize="11sp" />
 
@@ -438,11 +451,19 @@
                         android:background="@drawable/bg_input_field"
                         android:padding="8dp" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Model Name / Endpoint:"
+                        android:textColor="#94A3B8"
+                        android:textSize="11sp" />
+
                     <Spinner
                         android:id="@+id/spinner_live_models"
                         android:layout_width="match_parent"
                         android:layout_height="44dp"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="4dp"
                         android:background="@drawable/bg_input_field"
                         android:padding="8dp" />
 
@@ -450,7 +471,7 @@
                         android:id="@+id/et_api_key_input"
                         android:layout_width="match_parent"
                         android:layout_height="44dp"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="8dp"
                         android:background="@drawable/bg_input_field"
                         android:hint="Paste Gemini / Groq / OpenRouter API Key"
                         android:textColor="#FFFFFF"
@@ -458,25 +479,77 @@
                         android:paddingHorizontal="10dp"
                         android:textSize="12sp" />
 
-                    <Button
-                        android:id="@+id/btn_add_api_key"
+                    <!-- Key Action Buttons Row -->
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="42dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btn_add_api_key"
+                            android:layout_width="0dp"
+                            android:layout_height="42dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_btn_primary"
+                            android:text="+ ADD KEY"
+                            android:textColor="#FFFFFF"
+                            android:textSize="11.5sp"
+                            android:textStyle="bold" />
+
+                        <Button
+                            android:id="@+id/btn_ping_api_key"
+                            android:layout_width="0dp"
+                            android:layout_height="42dp"
+                            android:layout_weight="1.2"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/bg_btn_emerald"
+                            android:text="⚡ TEST PING"
+                            android:textColor="#FFFFFF"
+                            android:textSize="11.5sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Ping Test Result Banner -->
+                    <TextView
+                        android:id="@+id/tv_ping_result"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:background="@drawable/bg_btn_primary"
-                        android:text="+ ADD KEY TO POOL"
-                        android:textColor="#FFFFFF"
+                        android:background="#1E293B"
+                        android:padding="8dp"
+                        android:text="⚡ Status: Ready to Test API Key Ping"
+                        android:textColor="#38BDF8"
                         android:textSize="11.5sp"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/tv_active_keys_count"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="Active Keys in Pool: 0"
-                        android:textColor="#94A3B8"
-                        android:textSize="11sp" />
+                        android:layout_marginTop="8dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_active_keys_count"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Active Keys in Pool: 0"
+                            android:textColor="#94A3B8"
+                            android:textSize="11sp" />
+
+                        <Button
+                            android:id="@+id/btn_clear_keys"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:background="@drawable/bg_btn_dark"
+                            android:paddingHorizontal="10dp"
+                            android:text="🗑️ CLEAR"
+                            android:textColor="#EF4444"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 

@@ -4,9 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import org.json.JSONArray
-import org.json.JSONObject
-import java.net.HttpURLConnection
-import java.net.URL
 
 data class ApiKeyStatus(
     val key: String,
@@ -39,6 +36,13 @@ class ApiKeyRotator(context: Context) {
     fun removeKey(key: String) {
         keyPool.removeAll { it.key == key }
         saveKeysToPrefs()
+    }
+
+    @Synchronized
+    fun clearAllKeys() {
+        keyPool.clear()
+        saveKeysToPrefs()
+        Log.i("ApiKeyRotator", "Cleared all API keys from pool.")
     }
 
     @Synchronized
@@ -81,7 +85,9 @@ class ApiKeyRotator(context: Context) {
             entry.rateLimitResetTime = System.currentTimeMillis() + (cooldownSeconds * 1000L)
             Log.w("ApiKeyRotator", "API Key ${key.take(6)}... hit 429 Rate Limit. Rotating to next key!")
             // Advance index to rotate immediately
-            currentIndex = (currentIndex + 1) % keyPool.size
+            if (keyPool.isNotEmpty()) {
+                currentIndex = (currentIndex + 1) % keyPool.size
+            }
         }
     }
 
@@ -99,11 +105,10 @@ class ApiKeyRotator(context: Context) {
         try {
             val arr = JSONArray(jsonStr)
             for (i in 0 until arr.length()) {
-                val k = arr.getString(i)
-                if (k.isNotBlank()) keyPool.add(ApiKeyStatus(k))
+                keyPool.add(ApiKeyStatus(arr.getString(i)))
             }
         } catch (e: Exception) {
-            Log.e("ApiKeyRotator", "Error loading keys: ${e.message}")
+            Log.e("ApiKeyRotator", "Failed to load keys from prefs: ${e.message}")
         }
     }
 }
