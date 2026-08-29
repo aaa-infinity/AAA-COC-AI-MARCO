@@ -24,9 +24,9 @@ def main():
     print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id}...")
 
     # Telegram caption limit is 1024 characters
-    caption_text = f"""👑 🎯 <b>Ai Marco coc v11.0 (Macrorify Play Mode HUD Edition)</b>
-📦 <b>File:</b> Ai-Marco-coc-v11.0.apk ({file_size_str})
-🎯 <b>Macrorify Floating HUD:</b> 42dp bubble with edge-snapping &amp; 40dp pill toolbar
+    caption_text = f"""👑 🚀 <b>Ai Marco coc v11.5 (Master Titan Pro Edition)</b>
+📦 <b>File:</b> Ai-Marco-coc-v11.5.apk ({file_size_str})
+🎯 <b>Macrorify Floating HUD:</b> 44dp bubble + edge snapping &amp; pill toolbar
 🤖 <b>2-Way Telegram Remote:</b> /status, /pause, /resume, /attack, /walls &amp; /schedule
 ⏰ <b>Smart Sleep Scheduler:</b> Humanized farming windows &amp; rest breaks
 ⚡ <b>Snapshot Fast-Skipper:</b> Instant HSV detection without cloud delays
@@ -48,7 +48,7 @@ def main():
         "-F", f"chat_id={chat_id}",
         "-F", "parse_mode=HTML",
         "-F", f"caption=<{caption_file}",
-        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v11.0.apk",
+        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v11.5.apk",
         f"https://api.telegram.org/bot{bot_token}/sendDocument"
     ]
 

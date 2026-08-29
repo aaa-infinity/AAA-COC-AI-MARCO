@@ -1,6 +1,8 @@
 package com.cocai.autoclicker.ui
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -11,12 +13,14 @@ import androidx.appcompat.app.AppCompatActivity
 import com.cocai.autoclicker.R
 import com.cocai.autoclicker.engine.*
 import com.cocai.autoclicker.service.AutoClickAccessibilityService
+import com.cocai.autoclicker.service.FloatingHUDService
 import com.cocai.autoclicker.service.FloatingOverlayService
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var keyRotator: ApiKeyRotator
     private lateinit var memoryEngine: AiMemoryEngine
+    private lateinit var appPrefs: SharedPreferences
     private val pingEngine = ApiKeyPingEngine()
 
     private lateinit var tabBtnDashboard: Button
@@ -29,6 +33,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tabContentClan: LinearLayout
     private lateinit var tabContentAi: LinearLayout
 
+    private lateinit var btnGrantAccessibility: Button
+    private lateinit var btnGrantOverlay: Button
+
     private lateinit var spinnerProvider: Spinner
     private lateinit var spinnerLiveModels: Spinner
     private lateinit var spinnerStrategyPicker: Spinner
@@ -36,6 +43,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvActiveKeysCount: TextView
     private lateinit var tvVisionStatus: TextView
     private lateinit var tvPingResult: TextView
+
+    private lateinit var etTelegramToken: EditText
+    private lateinit var etTelegramChatId: EditText
 
     private val providers = arrayOf(
         "Google Gemini (Official / Recommended)",
@@ -56,6 +66,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        appPrefs = getSharedPreferences("app_settings_prefs", Context.MODE_PRIVATE)
         initEngines()
         bindViews()
         setupTabSwitching()
@@ -63,6 +74,11 @@ class MainActivity : AppCompatActivity() {
         setupStrategyTab()
         setupClanTab()
         setupAiProviderTab()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updatePermissionButtonStates()
     }
 
     private fun initEngines() {
@@ -81,6 +97,9 @@ class MainActivity : AppCompatActivity() {
         tabContentClan = findViewById(R.id.tab_content_clan)
         tabContentAi = findViewById(R.id.tab_content_ai)
 
+        btnGrantAccessibility = findViewById(R.id.btn_grant_accessibility)
+        btnGrantOverlay = findViewById(R.id.btn_grant_overlay)
+
         spinnerProvider = findViewById(R.id.spinner_provider)
         spinnerLiveModels = findViewById(R.id.spinner_live_models)
         spinnerStrategyPicker = findViewById(R.id.spinner_strategy_picker)
@@ -88,16 +107,44 @@ class MainActivity : AppCompatActivity() {
         tvActiveKeysCount = findViewById(R.id.tv_active_keys_count)
         tvVisionStatus = findViewById(R.id.tv_vision_status)
         tvPingResult = findViewById(R.id.tv_ping_result)
+
+        etTelegramToken = findViewById(R.id.et_telegram_bot_token)
+        etTelegramChatId = findViewById(R.id.et_telegram_chat_id)
+
+        // Restore saved Telegram configs
+        val savedToken = appPrefs.getString("tg_token", "8841143616:AAGbcJKf3MLTN17-tpmwhZKZQIIbErDT1PA")
+        val savedChatId = appPrefs.getString("tg_chat_id", "-1004447017934")
+        etTelegramToken.setText(savedToken)
+        etTelegramChatId.setText(savedChatId)
+    }
+
+    private fun updatePermissionButtonStates() {
+        if (AutoClickAccessibilityService.isServiceRunning) {
+            btnGrantAccessibility.text = "✓ ACCESSIBILITY"
+            btnGrantAccessibility.setBackgroundResource(R.drawable.bg_btn_emerald)
+        } else {
+            btnGrantAccessibility.text = "ACCESSIBILITY"
+            btnGrantAccessibility.setBackgroundResource(R.drawable.bg_btn_primary)
+        }
+
+        val overlayOk = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) Settings.canDrawOverlays(this) else true
+        if (overlayOk) {
+            btnGrantOverlay.text = "✓ OVERLAY PERM"
+            btnGrantOverlay.setBackgroundResource(R.drawable.bg_btn_emerald)
+        } else {
+            btnGrantOverlay.text = "OVERLAY PERM"
+            btnGrantOverlay.setBackgroundResource(R.drawable.bg_btn_primary)
+        }
     }
 
     private fun setupDashboardControls() {
-        findViewById<Button>(R.id.btn_grant_accessibility).setOnClickListener {
+        btnGrantAccessibility.setOnClickListener {
             val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
             startActivity(intent)
             Toast.makeText(this, "Enable 'Ai Marco coc' Accessibility Service", Toast.LENGTH_LONG).show()
         }
 
-        findViewById<Button>(R.id.btn_grant_overlay).setOnClickListener {
+        btnGrantOverlay.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
                 val intent = Intent(
                     Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
@@ -112,14 +159,19 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_start_floating_hud).setOnClickListener {
             if (!AutoClickAccessibilityService.isServiceRunning) {
                 Toast.makeText(this, "Please enable Accessibility Service first!", Toast.LENGTH_LONG).show()
+                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                startActivity(intent)
                 return@setOnClickListener
             }
-            if (!Settings.canDrawOverlays(this)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
                 Toast.makeText(this, "Please grant Overlay Permission!", Toast.LENGTH_LONG).show()
+                val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
+                startActivity(intent)
                 return@setOnClickListener
             }
 
-            startService(Intent(this, FloatingOverlayService::class.java))
+            // Start Floating Macrorify HUD Service
+            startService(Intent(this, FloatingHUDService::class.java))
 
             val launchIntent = packageManager.getLaunchIntentForPackage("com.supercell.clashofclans")
             if (launchIntent != null) {
@@ -127,7 +179,7 @@ class MainActivity : AppCompatActivity() {
                 startActivity(launchIntent)
                 Toast.makeText(this, "🚀 Launching Clash of Clans Home Village...", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "🚀 Controller Launched! Open Clash of Clans.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "🚀 Macrorify Controller Launched! Open Clash of Clans.", Toast.LENGTH_SHORT).show()
                 moveTaskToBack(true)
             }
         }
@@ -205,11 +257,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btn_send_telegram_test).setOnClickListener {
-            val token = findViewById<EditText>(R.id.et_telegram_bot_token).text.toString().trim()
-            val chatId = findViewById<EditText>(R.id.et_telegram_chat_id).text.toString().trim()
+            val token = etTelegramToken.text.toString().trim()
+            val chatId = etTelegramChatId.text.toString().trim()
             if (token.isNotEmpty() && chatId.isNotEmpty()) {
+                appPrefs.edit().putString("tg_token", token).putString("tg_chat_id", chatId).apply()
                 val bot = TelegramBotManager(this, token, chatId)
-                bot.sendMessage("👑 <b>[Ai Marco coc]</b> 2-Way Telegram Remote Connected! You can now send <code>/status</code>, <code>/pause</code>, <code>/resume</code>, <code>/attack</code>, <code>/walls</code>, or <code>/schedule</code>.") { ok ->
+                bot.sendMessage("👑 <b>[Ai Marco coc]</b> 2-Way Telegram Remote Connected! Send <code>/status</code>, <code>/pause</code>, <code>/resume</code>, <code>/attack</code>, <code>/walls</code>, or <code>/schedule</code>.") { ok ->
                     if (ok) {
                         Toast.makeText(this, "✓ Telegram Test Ping Dispatched!", Toast.LENGTH_SHORT).show()
                     } else {
