@@ -35,12 +35,10 @@ jobs:
         if: always()
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN || '8841143616:AAGbcJKf3MLTN17-tpmwhZKZQIIbErDT1PA' }}
-          TELEGRAM_CHAT_ID: "@aaafreecloud"
+          TELEGRAM_CHAT_ID: "-1004447017934"
         run: |
           if [ -n "$TELEGRAM_BOT_TOKEN" ]; then
-            curl -s -F chat_id="${TELEGRAM_CHAT_ID}" \
-                 -F text="🚀 [AAA COC AI MARCO] Cloud APK Build Started on GitHub Runner...%0ACommit: ${{ github.sha }}%0AStatus: Compiling Android Codebase with Gradle 8.7 & ML Kit Vision" \
-                 https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage || true
+            curl -s "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=🚀+[AAA+COC+AI+MARCO]+Cloud+APK+Build+Started+on+GitHub+Runner...%0ACommit:+${{ github.sha }}%0AStatus:+Compiling+Android+Codebase" || true
           fi
 
       - name: Compile Commercial Debug APK
@@ -61,17 +59,16 @@ jobs:
         if: success()
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN || '8841143616:AAGbcJKf3MLTN17-tpmwhZKZQIIbErDT1PA' }}
-          TELEGRAM_CHAT_ID: "@aaafreecloud"
+          TELEGRAM_CHAT_ID: "-1004447017934"
         run: |
           if [ -n "$TELEGRAM_BOT_TOKEN" ]; then
             APK_FILE=$(find android_app/app/build/outputs/apk/debug -name "*.apk" | head -n 1)
             if [ -n "$APK_FILE" ] && [ -f "$APK_FILE" ]; then
               FILE_SIZE=$(du -h "$APK_FILE" | cut -f1)
               echo "Found APK: $APK_FILE (Size: $FILE_SIZE)"
-              curl -F chat_id="${TELEGRAM_CHAT_ID}" \
-                   -F document=@"$APK_FILE" \
-                   -F caption="✅ ⚔️ AAA COC AI MARCO v2.0 APK Build Success!%0A📦 Size: ${FILE_SIZE}%0A🐉 Home Village Zap Dragon Auto-Farming Ready%0A📱 Universal Android Compatibility + Google ML Kit Vision & Self-Healing Telemetry" \
-                   https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument
+              curl -F "document=@${APK_FILE}" \
+                   -F "caption=✅ ⚔️ AAA COC AI MARCO v2.0 APK Build Success!%0A📦 Size: ${FILE_SIZE}%0A🐉 Home Village Zap Dragon Auto-Farming Ready%0A📱 Universal Android Compatibility + Google ML Kit Vision & Self-Healing Telemetry" \
+                   "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument?chat_id=${TELEGRAM_CHAT_ID}"
             else
               echo "No APK file found to send"
             fi
@@ -81,10 +78,8 @@ jobs:
         if: failure()
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN || '8841143616:AAGbcJKf3MLTN17-tpmwhZKZQIIbErDT1PA' }}
-          TELEGRAM_CHAT_ID: "@aaafreecloud"
+          TELEGRAM_CHAT_ID: "-1004447017934"
         run: |
           if [ -n "$TELEGRAM_BOT_TOKEN" ]; then
-            curl -s -F chat_id="${TELEGRAM_CHAT_ID}" \
-                 -F text="❌ [AAA COC AI MARCO] Cloud APK Build Failed!%0A⚠️ Reason: Gradle Compilation Error%0A🔍 Commit: ${{ github.sha }}%0A🛠 Automatic diagnostic report logged." \
-                 https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage || true
+            curl -s "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=❌+[AAA+COC+AI+MARCO]+Cloud+APK+Build+Failed!%0A⚠️+Reason:+Compilation+Error%0A🔍+Commit:+${{ github.sha }}" || true
           fi
