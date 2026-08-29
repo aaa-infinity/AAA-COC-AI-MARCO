@@ -38,9 +38,13 @@
                 android:resource="@xml/accessibility_service_config" />
         </service>
 
-        <!-- Floating Overlay UI Service -->
+        <!-- Floating Overlay UI Services -->
         <service
             android:name=".service.FloatingOverlayService"
+            android:exported="false" />
+
+        <service
+            android:name=".service.FloatingHUDService"
             android:exported="false" />
 
     </application>

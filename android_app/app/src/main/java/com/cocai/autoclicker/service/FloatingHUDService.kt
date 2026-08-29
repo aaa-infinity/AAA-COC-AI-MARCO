@@ -20,9 +20,13 @@ import com.cocai.autoclicker.engine.ClashAutomationCore
 import kotlin.math.abs
 
 /**
- * 👑 Macrorify-Style Play Mode Floating HUD Overlay Service
+ * 👑 Macrorify-Style Play Mode Floating HUD Service
+ *
+ * - Compact 42dp draggable bubble with edge snapping
+ * - Expandable horizontal 40dp Play Mode pill toolbar
+ * - State and position persistence via SharedPreferences
  */
-class FloatingOverlayService : Service() {
+class FloatingHUDService : Service() {
 
     private var windowManager: WindowManager? = null
     private var floatingRootView: View? = null
@@ -232,7 +236,7 @@ class FloatingOverlayService : Service() {
                         initialTouchX = event.rawX
                         initialTouchY = event.rawY
                         isDragging = false
-                        return false
+                        return false // Allow child clicks if no drag occurs
                     }
                     MotionEvent.ACTION_MOVE -> {
                         val dx = event.rawX - initialTouchX
@@ -247,6 +251,7 @@ class FloatingOverlayService : Service() {
                     }
                     MotionEvent.ACTION_UP -> {
                         if (isDragging) {
+                            // Snap to closest edge (Left or Right)
                             snapToClosestEdge(params.x)
                             return true
                         }
@@ -269,10 +274,12 @@ class FloatingOverlayService : Service() {
             try {
                 windowManager?.updateViewLayout(floatingRootView, params)
             } catch (e: Exception) {
+                // View detached safely
             }
         }
         animator.start()
 
+        // Save position
         prefs.edit().putInt("pos_x", targetX).putInt("pos_y", params.y).apply()
     }
 
@@ -283,6 +290,7 @@ class FloatingOverlayService : Service() {
             try {
                 windowManager?.removeView(floatingRootView)
             } catch (e: Exception) {
+                // Already detached
             }
         }
     }

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/macrorify_root_container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <!-- ==================== 1. MINIMIZED BUBBLE MODE ==================== -->
+    <LinearLayout
+        android:id="@+id/ll_minimized_bubble"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:background="@drawable/bg_macrorify_bubble"
+        android:elevation="8dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="👑"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <!-- ==================== 2. EXPANDED PLAY MODE TOOLBAR ==================== -->
+    <LinearLayout
+        android:id="@+id/ll_expanded_toolbar"
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:background="@drawable/bg_macrorify_capsule"
+        android:elevation="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="6dp"
+        android:visibility="visible">
+
+        <!-- 1. [👆 Drag/Collapse]: Tapping collapses to bubble; dragging moves bar -->
+        <Button
+            android:id="@+id/btn_hud_collapse"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/bg_macrorify_btn"
+            android:text="👆"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp" />
+
+        <!-- 2. [▶/⏸ Play/Pause]: Toggles macro execution -->
+        <Button
+            android:id="@+id/btn_hud_play_pause"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/bg_macrorify_btn_active"
+            android:text="▶"
+            android:textColor="#38BDF8"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <!-- 3. [⏹ Stop]: Halts active farming loops and resets state -->
+        <Button
+            android:id="@+id/btn_hud_stop"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/bg_macrorify_btn"
+            android:text="⏹"
+            android:textColor="#EF4444"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <!-- Live Status Pill Badge -->
+        <TextView
+            android:id="@+id/tv_hud_status_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/bg_pill_badge"
+            android:gravity="center"
+            android:paddingHorizontal="8dp"
+            android:text="READY"
+            android:textColor="#38BDF8"
+            android:textSize="10.5sp"
+            android:textStyle="bold" />
+
+        <!-- 4. [⚙ Quick Settings]: Floating Dialog for Strategy/Thresholds -->
+        <Button
+            android:id="@+id/btn_hud_settings"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/bg_macrorify_btn"
+            android:text="⚙"
+            android:textColor="#94A3B8"
+            android:textSize="14sp" />
+
+        <!-- 5. [❌ Exit]: Dismisses overlay and stops service -->
+        <Button
+            android:id="@+id/btn_hud_exit"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/bg_macrorify_btn"
+            android:text="❌"
+            android:textColor="#94A3B8"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+</FrameLayout>
