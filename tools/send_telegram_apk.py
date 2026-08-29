@@ -23,8 +23,8 @@ def main():
     file_size_str = f"{file_size_mb:.2f} MB"
     print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id}...")
 
-    caption_text = f"""👑 🌟 <b>Ai Marco coc v8.0 (Universal Game-Engine Master Edition)</b>
-📦 <b>File:</b> Ai-Marco-coc-v8.0.apk ({file_size_str})
+    caption_text = f"""👑 🌟 <b>Ai Marco coc v8.1 (Universal Fixed-UI Master Release)</b>
+📦 <b>File:</b> Ai-Marco-coc-v8.1.apk ({file_size_str})
 📐 <b>100% Screen-Percentage Scaling:</b> Works on any phone resolution (1080p, 1440p, 720p, 20:9)
 🎯 <b>Fixed-UI State Machine:</b> Clicks real Supercell HUD buttons with zero guesswork
 🧱 <b>Builder Overview Wall Dump:</b> Auto-selects walls via top builder hammer icon
@@ -43,7 +43,7 @@ def main():
         "-F", f"chat_id={chat_id}",
         "-F", "parse_mode=HTML",
         "-F", f"caption=<{caption_file}",
-        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v8.0.apk",
+        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v8.1.apk",
         f"https://api.telegram.org/bot{bot_token}/sendDocument"
     ]
 

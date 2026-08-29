@@ -8,6 +8,15 @@ import android.view.WindowManager
 import kotlin.math.max
 import kotlin.math.min
 
+enum class UiAnchor {
+    TOP_LEFT,
+    TOP_RIGHT,
+    BOTTOM_LEFT,
+    BOTTOM_RIGHT,
+    CENTER_STAGE,
+    DEPLOY_PERIMETER
+}
+
 /**
  * 📐 Percentage-Based Universal Screen Coordinator
  *
@@ -47,5 +56,9 @@ class ScreenCoordinateScaler(private val context: Context) {
 
     fun toScreenPixel(pctX: Float, pctY: Float): PointF {
         return PointF(pctX * screenWidth, pctY * screenHeight)
+    }
+
+    fun scaleCoordinate(designPt: PointF, anchor: UiAnchor = UiAnchor.CENTER_STAGE): PointF {
+        return designPt
     }
 }
