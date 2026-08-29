@@ -1,0 +1,44 @@
+{
+    "device": {
+        "adb_host": "127.0.0.1",
+        "adb_port": 5555,
+        "device_serial": null,
+        "connection_type": "adb",
+        "ref_width": 1920,
+        "ref_height": 1080
+    },
+    "anti_detection": {
+        "enable_jitter": true,
+        "jitter_std_dev": 3.5,
+        "bezier_swipes": true,
+        "min_action_delay": 0.6,
+        "max_action_delay": 1.4,
+        "session_timeout_minutes": 180,
+        "rest_break_minutes": 15
+    },
+    "farming": {
+        "min_gold": 600000,
+        "min_elixir": 600000,
+        "min_dark_elixir": 4000,
+        "target_star_bonus_ores": true,
+        "max_search_attempts": 60
+    },
+    "village": {
+        "auto_collect_resources": true,
+        "auto_collect_ores": true,
+        "auto_train": true,
+        "army_slot": 1,
+        "auto_request_troops": true
+    },
+    "battle": {
+        "strategy": "ZAP_DRAGON_FARMING",
+        "use_lightning_zap": true,
+        "use_hero_abilities": true,
+        "hero_ability_delay_sec": 12,
+        "deployment_delay": 0.1
+    },
+    "templates_dir": "vision/templates",
+    "ocr_backend": "easyocr",
+    "debug_mode": true,
+    "log_level": "INFO"
+}
