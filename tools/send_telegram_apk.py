@@ -23,21 +23,18 @@ def main():
     file_size_str = f"{file_size_mb:.2f} MB"
     print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id}...")
 
-    caption_text = f"""👑 ⚡ <b>Ai Marco coc v9.2 (CognitivePeak + API Key Test Ping Edition)</b>
+    # Telegram caption limit is 1024 characters
+    caption_text = f"""👑 ⚡ <b>Ai Marco coc v9.2 (CognitivePeak Edition)</b>
 📦 <b>File:</b> Ai-Marco-coc-v9.2.apk ({file_size_str})
-⚡ <b>Live API Key Test Ping:</b> Instant round-trip latency &amp; validation check
-🔑 <b>Multi-Key Auto-Rotation:</b> Gemini, Groq, OpenRouter, DeepSeek key pools
-🧠 <b>Multi-Provider Vision Failover:</b> Gemini 2.0 -> OpenRouter -> Groq -> Local Neural
-🗺️ <b>Defense Heatmap &amp; Base DNA:</b> 64-bit spatial fingerprinting &amp; kill-zone avoidance
-🌊 <b>3-Phase Wave Funnel Orchestrator:</b> Outer clear -> 4-finger core push -> Hero equipment surge
-🔄 <b>Supercell ID Auto-Cycle:</b> 4-account rotation across multiple villages
-🔋 <b>Device Health Watchdog:</b> Auto-pauses on &gt;42°C overheat or &lt;15% battery
-⏳ <b>Personal Break Handler:</b> 15-min cooldown timer for village lockouts
-🛡️ <b>Clan Castle Auto-Requester:</b> Requests reinforcements every 12 minutes
-🏛️ <b>Clan Capital &amp; Clan Games:</b> Auto-contributes gold &amp; finishes quests up to 4,000 pts
-🎁 <b>Merchant 24h Freebie:</b> Claims daily snacks, potions &amp; ores
-🐉 <b>5th Hero &amp; Pet Dispatch:</b> Dragon Duke + Greedy Raven active frenzy boost
-📐 <b>100% Percentage Scaling:</b> Precision across all Android devices
+⚡ <b>API Key Test Ping:</b> Live ms latency &amp; validation check
+🧠 <b>Vision Failover:</b> Gemini -> OpenRouter -> Groq -> Local TFLite
+🗺️ <b>Defense Heatmap:</b> 64-bit base DNA &amp; kill-zone avoidance
+🌊 <b>3-Phase Wave Funnel:</b> Outer clear -> 4-finger push -> Hero surge
+🔄 <b>Supercell ID Auto-Cycle:</b> 4-account rotation
+🔋 <b>Health Watchdog:</b> 42°C overheat &amp; 15% battery safety halts
+🛡️ <b>Clan Routines:</b> 12m CC Request, Capital Raids &amp; Clan Games
+🎁 <b>24h Freebie Claimer:</b> Daily snacks, potions &amp; ores
+🐉 <b>5th Hero &amp; Pet:</b> Dragon Duke + Greedy Raven frenzy
 🚨 <b>Panic Stop:</b> Volume Down Key Override"""
 
     caption_file = "/tmp/telegram_caption.txt"
