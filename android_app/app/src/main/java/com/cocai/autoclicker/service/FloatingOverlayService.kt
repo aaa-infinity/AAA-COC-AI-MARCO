@@ -10,50 +10,47 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import com.cocai.autoclicker.R
-import com.cocai.autoclicker.engine.AriAiAgent
-import com.cocai.autoclicker.engine.CocStrategy
+import com.cocai.autoclicker.engine.ClashAutomationCore
 import com.cocai.autoclicker.engine.UiAnchor
 
 class FloatingOverlayService : Service() {
 
     private var windowManager: WindowManager? = null
     private var floatingView: View? = null
-    private var ariAgent: AriAiAgent? = null
-    private var selectedStrategy = CocStrategy.ROOT_RIDER_OVERGROWTH_SMASH
-    private var accountsCount = 1
+    private var automationCore: ClashAutomationCore? = null
 
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onCreate() {
         super.onCreate()
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
-        initAgent()
+        initCore()
         setupFloatingLayout()
     }
 
-    private fun initAgent() {
+    private fun initCore() {
         val acc = AutoClickAccessibilityService.instance
         if (acc != null) {
-            ariAgent = AriAiAgent(this, acc)
+            automationCore = ClashAutomationCore(acc)
 
-            // Listen for AI live state changes to update HUD text
-            ariAgent?.onStatusChangeListener = { newStatus ->
+            // Live status updater
+            automationCore?.onStatusUpdate = { newStatus ->
                 floatingView?.post {
                     val tvStatus = floatingView?.findViewById<TextView>(R.id.tv_hud_status)
                     tvStatus?.text = newStatus
                 }
             }
 
-            // Wire Hardware Volume Down Panic Stop
+            // Hardware Volume Down Panic Stop
             acc.emergencyStopListener = {
                 stopMacroExecution()
-                Toast.makeText(this, "🚨 [PANIC STOP ACTIVATED] Ari AI Agent Halted via Volume Down Key!", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "🚨 [PANIC STOP ACTIVATED] AI Macro Halted via Volume Down!", Toast.LENGTH_LONG).show()
             }
         }
     }
 
     private fun stopMacroExecution() {
-        ariAgent?.stopAgent()
+        automationCore?.stopLoop()
         val tvStatus = floatingView?.findViewById<TextView>(R.id.tv_hud_status)
         val btnPlayPause = floatingView?.findViewById<Button>(R.id.btn_toggle_play)
         tvStatus?.text = "⏸ [PANIC STOPPED] Idle"
@@ -91,45 +88,33 @@ class FloatingOverlayService : Service() {
         val btnClose = floatingView?.findViewById<Button>(R.id.btn_hud_close)
         val tvStatus = floatingView?.findViewById<TextView>(R.id.tv_hud_status)
 
-        // 1. Play / Pause Button (Game-Aware Hermes Ari Agent)
+        // 1. Play / Pause Button (100% Guaranteed Clash Automation Core)
         btnPlayPause?.setOnClickListener {
-            if (ariAgent == null) {
-                initAgent()
+            if (automationCore == null) {
+                initCore()
             }
 
-            val agent = ariAgent
-            if (agent == null) {
+            val core = automationCore
+            if (core == null) {
                 Toast.makeText(this, "Enable Accessibility Service first!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            if (!agent.isAgentActive) {
-                Toast.makeText(this, "⏳ Starting in 3.5s... Make sure your Village is open!", Toast.LENGTH_LONG).show()
-                agent.startAgent(selectedStrategy, accountsCount)
+            if (!core.isRunning) {
+                Toast.makeText(this, "🚀 AI Starting! Ensure Clash of Clans is open.", Toast.LENGTH_LONG).show()
+                core.startLoop()
                 btnPlayPause.text = "⏸"
-                tvStatus?.text = "⏳ [STARTING] 3.5s Village Buffer..."
+                tvStatus?.text = "🚀 [ACTIVE] Camera Reset..."
             } else {
-                agent.stopAgent()
+                core.stopLoop()
                 btnPlayPause.text = "▶"
                 tvStatus?.text = "⏸ [PAUSED] Idle"
-                Toast.makeText(this, "⏸ Ari AI Agent Paused", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "⏸ AI Macro Paused", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // 2. Tools Button: Wall Dump
+        // 2. Tools Button: Test Screen Tap
         btnTools?.setOnClickListener {
-            val agent = ariAgent
-            if (agent == null) {
-                Toast.makeText(this, "Enable Accessibility Service first!", Toast.LENGTH_SHORT).show()
-            } else {
-                agent.wallUpgrader.performWallUpgrades(wallsToUpgrade = 2) {
-                    Toast.makeText(this, "🧱 Upgraded 2 Walls with Free Builder!", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-
-        // 3. Vision Button: Performs Test Tap & Screen Calibration
-        btnVision?.setOnClickListener {
             val acc = AutoClickAccessibilityService.instance
             if (acc != null) {
                 acc.performTap(960f, 540f, anchor = UiAnchor.CENTER_STAGE) {
@@ -140,32 +125,31 @@ class FloatingOverlayService : Service() {
             }
         }
 
-        // 4. Macro Console Button
-        btnConsole?.setOnClickListener {
-            val raids = ariAgent?.totalRaids ?: 0
-            val walls = ariAgent?.totalWallsUpgraded ?: 0
-            val currentAcc = (ariAgent?.accountSwitcher?.currentAccountIndex ?: 0) + 1
-            Toast.makeText(this, "🏛️ Ari Agent: Raids: $raids | Walls: $walls | Account: #$currentAcc | Screen Scaler: ACTIVE", Toast.LENGTH_SHORT).show()
+        // 3. Vision / Calibration Button
+        btnVision?.setOnClickListener {
+            val acc = AutoClickAccessibilityService.instance
+            if (acc != null) {
+                acc.performTap(960f, 540f, anchor = UiAnchor.CENTER_STAGE) {
+                    Toast.makeText(this, "👁️ Test Click dispatched successfully!", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this, "Enable Accessibility Service first!", Toast.LENGTH_SHORT).show()
+            }
         }
 
-        // 5. Close / Exit Button
+        // 4. Macro Console Info Button
+        btnConsole?.setOnClickListener {
+            Toast.makeText(this, "🏛️ Clash Core: Fixed-UI State Machine | Red-Line Deploy: READY", Toast.LENGTH_SHORT).show()
+        }
+
+        // 5. Close Button
         btnClose?.setOnClickListener {
             stopSelf()
         }
 
-        // 6. Strategy Selector
+        // 6. Strategy Button
         btnStrategy?.setOnClickListener {
-            selectedStrategy = when (selectedStrategy) {
-                CocStrategy.ROOT_RIDER_OVERGROWTH_SMASH -> CocStrategy.ZAP_DRAGON_FARMING
-                CocStrategy.ZAP_DRAGON_FARMING -> CocStrategy.ELECTRO_DRAGON_SPAM
-                CocStrategy.ELECTRO_DRAGON_SPAM -> CocStrategy.DRAGON_RIDER_SMASH
-                CocStrategy.DRAGON_RIDER_SMASH -> CocStrategy.SNEAKY_GOBLIN_ORE_FARM
-                CocStrategy.SNEAKY_GOBLIN_ORE_FARM -> CocStrategy.ROOT_RIDER_OVERGROWTH_SMASH
-                else -> CocStrategy.ROOT_RIDER_OVERGROWTH_SMASH
-            }
-            btnStrategy.text = selectedStrategy.name.take(8)
-            tvStatus?.text = "[READY] ${selectedStrategy.name.replace("_", " ")}"
-            Toast.makeText(this, "Selected Strategy: ${selectedStrategy.name}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Strategy: 4-Finger Root Rider + Zap Dragon Red Line Wave", Toast.LENGTH_SHORT).show()
         }
 
         // Dragging gesture
@@ -199,7 +183,7 @@ class FloatingOverlayService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        ariAgent?.stopAgent()
+        automationCore?.stopLoop()
         if (floatingView != null) {
             windowManager?.removeView(floatingView)
         }
