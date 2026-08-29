@@ -22,14 +22,15 @@ def main():
     file_size_str = f"{file_size_mb:.2f} MB"
     print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id}...")
 
-    caption = f"""🏛️ 🧠 <b>Ai Marco coc v6.1 (Expanded Neural Ari Agent) Released!</b>
-📦 <b>File:</b> Ai-Marco-coc-v6.1.apk ({file_size_str})
+    caption = f"""🏛️ ⚔️ <b>Ai Marco coc v6.2 (Ari AI Agent Pro) Released!</b>
+📦 <b>File:</b> Ai-Marco-coc-v6.2.apk ({file_size_str})
 ⚡ <b>Neural Vision Engine:</b> 12MB On-Device TFLite Core Defense Detector
 🎨 <b>Expanded Assets:</b> 285+ High-Res Datamined Building & Defense Sprites
 🧠 <b>Ari AI Agent:</b> Hermes-Class Autonomous ReAct Tool-Calling Engine
 🏆 <b>Complex AI Engine:</b> TH16/17 Root Rider Overgrowth & Giga Protection
+🧪 <b>Spell Brewer:</b> Auto-Brew & Clan Castle Spell Synchronization
+🎁 <b>Season Pass & Trader:</b> Claims Free Season Rewards & Daily Ores
 🏗️ <b>Auto-Builder:</b> Upgrades suggested defenses & traps automatically
-🎁 <b>Daily Rewards:</b> Claims Free Trader Gifts & Star Bonus Ores
 🛡️ <b>Clan Castle Counter:</b> Auto Poison/Freeze on defending troops
 🎮 <b>Smooth Battle Pacer:</b> 7-Phase Humanized Coordinated Deployment
 🖐️ <b>True Multi-Touch:</b> 4-Finger Line Wave & 2-Finger Funnel
@@ -49,7 +50,7 @@ def main():
     body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"chat_id\"\r\n\r\n{chat_id}\r\n".encode("utf-8"))
     body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"parse_mode\"\r\n\r\nHTML\r\n".encode("utf-8"))
     body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"caption\"\r\n\r\n{caption}\r\n".encode("utf-8"))
-    body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"document\"; filename=\"Ai-Marco-coc-v6.1.apk\"\r\nContent-Type: application/vnd.android.package-archive\r\n\r\n".encode("utf-8"))
+    body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"document\"; filename=\"Ai-Marco-coc-v6.2.apk\"\r\nContent-Type: application/vnd.android.package-archive\r\n\r\n".encode("utf-8"))
     body.append(file_bytes)
     body.append(f"\r\n--{boundary}--\r\n".encode("utf-8"))
 

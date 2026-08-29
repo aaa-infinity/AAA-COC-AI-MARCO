@@ -34,6 +34,8 @@ class AriAiAgent(
     val wallUpgrader = WallUpgradeEngine(accessibilityService)
     val buildingUpgrader = AutoBuildingUpgraderEngine(accessibilityService)
     val dailyRewards = DailyRewardsCollectorEngine(accessibilityService)
+    val spellBrewer = AutoSpellBrewEngine(accessibilityService)
+    val seasonPass = SeasonPassCollectorEngine(accessibilityService)
     val supervisor = AutonomousSupervisor(context, accessibilityService)
     val telegramNotifier = TelegramNotifierService()
     val tacticsEngine = AdvancedTacticsEngine(accessibilityService)
@@ -103,13 +105,18 @@ class AriAiAgent(
         collectHomeVillageResources {
             // Action 2: Claim Daily Rewards & Trader Gifts
             dailyRewards.collectAllDailyRewards {
-                // Action 3: Upgrade Suggested Defense & Wall Dump
-                buildingUpgrader.upgradeSuggestedBuilding {
-                    wallUpgrader.performWallUpgrades(wallsToUpgrade = 1) {
-                        // Action 4: Quick Train Pro Army Preset
-                        trainProArmy {
-                            // Action 5: Execute Pro Raid
-                            executeProRaid()
+                // Action 3: Claim Season Pass Magic Items & Tiers
+                seasonPass.claimSeasonPassRewards {
+                    // Action 4: Upgrade Suggested Defense & Wall Dump
+                    buildingUpgrader.upgradeSuggestedBuilding {
+                        wallUpgrader.performWallUpgrades(wallsToUpgrade = 1) {
+                            // Action 5: Quick Train Pro Army & Brew Spells
+                            trainProArmy {
+                                spellBrewer.ensureSpellsBrewed(currentStrategy) {
+                                    // Action 6: Execute Pro Raid
+                                    executeProRaid()
+                                }
+                            }
                         }
                     }
                 }
