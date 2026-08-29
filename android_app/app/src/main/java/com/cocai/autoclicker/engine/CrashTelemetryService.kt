@@ -5,7 +5,6 @@ import android.os.Build
 import android.util.Log
 import org.json.JSONObject
 import java.io.File
-import java.io.FileWriter
 
 class CrashTelemetryService private constructor(private val context: Context) {
 
@@ -48,11 +47,7 @@ class CrashTelemetryService private constructor(private val context: Context) {
                 put("stack_trace", Log.getStackTraceString(throwable))
             }
 
-            val writer = FileWriter(logFile, true)
-            writer.write(crashReport.toString() + "
-")
-            writer.flush()
-            writer.close()
+            logFile.appendText(crashReport.toString() + "\n")
             Log.e("Telemetry", "Crash report logged to ${logFile.absolutePath}")
         } catch (e: Exception) {
             Log.e("Telemetry", "Failed to log crash: ${e.message}")

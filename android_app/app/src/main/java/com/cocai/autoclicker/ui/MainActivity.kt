@@ -10,6 +10,7 @@ import android.widget.*
 import com.cocai.autoclicker.R
 import com.cocai.autoclicker.engine.AiMemoryEngine
 import com.cocai.autoclicker.engine.ApiKeyRotator
+import com.cocai.autoclicker.engine.CrashTelemetryService
 import com.cocai.autoclicker.engine.LiveModelFetcher
 import com.cocai.autoclicker.service.AutoClickAccessibilityService
 import com.cocai.autoclicker.service.FloatingOverlayService
@@ -49,6 +50,9 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Initialize Global Crash & Diagnostic Telemetry
+        CrashTelemetryService.init(this)
 
         keyRotator = ApiKeyRotator(this)
         memoryEngine = AiMemoryEngine(this)
