@@ -9,14 +9,18 @@ import com.cocai.autoclicker.service.AutoClickAccessibilityService
 import kotlin.random.Random
 
 /**
- * 🏛️ ARI AI AGENT (Anti-Ban Humanized Home Village Farmer & Supercell ID Switcher)
+ * 🏛️ ARI AI AGENT - ULTIMATE POWER EDITION
  *
  * 🛡️ Anti-Ban Protections:
- * 1. 2D Gaussian Coordinate Jitter (sigma = 4.2px) so touches never hit the exact same pixel
+ * 1. 2D Gaussian Coordinate Jitter (sigma = 4.2px)
  * 2. Log-Normal Reaction Timing (210ms - 480ms human cognitive latency)
  * 3. Human Idle Breathers & Village Inspection swipes
  * 4. Supercell ID Multi-Account Switcher (Cycles across multiple accounts)
  * 5. Dedicated 1 Free Builder Wall Upgrade Dump
+ * 6. Adaptive Real-Time Loot OCR Scanner
+ * 7. Active Hero Equipment Auto-Trigger (Giant Gauntlet, Spiky Ball, Invisibility, Eternal Tome)
+ * 8. Double-Queue Smart Army Rebalancer for Zero-Downtime Raids
+ * 9. Season Pass & 20% Builder Boost Maximizer
  */
 class AriAiAgent(
     private val context: Context,
@@ -43,6 +47,10 @@ class AriAiAgent(
     val deadBaseHunter = DeadBaseCollectorHunter()
     val antiBan = AntiBanHumanSimulationEngine()
     val accountSwitcher = SupercellIdAccountSwitcher(accessibilityService)
+    val lootOcr = AdaptiveLootOcrEngine()
+    val heroEquip = HeroEquipmentAutoTriggerEngine(accessibilityService)
+    val armyRebalancer = SmartArmyRebalancer(accessibilityService)
+    val seasonMaximizer = SeasonBankMaximizer(accessibilityService)
 
     var totalAccounts: Int = 1
     var isAgentActive: Boolean = false
@@ -63,7 +71,7 @@ class AriAiAgent(
         currentStrategy = strategy
         totalAccounts = accountsCount
         isAgentActive = true
-        Log.i("AriAiAgent", "=== [ARI AI AGENT ONLINE] Anti-Ban Humanized Home Village Farmer Active (Accounts: $totalAccounts) ===")
+        Log.i("AriAiAgent", "=== [ARI AI AGENT ULTIMATE ONLINE] Accounts: $totalAccounts | Strategy: ${strategy.name} ===")
 
         supervisor.startSupervisor()
 
@@ -102,8 +110,8 @@ class AriAiAgent(
         collectHomeVillageResources {
             // Step 2: Instant Wall Upgrade Dump
             upgradeHomeVillageWalls {
-                // Step 3: Quick Train 0-Cost Army
-                trainProArmy {
+                // Step 3: Double-Queue 0-Cost Pro Army
+                armyRebalancer.doubleQueueArmy {
                     // Step 4: Search & Raid High Loot Base
                     executeProRaid()
                 }
@@ -143,32 +151,9 @@ class AriAiAgent(
         }
     }
 
-    private fun trainProArmy(onComplete: () -> Unit) {
-        Log.i("AriAiAgent", "⚡ [HOME FARM] Queuing 0-Cost Pro Meta Army...")
-        val armyBtn = antiBan.humanizeCoordinate(PointF(90f, 830f))
-        accessibilityService.performTap(armyBtn.x, armyBtn.y) {
-            scheduleNextStep(750L) {
-                val trainTab = antiBan.humanizeCoordinate(PointF(1350f, 150f))
-                accessibilityService.performTap(trainTab.x, trainTab.y) {
-                    scheduleNextStep(580L) {
-                        val quickTrain = antiBan.humanizeCoordinate(PointF(1580f, 380f))
-                        accessibilityService.performTap(quickTrain.x, quickTrain.y) {
-                            scheduleNextStep(580L) {
-                                val closeBtn = antiBan.humanizeCoordinate(PointF(1820f, 85f))
-                                accessibilityService.performTap(closeBtn.x, closeBtn.y) {
-                                    scheduleNextStep(650L, onComplete)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     private fun executeProRaid() {
         Log.i("AriAiAgent", "⚔️ [MATCHMAKING] Searching for 500k+ Gold & Elixir bases...")
-        matchmaker.findTargetBase(LootRequirement(minGold = 500000L, minElixir = 500000L)) {
+        matchmaker.findTargetBase(LootRequirement(minGold = lootOcr.minGoldThreshold, minElixir = lootOcr.minElixirThreshold)) {
             scheduleNextStep(700L) {
                 val profile = deadBaseHunter.analyzeLootDistribution(650000L, 650000L, 5000L)
                 val plan = tacticsEngine.computeTacticalPlan()
@@ -197,9 +182,10 @@ class AriAiAgent(
                                     deployHeroes(PointF(960f, 850f))
                                     scheduleNextStep(14000L) {
                                         gigaProtection.protectArmyFromGigaExplosion {
-                                            modernFeatures.triggerHeroEquipmentCombos()
-                                            scheduleNextStep(36000L) {
-                                                finishRaidAndReflect()
+                                            heroEquip.triggerHeroEquipmentSequence {
+                                                scheduleNextStep(32000L) {
+                                                    finishRaidAndReflect()
+                                                }
                                             }
                                         }
                                     }
@@ -209,7 +195,9 @@ class AriAiAgent(
                     }
                     CocStrategy.ZAP_DRAGON_FARMING -> {
                         battlePacing.executeSmoothZapDragonBattle(plan) {
-                            finishRaidAndReflect()
+                            heroEquip.triggerHeroEquipmentSequence {
+                                finishRaidAndReflect()
+                            }
                         }
                     }
                     CocStrategy.ELECTRO_DRAGON_SPAM -> {
@@ -217,9 +205,10 @@ class AriAiAgent(
                         multiTouch.deployFourFingerWave(PointF(600f, 830f), PointF(1350f, 830f), 2) {
                             deployHeroes(PointF(960f, 850f))
                             scheduleNextStep(14000L) {
-                                modernFeatures.triggerHeroEquipmentCombos()
-                                scheduleNextStep(36000L) {
-                                    finishRaidAndReflect()
+                                heroEquip.triggerHeroEquipmentSequence {
+                                    scheduleNextStep(32000L) {
+                                        finishRaidAndReflect()
+                                    }
                                 }
                             }
                         }
@@ -231,9 +220,10 @@ class AriAiAgent(
                             multiTouch.deployFourFingerWave(PointF(700f, 840f), PointF(1250f, 840f), 2) {
                                 deployHeroes(PointF(960f, 850f))
                                 scheduleNextStep(14000L) {
-                                    modernFeatures.triggerHeroEquipmentCombos()
-                                    scheduleNextStep(36000L) {
-                                        finishRaidAndReflect()
+                                    heroEquip.triggerHeroEquipmentSequence {
+                                        scheduleNextStep(32000L) {
+                                            finishRaidAndReflect()
+                                        }
                                     }
                                 }
                             }
@@ -299,32 +289,42 @@ class AriAiAgent(
 
                             // Dispatch Real-time Telegram Telemetry Report
                             telegramNotifier.sendRaidReport(
-                                strategy = "🌾 Humanized Home Farm (" + currentStrategy.name + ")",
+                                strategy = "🌾 Ultimate Home Farm (" + currentStrategy.name + ")",
                                 goldGained = goldGained,
                                 elixirGained = elixirGained,
                                 darkElixirGained = darkGained,
                                 totalRaids = totalRaids
                             )
 
-                            // Anti-Ban Breather or Account Switch after every 3 raids
-                            if (totalAccounts > 1 && totalRaids % 3 == 0) {
-                                Log.i("AriAiAgent", "🔄 [ACCOUNT ROTATION] Rotating to next Supercell ID account...")
-                                accountSwitcher.switchToNextAccount(totalAccounts) {
-                                    pureHomeVillageFarmLoop()
+                            // Every 4 raids, auto-claim season pass & builder boost milestones
+                            if (totalRaids % 4 == 0) {
+                                seasonMaximizer.claimSeasonRewardsAndBoosts {
+                                    handleAccountRotationOrBreather()
                                 }
-                            } else if (antiBan.shouldTakeHumanBreather(totalRaids)) {
-                                val breather = antiBan.getBreatherDurationMs()
-                                handler.postDelayed({
-                                    pureHomeVillageFarmLoop()
-                                }, breather)
                             } else {
-                                scheduleNextStep(2200L) {
-                                    pureHomeVillageFarmLoop()
-                                }
+                                handleAccountRotationOrBreather()
                             }
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun handleAccountRotationOrBreather() {
+        if (totalAccounts > 1 && totalRaids % 3 == 0) {
+            Log.i("AriAiAgent", "🔄 [ACCOUNT ROTATION] Rotating to next Supercell ID account...")
+            accountSwitcher.switchToNextAccount(totalAccounts) {
+                pureHomeVillageFarmLoop()
+            }
+        } else if (antiBan.shouldTakeHumanBreather(totalRaids)) {
+            val breather = antiBan.getBreatherDurationMs()
+            handler.postDelayed({
+                pureHomeVillageFarmLoop()
+            }, breather)
+        } else {
+            scheduleNextStep(2200L) {
+                pureHomeVillageFarmLoop()
             }
         }
     }

@@ -23,15 +23,16 @@ def main():
     file_size_str = f"{file_size_mb:.2f} MB"
     print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id}...")
 
-    caption_text = f"""🎨 🛡️ <b>Ai Marco coc v7.1 (Pro Cyber Gaming Edition)</b>
-📦 <b>File:</b> Ai-Marco-coc-v7.1.apk ({file_size_str})
+    caption_text = f"""👑 ⚡ <b>Ai Marco coc v7.2 (Ultimate Power &amp; Pro UI Edition)</b>
+📦 <b>File:</b> Ai-Marco-coc-v7.2.apk ({file_size_str})
 ✨ <b>AAA Cyber Gaming UI:</b> Modern glassmorphism, glowing cards &amp; sleek tabs
 🛡️ <b>Anti-Ban Biometrics:</b> 2D Gaussian touch jitter &amp; log-normal human latency
+⚔️ <b>Hero Equipment Auto-Trigger:</b> Giant Gauntlet, Spiky Ball, Invisibility, Eternal Tome
 🔄 <b>Supercell ID Switcher:</b> Auto-rotates multiple accounts on schedule
+⚡ <b>Double-Queue Army Trainer:</b> Zero-downtime continuous raiding
+🏆 <b>Season Bank Maximizer:</b> Auto-claims 20% builder boosts &amp; ores
 🧱 <b>Dedicated Wall Builder:</b> Auto-dumps full loot into wall upgrades
 🎯 <b>Dead Base Hunter:</b> Surgical outside collector strip on dead bases
-⚡ <b>0-Cost Quick Train:</b> Root Riders, Zap Dragons &amp; Sneaky Goblins
-🔍 <b>Smart Nexting Search:</b> 500k+ Gold &amp; Elixir hunter
 🖐️ <b>Multi-Touch Raid:</b> 4-Finger Line Wave &amp; 2-Finger Funnel
 🚨 <b>Panic Stop:</b> Volume Down Key Override"""
 
@@ -44,7 +45,7 @@ def main():
         "-F", f"chat_id={chat_id}",
         "-F", "parse_mode=HTML",
         "-F", f"caption=<{caption_file}",
-        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v7.1.apk",
+        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v7.2.apk",
         f"https://api.telegram.org/bot{bot_token}/sendDocument"
     ]
 
