@@ -262,14 +262,14 @@ class AriAiAgent(
                             totalDarkElixirFarmed += darkGained
 
                             // Update Reinforcement Learning Memory
-                            memoryEngine.recordBattleOutcome(
-                                entrySide = "BOTTOM_LEFT",
+                            memoryEngine.recordAttackResult(
+                                entryAngle = "BOTTOM_LEFT",
+                                zapSuccess = true,
+                                gold = goldGained,
+                                elixir = elixirGained,
+                                dark = darkGained,
                                 stars = 3,
-                                destructionPercent = 100,
-                                lootGold = goldGained,
-                                lootElixir = elixirGained,
-                                spellsUsed = listOf("Rage", "Freeze", "Overgrowth"),
-                                durationSeconds = 62
+                                destruction = 100
                             )
 
                             // Dispatch Real-time Telegram Telemetry Report
