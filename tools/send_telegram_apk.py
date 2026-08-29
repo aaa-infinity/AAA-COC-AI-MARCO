@@ -24,13 +24,15 @@ def main():
     print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id}...")
 
     # Telegram caption MUST be under 1024 characters
-    caption = f"""🏛️ ⚔️ <b>Ai Marco coc v6.2 (Ari AI Agent Pro)</b>
-📦 <b>File:</b> Ai-Marco-coc-v6.2.apk ({file_size_str})
-⚡ <b>Neural Vision:</b> 12MB TFLite On-Device Detector
-🎨 <b>Assets:</b> 285+ High-Res Building & Troop Sprites
+    caption = f"""🏛️ 🐉 <b>Ai Marco coc v6.3 (Cyber Dragon Edition)</b>
+📦 <b>File:</b> Ai-Marco-coc-v6.3.apk ({file_size_str})
+🎨 <b>New AAA Icon:</b> Glowing Neon Cyber-Dragon &amp; Royal Crown
+🔨 <b>Blacksmith Auto-Upgrader:</b> Hero Equipment &amp; Ores
+🏰 <b>Clan Capital:</b> Auto Weekend Raid &amp; Gold Contribution
+⚡ <b>Neural Vision:</b> 12MB TFLite On-Device Core Detector
 🧠 <b>Ari AI Agent:</b> Hermes ReAct Autonomous Engine
-🏆 <b>Pro Meta:</b> TH16/17 Root Rider & Zap Dragons
-🧪 <b>Spell Brewer &amp; Season Pass:</b> Auto-Brew &amp; Claim
+🏆 <b>Pro Meta:</b> TH16/17 Root Rider &amp; Zap Dragons
+🧪 <b>Spell Brewer &amp; Pass:</b> Auto-Brew &amp; Season Claims
 🖐️ <b>Multi-Touch:</b> 4-Finger Line Wave &amp; 2-Finger Funnel
 🚨 <b>Panic Stop:</b> Volume Down Key Override"""
 
@@ -42,7 +44,7 @@ def main():
     body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"chat_id\"\r\n\r\n{chat_id}\r\n".encode("utf-8"))
     body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"parse_mode\"\r\n\r\nHTML\r\n".encode("utf-8"))
     body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"caption\"\r\n\r\n{caption}\r\n".encode("utf-8"))
-    body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"document\"; filename=\"Ai-Marco-coc-v6.2.apk\"\r\nContent-Type: application/vnd.android.package-archive\r\n\r\n".encode("utf-8"))
+    body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"document\"; filename=\"Ai-Marco-coc-v6.3.apk\"\r\nContent-Type: application/vnd.android.package-archive\r\n\r\n".encode("utf-8"))
     body.append(file_bytes)
     body.append(f"\r\n--{boundary}--\r\n".encode("utf-8"))
 

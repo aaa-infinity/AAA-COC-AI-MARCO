@@ -36,6 +36,8 @@ class AriAiAgent(
     val dailyRewards = DailyRewardsCollectorEngine(accessibilityService)
     val spellBrewer = AutoSpellBrewEngine(accessibilityService)
     val seasonPass = SeasonPassCollectorEngine(accessibilityService)
+    val blacksmith = BlacksmithUpgradeEngine(accessibilityService)
+    val clanCapital = ClanCapitalWeekendEngine(accessibilityService)
     val supervisor = AutonomousSupervisor(context, accessibilityService)
     val telegramNotifier = TelegramNotifierService()
     val tacticsEngine = AdvancedTacticsEngine(accessibilityService)
@@ -107,14 +109,20 @@ class AriAiAgent(
             dailyRewards.collectAllDailyRewards {
                 // Action 3: Claim Season Pass Magic Items & Tiers
                 seasonPass.claimSeasonPassRewards {
-                    // Action 4: Upgrade Suggested Defense & Wall Dump
-                    buildingUpgrader.upgradeSuggestedBuilding {
-                        wallUpgrader.performWallUpgrades(wallsToUpgrade = 1) {
-                            // Action 5: Quick Train Pro Army & Brew Spells
-                            trainProArmy {
-                                spellBrewer.ensureSpellsBrewed(currentStrategy) {
-                                    // Action 6: Execute Pro Raid
-                                    executeProRaid()
+                    // Action 4: Upgrade Hero Equipment with Ores at Blacksmith
+                    blacksmith.upgradeHeroEquipment {
+                        // Action 5: Clan Capital Weekend Raid & Gold Contribution
+                        clanCapital.performCapitalRaidIfActive {
+                            // Action 6: Upgrade Suggested Defense & Wall Dump
+                            buildingUpgrader.upgradeSuggestedBuilding {
+                                wallUpgrader.performWallUpgrades(wallsToUpgrade = 1) {
+                                    // Action 7: Quick Train Pro Army & Brew Spells
+                                    trainProArmy {
+                                        spellBrewer.ensureSpellsBrewed(currentStrategy) {
+                                            // Action 8: Execute Pro Raid
+                                            executeProRaid()
+                                        }
+                                    }
                                 }
                             }
                         }
