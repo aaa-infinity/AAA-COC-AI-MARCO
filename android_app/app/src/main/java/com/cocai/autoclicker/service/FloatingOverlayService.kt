@@ -9,6 +9,8 @@ import android.graphics.PixelFormat
 import android.graphics.Point
 import android.os.Build
 import android.os.IBinder
+import android.provider.Settings
+import android.util.Log
 import android.view.*
 import android.view.animation.DecelerateInterpolator
 import android.widget.Button
@@ -20,7 +22,7 @@ import com.cocai.autoclicker.engine.ClashAutomationCore
 import kotlin.math.abs
 
 /**
- * 👑 Macrorify-Style Play Mode Floating HUD Overlay Service
+ * 👑 Macrorify-Style Play Mode Floating HUD Overlay Service (100% Crash-Proof)
  */
 class FloatingOverlayService : Service() {
 
@@ -31,6 +33,7 @@ class FloatingOverlayService : Service() {
     private lateinit var prefs: SharedPreferences
 
     private var isExpanded: Boolean = true
+    private var isViewAttached: Boolean = false
     private var screenWidth: Int = 1080
     private var screenHeight: Int = 2400
 
@@ -38,69 +41,97 @@ class FloatingOverlayService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
-        prefs = getSharedPreferences("macrorify_hud_prefs", Context.MODE_PRIVATE)
+        try {
+            windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
+            prefs = getSharedPreferences("macrorify_hud_prefs", Context.MODE_PRIVATE)
 
-        fetchScreenDimensions()
-        initCore()
-        setupFloatingLayout()
+            fetchScreenDimensions()
+            initCore()
+            setupFloatingLayout()
+        } catch (e: Exception) {
+            Log.e("FloatingOverlay", "Error during onCreate: ${e.message}", e)
+            stopSelf()
+        }
     }
 
     private fun fetchScreenDimensions() {
-        val windowMgr = windowManager ?: return
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val metrics = windowMgr.currentWindowMetrics
-            screenWidth = metrics.bounds.width()
-            screenHeight = metrics.bounds.height()
-        } else {
-            @Suppress("DEPRECATION")
-            val display = windowMgr.defaultDisplay
-            val size = Point()
-            @Suppress("DEPRECATION")
-            display.getSize(size)
-            screenWidth = size.x
-            screenHeight = size.y
+        try {
+            val windowMgr = windowManager ?: return
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                val metrics = windowMgr.currentWindowMetrics
+                screenWidth = metrics.bounds.width()
+                screenHeight = metrics.bounds.height()
+            } else {
+                @Suppress("DEPRECATION")
+                val display = windowMgr.defaultDisplay
+                val size = Point()
+                @Suppress("DEPRECATION")
+                display.getSize(size)
+                screenWidth = size.x
+                screenHeight = size.y
+            }
+        } catch (e: Exception) {
+            screenWidth = 1080
+            screenHeight = 2400
         }
     }
 
     private fun initCore() {
-        val acc = AutoClickAccessibilityService.instance
-        if (acc != null) {
-            automationCore = ClashAutomationCore(this, acc)
+        try {
+            val acc = AutoClickAccessibilityService.instance
+            if (acc != null) {
+                automationCore = ClashAutomationCore(this, acc)
 
-            automationCore?.onStatusUpdate = { newStatus ->
-                floatingRootView?.post {
-                    val tvStatus = floatingRootView?.findViewById<TextView>(R.id.tv_hud_status_badge)
-                    val shortStatus = when {
-                        newStatus.contains("STARTING", true) -> "START"
-                        newStatus.contains("BUILDER", true) || newStatus.contains("WALL", true) -> "WALLS"
-                        newStatus.contains("QUICK TRAIN", true) || newStatus.contains("ARMY", true) -> "TRAIN"
-                        newStatus.contains("SEARCHING", true) || newStatus.contains("ATTACK", true) -> "SEARCH"
-                        newStatus.contains("WAVE", true) || newStatus.contains("RAIDING", true) -> "RAID"
-                        newStatus.contains("VICTORY", true) -> "WIN"
-                        newStatus.contains("COOLDOWN", true) || newStatus.contains("PAUSE", true) -> "REST"
-                        else -> "ACTIVE"
+                automationCore?.onStatusUpdate = { newStatus ->
+                    floatingRootView?.post {
+                        try {
+                            val tvStatus = floatingRootView?.findViewById<TextView>(R.id.tv_hud_status_badge)
+                            val shortStatus = when {
+                                newStatus.contains("STARTING", true) -> "START"
+                                newStatus.contains("BUILDER", true) || newStatus.contains("WALL", true) -> "WALLS"
+                                newStatus.contains("QUICK TRAIN", true) || newStatus.contains("ARMY", true) -> "TRAIN"
+                                newStatus.contains("SEARCHING", true) || newStatus.contains("ATTACK", true) -> "SEARCH"
+                                newStatus.contains("WAVE", true) || newStatus.contains("RAIDING", true) -> "RAID"
+                                newStatus.contains("VICTORY", true) -> "WIN"
+                                newStatus.contains("COOLDOWN", true) || newStatus.contains("PAUSE", true) -> "REST"
+                                else -> "ACTIVE"
+                            }
+                            tvStatus?.text = shortStatus
+                        } catch (e: Exception) {
+                            Log.w("FloatingOverlay", "Error updating status: ${e.message}")
+                        }
                     }
-                    tvStatus?.text = shortStatus
+                }
+
+                acc.emergencyStopListener = {
+                    stopMacroExecution()
+                    Toast.makeText(this, "🚨 [PANIC STOP ACTIVATED] Macro Halted via Volume Down!", Toast.LENGTH_LONG).show()
                 }
             }
-
-            acc.emergencyStopListener = {
-                stopMacroExecution()
-                Toast.makeText(this, "🚨 [PANIC STOP ACTIVATED] Macro Halted via Volume Down!", Toast.LENGTH_LONG).show()
-            }
+        } catch (e: Exception) {
+            Log.e("FloatingOverlay", "Error initializing core: ${e.message}")
         }
     }
 
     private fun stopMacroExecution() {
-        automationCore?.stopLoop()
-        val tvStatus = floatingRootView?.findViewById<TextView>(R.id.tv_hud_status_badge)
-        val btnPlayPause = floatingRootView?.findViewById<Button>(R.id.btn_hud_play_pause)
-        tvStatus?.text = "IDLE"
-        btnPlayPause?.text = "▶"
+        try {
+            automationCore?.stopLoop()
+            val tvStatus = floatingRootView?.findViewById<TextView>(R.id.tv_hud_status_badge)
+            val btnPlayPause = floatingRootView?.findViewById<Button>(R.id.btn_hud_play_pause)
+            tvStatus?.text = "IDLE"
+            btnPlayPause?.text = "▶"
+        } catch (e: Exception) {
+            Log.w("FloatingOverlay", "Error stopping macro: ${e.message}")
+        }
     }
 
     private fun setupFloatingLayout() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+            Log.e("FloatingOverlay", "Cannot draw overlays: permission not granted!")
+            stopSelf()
+            return
+        }
+
         val layoutType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         } else {
@@ -108,7 +139,6 @@ class FloatingOverlayService : Service() {
             WindowManager.LayoutParams.TYPE_PHONE
         }
 
-        // Restore saved position
         val savedX = prefs.getInt("pos_x", screenWidth - 250)
         val savedY = prefs.getInt("pos_y", 200)
         isExpanded = prefs.getBoolean("is_expanded", true)
@@ -122,94 +152,105 @@ class FloatingOverlayService : Service() {
         )
 
         params.gravity = Gravity.TOP or Gravity.START
-        params.x = savedX
-        params.y = savedY
+        params.x = savedX.coerceIn(0, screenWidth - 100)
+        params.y = savedY.coerceIn(0, screenHeight - 100)
         windowParams = params
 
-        floatingRootView = LayoutInflater.from(this).inflate(R.layout.layout_macrorify_hud, null)
-        windowManager?.addView(floatingRootView, params)
+        try {
+            val inflater = LayoutInflater.from(this)
+            floatingRootView = inflater.inflate(R.layout.layout_macrorify_hud, null)
+            windowManager?.addView(floatingRootView, params)
+            isViewAttached = true
+        } catch (e: Exception) {
+            Log.e("FloatingOverlay", "Failed to add floating view: ${e.message}")
+            stopSelf()
+            return
+        }
 
-        val llBubble = floatingRootView?.findViewById<LinearLayout>(R.id.ll_minimized_bubble)
-        val llToolbar = floatingRootView?.findViewById<LinearLayout>(R.id.ll_expanded_toolbar)
-        val btnCollapse = floatingRootView?.findViewById<Button>(R.id.btn_hud_collapse)
-        val btnPlayPause = floatingRootView?.findViewById<Button>(R.id.btn_hud_play_pause)
-        val btnStop = floatingRootView?.findViewById<Button>(R.id.btn_hud_stop)
-        val btnSettings = floatingRootView?.findViewById<Button>(R.id.btn_hud_settings)
-        val btnExit = floatingRootView?.findViewById<Button>(R.id.btn_hud_exit)
-        val tvStatus = floatingRootView?.findViewById<TextView>(R.id.tv_hud_status_badge)
+        bindControls()
+    }
+
+    private fun bindControls() {
+        val root = floatingRootView ?: return
+        val llBubble = root.findViewById<LinearLayout>(R.id.ll_minimized_bubble)
+        val btnCollapse = root.findViewById<Button>(R.id.btn_hud_collapse)
+        val btnPlayPause = root.findViewById<Button>(R.id.btn_hud_play_pause)
+        val btnStop = root.findViewById<Button>(R.id.btn_hud_stop)
+        val btnSettings = root.findViewById<Button>(R.id.btn_hud_settings)
+        val btnExit = root.findViewById<Button>(R.id.btn_hud_exit)
+        val tvStatus = root.findViewById<TextView>(R.id.tv_hud_status_badge)
 
         updateExpandedState(isExpanded)
 
-        // 1. Minimized Bubble Click -> Expand
-        llBubble?.setOnClickListener {
-            updateExpandedState(true)
-        }
+        llBubble?.setOnClickListener { updateExpandedState(true) }
+        btnCollapse?.setOnClickListener { updateExpandedState(false) }
 
-        // 2. Collapse Button Click -> Minimize to Bubble
-        btnCollapse?.setOnClickListener {
-            updateExpandedState(false)
-        }
-
-        // 3. Play / Pause Macro
         btnPlayPause?.setOnClickListener {
-            if (automationCore == null) initCore()
-            val core = automationCore
-            if (core == null) {
-                Toast.makeText(this, "Enable Accessibility Service first!", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+            try {
+                if (automationCore == null) initCore()
+                val core = automationCore
+                if (core == null) {
+                    Toast.makeText(this, "Enable Accessibility Service first!", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
 
-            if (!core.isRunning) {
-                core.startLoop(accounts = 2)
-                btnPlayPause.text = "⏸"
-                tvStatus?.text = "FARM"
-                Toast.makeText(this, "🚀 Ari AI Play Mode Started!", Toast.LENGTH_SHORT).show()
-            } else {
-                core.stopLoop()
-                btnPlayPause.text = "▶"
-                tvStatus?.text = "PAUSED"
-                Toast.makeText(this, "⏸ Ari AI Paused", Toast.LENGTH_SHORT).show()
+                if (!core.isRunning) {
+                    core.startLoop(accounts = 2)
+                    btnPlayPause.text = "⏸"
+                    tvStatus?.text = "FARM"
+                    Toast.makeText(this, "🚀 Ari AI Play Mode Started!", Toast.LENGTH_SHORT).show()
+                } else {
+                    core.stopLoop()
+                    btnPlayPause.text = "▶"
+                    tvStatus?.text = "PAUSED"
+                    Toast.makeText(this, "⏸ Ari AI Paused", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Log.e("FloatingOverlay", "Play/Pause error: ${e.message}")
             }
         }
 
-        // 4. Stop Macro
         btnStop?.setOnClickListener {
             stopMacroExecution()
             Toast.makeText(this, "⏹ Farm Loops Reset & Stopped", Toast.LENGTH_SHORT).show()
         }
 
-        // 5. Quick Settings Dialog Toggle
         btnSettings?.setOnClickListener {
-            val core = automationCore
-            val batt = core?.watchdog?.batteryPercentage ?: 100
-            val temp = core?.watchdog?.currentTemperatureCelsius ?: 30.0f
-            val raids = core?.totalRaidsCompleted ?: 0
-            val accIdx = (core?.accountSwitcher?.currentAccountIndex ?: 0) + 1
-            Toast.makeText(this, "⚙ [MACRORIFY HUD] Acc #$accIdx | ⚔️ Raids: $raids | 🔋 $batt% | 🌡️ ${temp}°C", Toast.LENGTH_LONG).show()
+            try {
+                val core = automationCore
+                val batt = core?.watchdog?.batteryPercentage ?: 100
+                val temp = core?.watchdog?.currentTemperatureCelsius ?: 30.0f
+                val raids = core?.totalRaidsCompleted ?: 0
+                val accIdx = (core?.accountSwitcher?.currentAccountIndex ?: 0) + 1
+                Toast.makeText(this, "⚙ [MACRORIFY HUD] Acc #$accIdx | ⚔️ Raids: $raids | 🔋 $batt% | 🌡️ ${temp}°C", Toast.LENGTH_LONG).show()
+            } catch (e: Exception) {
+                Toast.makeText(this, "Settings Active", Toast.LENGTH_SHORT).show()
+            }
         }
 
-        // 6. Exit Button
         btnExit?.setOnClickListener {
             stopSelf()
         }
 
-        // Touch & Drag Handling with Edge Snapping
         setupTouchAndDragGesture()
     }
 
     private fun updateExpandedState(expanded: Boolean) {
         isExpanded = expanded
-        prefs.edit().putBoolean("is_expanded", isExpanded).apply()
+        try {
+            prefs.edit().putBoolean("is_expanded", isExpanded).apply()
+            val llBubble = floatingRootView?.findViewById<LinearLayout>(R.id.ll_minimized_bubble)
+            val llToolbar = floatingRootView?.findViewById<LinearLayout>(R.id.ll_expanded_toolbar)
 
-        val llBubble = floatingRootView?.findViewById<LinearLayout>(R.id.ll_minimized_bubble)
-        val llToolbar = floatingRootView?.findViewById<LinearLayout>(R.id.ll_expanded_toolbar)
-
-        if (expanded) {
-            llBubble?.visibility = View.GONE
-            llToolbar?.visibility = View.VISIBLE
-        } else {
-            llToolbar?.visibility = View.GONE
-            llBubble?.visibility = View.VISIBLE
+            if (expanded) {
+                llBubble?.visibility = View.GONE
+                llToolbar?.visibility = View.VISIBLE
+            } else {
+                llToolbar?.visibility = View.GONE
+                llBubble?.visibility = View.VISIBLE
+            }
+        } catch (e: Exception) {
+            Log.w("FloatingOverlay", "Error updating expanded state: ${e.message}")
         }
     }
 
@@ -239,9 +280,12 @@ class FloatingOverlayService : Service() {
                         val dy = event.rawY - initialTouchY
                         if (abs(dx) > 12 || abs(dy) > 12) {
                             isDragging = true
-                            params.x = (initialX + dx).toInt().coerceIn(0, screenWidth - 100)
-                            params.y = (initialY + dy).toInt().coerceIn(0, screenHeight - 100)
-                            windowManager?.updateViewLayout(floatingRootView, params)
+                            params.x = (initialX + dx).toInt().coerceIn(0, screenWidth - 80)
+                            params.y = (initialY + dy).toInt().coerceIn(0, screenHeight - 80)
+                            try {
+                                if (isViewAttached) windowManager?.updateViewLayout(floatingRootView, params)
+                            } catch (e: Exception) {
+                            }
                             return true
                         }
                     }
@@ -267,23 +311,28 @@ class FloatingOverlayService : Service() {
         animator.addUpdateListener { animation ->
             params.x = animation.animatedValue as Int
             try {
-                windowManager?.updateViewLayout(floatingRootView, params)
+                if (isViewAttached) windowManager?.updateViewLayout(floatingRootView, params)
             } catch (e: Exception) {
             }
         }
         animator.start()
 
-        prefs.edit().putInt("pos_x", targetX).putInt("pos_y", params.y).apply()
+        try {
+            prefs.edit().putInt("pos_x", targetX).putInt("pos_y", params.y).apply()
+        } catch (e: Exception) {
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        automationCore?.stopLoop()
-        if (floatingRootView != null) {
-            try {
+        try {
+            automationCore?.stopLoop()
+            if (isViewAttached && floatingRootView != null) {
                 windowManager?.removeView(floatingRootView)
-            } catch (e: Exception) {
+                isViewAttached = false
             }
+        } catch (e: Exception) {
+            Log.w("FloatingOverlay", "Error removing view on destroy: ${e.message}")
         }
     }
 }

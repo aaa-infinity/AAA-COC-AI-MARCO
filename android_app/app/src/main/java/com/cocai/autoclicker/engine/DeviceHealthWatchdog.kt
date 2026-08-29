@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
+import android.os.Build
 import android.util.Log
 
 /**
@@ -25,38 +26,55 @@ class DeviceHealthWatchdog(private val context: Context) {
     var onThermalThrottle: ((Float) -> Unit)? = null
     var onLowBatteryHalt: ((Int) -> Unit)? = null
 
+    private var isRegistered = false
+
     private val batteryReceiver = object : BroadcastReceiver() {
         override fun onReceive(ctxt: Context?, intent: Intent?) {
             if (intent == null) return
+            try {
+                val rawTemp = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0)
+                currentTemperatureCelsius = rawTemp / 10.0f
 
-            val rawTemp = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0)
-            currentTemperatureCelsius = rawTemp / 10.0f
+                val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
+                val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
+                batteryPercentage = if (level >= 0 && scale > 0) (level * 100 / scale) else 100
 
-            val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
-            val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
-            batteryPercentage = if (level >= 0 && scale > 0) (level * 100 / scale) else 100
+                val status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
+                isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                             status == BatteryManager.BATTERY_STATUS_FULL
 
-            val status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
-            isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                         status == BatteryManager.BATTERY_STATUS_FULL
+                Log.d("HealthWatchdog", "🔋 Battery: $batteryPercentage% | Temp: ${currentTemperatureCelsius}°C | Charging: $isCharging")
 
-            Log.d("HealthWatchdog", "🔋 Battery: $batteryPercentage% | Temp: ${currentTemperatureCelsius}°C | Charging: $isCharging")
-
-            checkSafetyLimits()
+                checkSafetyLimits()
+            } catch (e: Exception) {
+                Log.w("HealthWatchdog", "Error parsing battery intent: ${e.message}")
+            }
         }
     }
 
     fun startMonitoring() {
-        val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
-        context.registerReceiver(batteryReceiver, filter)
-        Log.i("HealthWatchdog", "🛡️ Device Health & Thermal Watchdog Online")
+        if (isRegistered) return
+        try {
+            val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                context.registerReceiver(batteryReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+            } else {
+                context.registerReceiver(batteryReceiver, filter)
+            }
+            isRegistered = true
+            Log.i("HealthWatchdog", "🛡️ Device Health & Thermal Watchdog Online")
+        } catch (e: Exception) {
+            Log.w("HealthWatchdog", "Warning: Could not register battery receiver: ${e.message}")
+        }
     }
 
     fun stopMonitoring() {
+        if (!isRegistered) return
         try {
             context.unregisterReceiver(batteryReceiver)
+            isRegistered = false
         } catch (e: Exception) {
-            Log.w("HealthWatchdog", "Receiver not registered or already stopped")
+            Log.w("HealthWatchdog", "Receiver not registered or already stopped: ${e.message}")
         }
     }
 

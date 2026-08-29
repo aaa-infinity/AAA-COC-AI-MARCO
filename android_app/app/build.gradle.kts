@@ -11,8 +11,8 @@ android {
         applicationId = "com.cocai.autoclicker"
         minSdk = 24
         targetSdk = 34
-        versionCode = 10
-        versionName = "11.0-MacrorifyHUD"
+        versionCode = 11
+        versionName = "12.0-CrashFixed"
     }
 
     buildTypes {
