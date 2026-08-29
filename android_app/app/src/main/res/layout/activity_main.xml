@@ -561,12 +561,12 @@
                             android:id="@+id/btn_ping_api_key"
                             android:layout_width="0dp"
                             android:layout_height="42dp"
-                            android:layout_weight="1.2"
+                            android:layout_weight="1.4"
                             android:layout_marginStart="8dp"
                             android:background="@drawable/bg_btn_emerald"
-                            android:text="⚡ TEST PING"
+                            android:text="⚡ FETCH MODELS &amp; PING"
                             android:textColor="#FFFFFF"
-                            android:textSize="11.5sp"
+                            android:textSize="11sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 

@@ -11,12 +11,10 @@ import java.net.URL
 import kotlin.concurrent.thread
 
 /**
- * 🌐 Dynamic Live Model Discovery Client
+ * 🌐 100% Dynamic Live Model Discovery Client
  *
- * Calls live endpoints to fetch available vision models:
- * - Google AI Studio: /models?key=...
- * - OpenRouter: /models
- * - Groq: /models
+ * Hits the provider's `/models` endpoint and returns ONLY real live models
+ * active on the user's specific API key account (zero hardcoded static lists).
  */
 class ModelDiscoveryClient {
 
@@ -28,39 +26,54 @@ class ModelDiscoveryClient {
         onSuccess: (List<String>) -> Unit,
         onError: (String) -> Unit
     ) {
+        if (apiKey.isBlank()) {
+            onError("Please enter your API key first")
+            return
+        }
+
         thread {
             var conn: HttpURLConnection? = null
             try {
                 val urlStr = when (provider) {
-                    AiProviderEnum.GOOGLE_AI_STUDIO -> "${provider.baseUrl}/models?key=$apiKey"
-                    AiProviderEnum.OPENROUTER -> "${provider.baseUrl}/models"
-                    AiProviderEnum.GROQ -> "${provider.baseUrl}/models"
-                    AiProviderEnum.CUSTOM_OPENAI -> "${provider.baseUrl}/models"
+                    AiProviderEnum.GOOGLE_AI_STUDIO -> "https://generativelanguage.googleapis.com/v1beta/models?key=$apiKey"
+                    AiProviderEnum.OPENROUTER -> "https://openrouter.ai/api/v1/models"
+                    AiProviderEnum.GROQ -> "https://api.groq.com/openai/v1/models"
+                    AiProviderEnum.CUSTOM_OPENAI -> "https://api.deepseek.com/v1/models"
                 }
 
                 val url = URL(urlStr)
                 conn = url.openConnection() as HttpURLConnection
                 conn.requestMethod = "GET"
-                conn.connectTimeout = 8000
-                conn.readTimeout = 8000
+                conn.connectTimeout = 10000
+                conn.readTimeout = 10000
 
-                if (provider != AiProviderEnum.GOOGLE_AI_STUDIO && apiKey.isNotEmpty()) {
+                if (provider != AiProviderEnum.GOOGLE_AI_STUDIO) {
                     conn.setRequestProperty("Authorization", "Bearer $apiKey")
                 }
+                conn.setRequestProperty("Accept", "application/json")
 
-                if (conn.responseCode in 200..299) {
+                val code = conn.responseCode
+                if (code in 200..299) {
                     val reader = BufferedReader(InputStreamReader(conn.inputStream))
                     val body = reader.readText()
                     reader.close()
 
                     val models = parseModelsList(body, provider)
-                    mainHandler.post { onSuccess(models) }
+                    if (models.isNotEmpty()) {
+                        mainHandler.post { onSuccess(models) }
+                    } else {
+                        mainHandler.post { onError("No active models returned for this key") }
+                    }
                 } else {
-                    mainHandler.post { onError("HTTP ${conn.responseCode}") }
+                    val errStream = conn.errorStream
+                    val errText = if (errStream != null) {
+                        BufferedReader(InputStreamReader(errStream)).readText()
+                    } else "HTTP $code"
+                    mainHandler.post { onError("HTTP $code: $errText") }
                 }
             } catch (e: Exception) {
-                Log.e("ModelDiscovery", "Error fetching models: ${e.message}")
-                mainHandler.post { onError(e.localizedMessage ?: "Connection error") }
+                Log.e("ModelDiscovery", "Error fetching live models: ${e.message}")
+                mainHandler.post { onError("Connection Error: ${e.localizedMessage ?: "Failed to connect"}") }
             } finally {
                 conn?.disconnect()
             }
@@ -75,14 +88,25 @@ class ModelDiscoveryClient {
             if (dataArr != null) {
                 for (i in 0 until dataArr.length()) {
                     val m = dataArr.getJSONObject(i)
-                    val name = m.optString("name").replace("models/", "")
-                    val id = m.optString("id", name)
-                    if (id.isNotEmpty()) result.add(id)
+                    var id = m.optString("id")
+                    if (id.isEmpty()) {
+                        id = m.optString("name").replace("models/", "")
+                    }
+                    if (id.isNotEmpty()) {
+                        // Filter for relevant vision/language generation models
+                        if (provider == AiProviderEnum.GOOGLE_AI_STUDIO) {
+                            if (id.contains("gemini", ignoreCase = true) || id.contains("gemma", ignoreCase = true)) {
+                                result.add(id)
+                            }
+                        } else {
+                            result.add(id)
+                        }
+                    }
                 }
             }
         } catch (e: Exception) {
-            Log.w("ModelDiscovery", "JSON parsing error: ${e.message}")
+            Log.w("ModelDiscovery", "JSON parse error: ${e.message}")
         }
-        return if (result.isNotEmpty()) result else listOf("gemini-2.0-flash", "llama-3.3-70b-versatile", "google/gemma-4-31b-it:free")
+        return result.distinct()
     }
 }

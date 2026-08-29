@@ -9,24 +9,20 @@ import com.cocai.autoclicker.service.AutoClickAccessibilityService
 import kotlin.random.Random
 
 /**
- * 👑 CLASH AUTOMATION CORE ENGINE - ULTIMATE TITAN SUITE
+ * 👑 CLASH AUTOMATION CORE ENGINE - PURE DRAGON FARMING EDITION
  *
- * Integrated Capabilities:
- * - 2-Way Conversational Telegram Remote Control & Status Bot
- * - Smart Sleep / Schedule Timer (Automated farming hours & rest breaks)
- * - Snapshot Matchmaking Fast-Skipper (HSV instant detection)
- * - Dynamic Gaussian Jitter & Humanized Motion Calibrator
- * - Multi-Provider Vision Auto-Failover Router (Gemini -> OpenRouter -> Groq -> Local)
- * - Tactical Defense Heatmap & 64-Bit Base DNA Analyzer
- * - 3-Phase Wave-Based Funnel & Hero Equipment Orchestrator
- * - Top Builder Overview Wall Dump
- * - Multi-Account Supercell ID Auto-Cycle (2-4 Accounts)
- * - Personal Break / Under Attack 15-min Cooldown Detector
- * - Battery & Thermal Watchdog (> 42°C / < 15% Safe Halts)
- * - Clan Castle 12-min Troop Auto-Requester
- * - Clan Capital Weekend & Clan Games Task Automator
- * - Daily Merchant Freebie & Magic Snack Claimer
- * - 5th Hero (Dragon Duke) + Greedy Raven Pet Ability Trigger
+ * Dedicated Capabilities:
+ * - 🐉 Pure Zap Dragon & Mass Air Loot Farming Strategy
+ * - 🏠 Pure Home Village Focus (No Builder Base Clutter)
+ * - 🧱 Smart Builder Overview Wall Dump (Never waste loot)
+ * - ⚡ Snapshot Matchmaking Fast-Skipper (HSV instant detection)
+ * - 🤖 2-Way Conversational Telegram Remote Control (/status, /pause, /resume, /attack, /walls, /schedule)
+ * - ⏰ Smart Sleep / Schedule Timer (Automated farming hours & rest breaks)
+ * - 🔄 Multi-Account Supercell ID Auto-Cycle (2-4 Accounts)
+ * - 🔋 Battery & Thermal Watchdog (> 42°C / < 15% Safe Halts)
+ * - 🛡️ 12-Min CC Reinforcement Auto-Requester
+ * - 💎 Obstacle & Gem Box Auto-Clearer
+ * - 🚨 Panic Stop: Hardware Volume Down Override
  */
 class ClashAutomationCore(
     private val context: Context,
@@ -40,17 +36,11 @@ class ClashAutomationCore(
     val keyRotator = ApiKeyRotator(context)
     val memoryEngine = AiMemoryEngine(context)
     val aiRouter = AiRouterEngine(context, keyRotator)
-    val heatmapAnalyzer = DefenseHeatmapAnalyzer(memoryEngine)
-    val waveOrchestrator = TacticalWaveOrchestrator(accessibilityService)
+    val dragonEngine = DragonFarmingEngine(accessibilityService)
     val watchdog = DeviceHealthWatchdog(context)
     val accountSwitcher = SupercellIdAccountSwitcher(accessibilityService)
     val ccRequester = ClanCastleAutoRequester(accessibilityService)
-    val capitalEngine = ClanCapitalEngine(accessibilityService)
-    val gamesEngine = ClanGamesEngine(accessibilityService)
     val freebieCollector = DailyFreebieCollector(accessibilityService)
-    val dragonDuke = DragonDukeManager(accessibilityService)
-    val attackSafety = AttackSafetyEngine()
-    val chatRecruiter = GlobalChatEngine(accessibilityService)
     val telegramBot = TelegramBotManager(context)
     val smartSchedule = SmartSleepScheduleEngine(context)
     val snapshotSkipper = SnapshotMatchmakingSkipper()
@@ -93,8 +83,9 @@ class ClashAutomationCore(
                 val batt = watchdog.batteryPercentage
                 val acc = accountSwitcher.currentAccountIndex + 1
                 """
-                👑 <b>Ai Marco coc - Live Status Report</b>
+                👑 <b>Ai Marco coc - Dragon Farming Status</b>
                 • <b>State:</b> ${if (isRunning) "🟢 RUNNING & FARMING" else "⏸ PAUSED / IDLE"}
+                • <b>Strategy:</b> 🐉 Pure Zap Dragon Farming
                 • <b>Active Account:</b> #${acc} of $totalAccounts
                 • <b>Total Raids:</b> $totalRaidsCompleted Raids
                 • <b>Battery:</b> $batt% (${if (watchdog.isCharging) "⚡ Charging" else "🔋 Unplugged"})
@@ -104,15 +95,15 @@ class ClashAutomationCore(
             }
             "/pause" -> {
                 stopLoop()
-                "⏸ <b>Macro Execution Paused via Telegram.</b>"
+                "⏸ <b>Dragon Farming Paused via Telegram.</b>"
             }
             "/resume" -> {
                 startLoop(totalAccounts)
-                "🚀 <b>Macro Execution Resumed via Telegram!</b>"
+                "🚀 <b>Dragon Farming Resumed via Telegram!</b>"
             }
             "/attack" -> {
                 startMatchmakingAndAttack()
-                "⚔️ <b>Instant Raid Triggered! Searching multiplayer base...</b>"
+                "⚔️ <b>Instant Dragon Raid Triggered! Searching base...</b>"
             }
             "/walls" -> {
                 continueVillageUpgradesAndArmy()
@@ -127,8 +118,7 @@ class ClashAutomationCore(
                 }
             }
             else -> {
-                // Conversational AI Smart Reply on Telegram
-                "🤖 <b>Ari AI:</b> I am actively monitoring your village! All defenses and 24/7 farming loops are operational. (Total Raids: $totalRaidsCompleted, Battery: ${watchdog.batteryPercentage}%)."
+                "🤖 <b>Ari AI:</b> Pure Dragon farming loop is online! (Total Raids: $totalRaidsCompleted, Battery: ${watchdog.batteryPercentage}%)."
             }
         }
     }
@@ -140,7 +130,6 @@ class ClashAutomationCore(
         watchdog.startMonitoring()
         updateStatus("🚀 [STARTING] Standardizing Camera View...")
 
-        // Step 1: Smooth 2-finger zoom out
         zoomOutAndResetCamera {
             executeVillageRoutine()
         }
@@ -165,7 +154,7 @@ class ClashAutomationCore(
     }
 
     /**
-     * 2. Village Routine: Schedule Check -> Daily Freebies -> Clan Games -> Walls -> Army -> Attack
+     * 2. Home Village Routine: Freebies -> CC Request -> Walls -> Quick Train Dragons -> Attack
      */
     private fun executeVillageRoutine() {
         if (!isRunning) return
@@ -177,14 +166,12 @@ class ClashAutomationCore(
             return
         }
 
-        // Step A: Daily Merchant Freebies (once per 24h)
+        // Daily Merchant Freebies
         freebieCollector.collectIfDue {
-            // Step B: Clan Games / Clan Castle Check
+            // Clan Castle Check every 3 raids
             if (totalRaidsCompleted % 3 == 0) {
                 ccRequester.requestReinforcements {
-                    gamesEngine.checkAndManageClanGames {
-                        continueVillageUpgradesAndArmy()
-                    }
+                    continueVillageUpgradesAndArmy()
                 }
             } else {
                 continueVillageUpgradesAndArmy()
@@ -204,8 +191,8 @@ class ClashAutomationCore(
                         // Tap Confirm Upgrade with Gold/Elixir
                         accessibilityService.performPercentageTap(UniversalFixedUiMapper.PCT_UPGRADE_CONFIRM) {
                             handler.postDelayed({
-                                // Train Army next
-                                trainArmyRoutine {
+                                // Train 0-Cost Dragon Army next
+                                trainDragonArmyRoutine {
                                     startMatchmakingAndAttack()
                                 }
                             }, 600L)
@@ -217,11 +204,11 @@ class ClashAutomationCore(
     }
 
     /**
-     * 3. Army Routine: Double-Queue 0-Cost Pro Meta Army
+     * 3. Army Routine: Double-Queue 0-Cost Dragon Army (Slot 1)
      */
-    private fun trainArmyRoutine(onComplete: () -> Unit) {
+    private fun trainDragonArmyRoutine(onComplete: () -> Unit) {
         if (!isRunning) return
-        updateStatus("⚡ [QUICK TRAIN] Double-Queuing 0-Cost Army...")
+        updateStatus("🐉 [QUICK TRAIN] Double-Queuing 0-Cost Dragon Army...")
 
         // Tap Bottom-Left Army Bottle Icon
         accessibilityService.performPercentageTap(UniversalFixedUiMapper.PCT_ARMY_OVERVIEW) {
@@ -229,7 +216,7 @@ class ClashAutomationCore(
                 // Tap Quick Train Tab
                 accessibilityService.performPercentageTap(UniversalFixedUiMapper.PCT_QUICK_TRAIN_TAB) {
                     handler.postDelayed({
-                        // Tap Train Slot 1
+                        // Tap Train Slot 1 (Zap Dragons)
                         accessibilityService.performPercentageTap(UniversalFixedUiMapper.PCT_TRAIN_SLOT_1) {
                             handler.postDelayed({
                                 // Tap Close X
@@ -247,7 +234,7 @@ class ClashAutomationCore(
     }
 
     /**
-     * 4. Attack Routine: Search Match -> Smart Nexting -> Deploy
+     * 4. Attack Routine: Search Match -> Nexting -> Dragon Assault
      */
     private fun startMatchmakingAndAttack() {
         if (!isRunning) return
@@ -258,7 +245,6 @@ class ClashAutomationCore(
             handler.postDelayed({
                 // Tap "Find a Match" (Bottom-Right)
                 accessibilityService.performPercentageTap(UniversalFixedUiMapper.PCT_FIND_MATCH) {
-                    // Allow 3.2s for matchmaking clouds or snapshot base load
                     handler.postDelayed({
                         searchAndNextBase(searchCount = 0)
                     }, 3200L)
@@ -279,34 +265,31 @@ class ClashAutomationCore(
                 }, jitterCalibrator.getHumanizedDelayMs(3000L))
             }
         } else {
-            // Target Base Selected! Execute 3-Phase Funnel Attack Orchestration
-            execute3PhaseWaveAssault()
+            // Target Base Selected! Execute Pure Dragon Assault
+            executeDragonFarmingAssault()
         }
     }
 
     /**
-     * 5. 3-Phase Wave Funnel Assault + 5th Hero (Dragon Duke) Dispatch
+     * 5. Pure Dragon Army Assault (Zap Air Defenses + Mass Dragon Line + Warden)
      */
-    private fun execute3PhaseWaveAssault() {
+    private fun executeDragonFarmingAssault() {
         if (!isRunning) return
-        updateStatus("🌊 [WAVE ASSAULT] 3-Phase Funnel & Hero Equipment Orchestration...")
+        updateStatus("🐉 [DRAGON ASSAULT] Deploying Zap Dragons & Heroes...")
 
         val startLine = UniversalFixedUiMapper.PCT_DEPLOY_SOUTH_START
         val endLine = UniversalFixedUiMapper.PCT_DEPLOY_SOUTH_END
 
-        waveOrchestrator.execute3PhaseWaveAttack(startLine, endLine, wardenDelaySec = 12) {
-            // Deploy 5th Hero (Dragon Duke) + Greedy Raven Pet
-            dragonDuke.deployAndTrigger5thHero(PointF(0.500f, 0.785f)) {
-                updateStatus("🛡️ [BATTLE] Core Charge (Warden Tome + Dragon Duke Active)...")
-                handler.postDelayed({
-                    finishAttackAndReturnHome()
-                }, 28000L)
-            }
+        dragonEngine.executeDragonAssault(startLine, endLine) {
+            updateStatus("🔥 [DRAGON BATTLE] Dragons destroying storages & collectors...")
+            handler.postDelayed({
+                finishAttackAndReturnHome()
+            }, 26000L) // 26 seconds of destruction
         }
     }
 
     /**
-     * 6. End Battle -> Return to Village -> Account Rotation Check -> Loop!
+     * 6. End Battle -> Return Home -> Multi-Account Check -> Loop!
      */
     private fun finishAttackAndReturnHome() {
         if (!isRunning) return
@@ -339,20 +322,11 @@ class ClashAutomationCore(
                 executeVillageRoutine()
             }
         } else {
-            updateStatus("✨ [HOME] Raid #${totalRaidsCompleted} complete! Next cycle in 3s...")
+            updateStatus("✨ [HOME] Dragon Raid #${totalRaidsCompleted} complete! Next cycle in 3s...")
             handler.postDelayed({
                 if (isRunning) executeVillageRoutine()
             }, 3000L)
         }
-    }
-
-    /**
-     * Handles "Personal Break" / "Village Under Attack" 15-Minute Cooldown
-     */
-    fun triggerPersonalBreakCooldown() {
-        updateStatus("⏳ [COOLDOWN] Personal Break / Under Attack (15m)...")
-        telegramBot.sendMessage("⏳ <b>[PERSONAL BREAK]</b> Village Under Attack / Personal Break detected. Pausing for 15 minutes.")
-        pauseForCooldown(cooldownMs = 900000L) // 15 minutes = 900,000 ms
     }
 
     /**
@@ -369,6 +343,15 @@ class ClashAutomationCore(
                 }
             }, 6000L)
         }
+    }
+
+    /**
+     * Handles "Personal Break" / "Village Under Attack" 15-Minute Cooldown
+     */
+    fun triggerPersonalBreakCooldown() {
+        updateStatus("⏳ [COOLDOWN] Personal Break / Under Attack (15m)...")
+        telegramBot.sendMessage("⏳ <b>[PERSONAL BREAK]</b> Village Under Attack / Personal Break detected. Pausing for 15 minutes.")
+        pauseForCooldown(cooldownMs = 900000L)
     }
 
     private fun pauseForCooldown(cooldownMs: Long) {

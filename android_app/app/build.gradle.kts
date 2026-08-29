@@ -11,8 +11,8 @@ android {
         applicationId = "com.cocai.autoclicker"
         minSdk = 24
         targetSdk = 34
-        versionCode = 12
-        versionName = "13.0-SamsungThemeFixed"
+        versionCode = 14
+        versionName = "14.0-DragonEdition"
     }
 
     buildTypes {

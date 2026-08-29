@@ -285,15 +285,7 @@ class MainActivity : AppCompatActivity() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, providers)
         spinnerProvider.adapter = adapter
 
-        val defaultModels = arrayOf(
-            "gemini-2.0-flash",
-            "gemini-2.5-pro",
-            "llama-3.3-70b-versatile",
-            "google/gemma-4-31b-it:free",
-            "deepseek-chat"
-        )
-        val modelAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, defaultModels)
-        spinnerLiveModels.adapter = modelAdapter
+        val modelDiscovery = ModelDiscoveryClient()
 
         // Add Key to Pool
         findViewById<Button>(R.id.btn_add_api_key).setOnClickListener {
@@ -308,39 +300,59 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Test Ping / Validate Key
+        // Test Ping & Dynamically Fetch All Live Models
         findViewById<Button>(R.id.btn_ping_api_key).setOnClickListener {
             val inputKey = etApiKeyInput.text.toString().trim()
             val activeKey = if (inputKey.isNotEmpty()) inputKey else (keyRotator.getActiveKey() ?: "")
 
             if (activeKey.isEmpty()) {
-                Toast.makeText(this, "Enter or add an API key to test ping!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Enter or add an API key first!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val selectedModel = spinnerLiveModels.selectedItem?.toString() ?: "gemini-2.0-flash"
             val selectedProviderIdx = spinnerProvider.selectedItemPosition
-
-            val providerUrl = when (selectedProviderIdx) {
-                0 -> "https://generativelanguage.googleapis.com/v1beta"
-                1 -> "https://api.groq.com/openai/v1"
-                2 -> "https://openrouter.ai/api/v1"
-                else -> "https://api.deepseek.com/v1"
+            val providerEnum = when (selectedProviderIdx) {
+                0 -> AiProviderEnum.GOOGLE_AI_STUDIO
+                1 -> AiProviderEnum.GROQ
+                2 -> AiProviderEnum.OPENROUTER
+                else -> AiProviderEnum.CUSTOM_OPENAI
             }
 
-            tvPingResult.text = "⏳ Testing API connection to $selectedModel..."
+            tvPingResult.text = "⏳ Querying ${providerEnum.displayName} for live models..."
             tvPingResult.setTextColor(0xFFF59E0B.toInt())
 
-            pingEngine.pingProvider(
-                providerUrl = providerUrl,
+            modelDiscovery.fetchLiveModels(
+                provider = providerEnum,
                 apiKey = activeKey,
-                modelName = selectedModel,
-                onSuccess = { latency, msg ->
-                    tvPingResult.text = msg
-                    tvPingResult.setTextColor(0xFF34D399.toInt())
+                onSuccess = { liveModels ->
+                    // Populate dropdown with ONLY real live models from API key
+                    val liveAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, liveModels)
+                    spinnerLiveModels.adapter = liveAdapter
+
+                    val firstModel = liveModels.firstOrNull() ?: "gemini-2.0-flash"
+                    val providerUrl = when (providerEnum) {
+                        AiProviderEnum.GOOGLE_AI_STUDIO -> "https://generativelanguage.googleapis.com/v1beta"
+                        AiProviderEnum.GROQ -> "https://api.groq.com/openai/v1"
+                        AiProviderEnum.OPENROUTER -> "https://openrouter.ai/api/v1"
+                        AiProviderEnum.CUSTOM_OPENAI -> "https://api.deepseek.com/v1"
+                    }
+
+                    pingEngine.pingProvider(
+                        providerUrl = providerUrl,
+                        apiKey = activeKey,
+                        modelName = firstModel,
+                        onSuccess = { latency, _ ->
+                            tvPingResult.text = "⚡ Loaded ${liveModels.size} Live Models | Ping: ${latency}ms ($firstModel)"
+                            tvPingResult.setTextColor(0xFF34D399.toInt())
+                        },
+                        onError = { errMsg ->
+                            tvPingResult.text = "⚡ Loaded ${liveModels.size} Live Models ($firstModel) | $errMsg"
+                            tvPingResult.setTextColor(0xFF38BDF8.toInt())
+                        }
+                    )
                 },
-                onError = { errMsg ->
-                    tvPingResult.text = errMsg
+                onError = { err ->
+                    tvPingResult.text = "❌ Error fetching models: $err"
                     tvPingResult.setTextColor(0xFFEF4444.toInt())
                 }
             )
