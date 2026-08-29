@@ -10,16 +10,14 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import com.cocai.autoclicker.R
-import com.cocai.autoclicker.engine.AutonomousSupervisor
-import com.cocai.autoclicker.engine.CocFarmingEngine
+import com.cocai.autoclicker.engine.AriAiAgent
 import com.cocai.autoclicker.engine.CocStrategy
 
 class FloatingOverlayService : Service() {
 
     private var windowManager: WindowManager? = null
     private var floatingView: View? = null
-    private var farmingEngine: CocFarmingEngine? = null
-    private var supervisor: AutonomousSupervisor? = null
+    private var ariAgent: AriAiAgent? = null
     private var selectedStrategy = CocStrategy.ROOT_RIDER_OVERGROWTH_SMASH
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -27,28 +25,25 @@ class FloatingOverlayService : Service() {
     override fun onCreate() {
         super.onCreate()
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
-        initEngines()
+        initAgent()
         setupFloatingLayout()
     }
 
-    private fun initEngines() {
+    private fun initAgent() {
         val acc = AutoClickAccessibilityService.instance
         if (acc != null) {
-            farmingEngine = CocFarmingEngine(acc)
-            supervisor = AutonomousSupervisor(this, acc)
-            supervisor?.startSupervisor()
+            ariAgent = AriAiAgent(this, acc)
 
             // Wire Hardware Volume Down Panic Stop
             acc.emergencyStopListener = {
                 stopMacroExecution()
-                Toast.makeText(this, "🚨 [PANIC STOP ACTIVATED] Macro Halted via Volume Down Key!", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "🚨 [PANIC STOP ACTIVATED] Ari AI Agent Halted via Volume Down Key!", Toast.LENGTH_LONG).show()
             }
         }
     }
 
     private fun stopMacroExecution() {
-        farmingEngine?.stopEngine()
-        supervisor?.stopSupervisor()
+        ariAgent?.stopAgent()
         val tvStatus = floatingView?.findViewById<TextView>(R.id.tv_floating_status)
         val btnPlayPause = floatingView?.findViewById<Button>(R.id.btn_floating_play_pause)
         tvStatus?.text = "[PANIC STOPPED] Idle"
@@ -85,38 +80,38 @@ class FloatingOverlayService : Service() {
         val btnClose = floatingView?.findViewById<Button>(R.id.btn_floating_close)
         val tvStatus = floatingView?.findViewById<TextView>(R.id.tv_floating_status)
 
-        // 1. Play / Pause Button
+        // 1. Play / Pause Button (Hermes Ari Agent)
         btnPlayPause?.setOnClickListener {
-            if (farmingEngine == null) {
-                initEngines()
+            if (ariAgent == null) {
+                initAgent()
             }
 
-            val engine = farmingEngine
-            if (engine == null) {
+            val agent = ariAgent
+            if (agent == null) {
                 Toast.makeText(this, "Enable Accessibility Service first!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            if (!engine.isRunning) {
-                engine.startEngine(selectedStrategy)
+            if (!agent.isAgentActive) {
+                agent.startAgent(selectedStrategy)
                 btnPlayPause.text = "⏸ PAUSE"
-                tvStatus?.text = "[FARMING] ${selectedStrategy.name.replace("_", " ")}"
-                Toast.makeText(this, "🚀 Home Village AI Macro Started: ${selectedStrategy.name}", Toast.LENGTH_SHORT).show()
+                tvStatus?.text = "🏛️ [ARI ACTIVE] ${selectedStrategy.name.replace("_", " ")}"
+                Toast.makeText(this, "🚀 Ari AI Agent (Hermes Class) Started: ${selectedStrategy.name}", Toast.LENGTH_SHORT).show()
             } else {
-                engine.stopEngine()
+                agent.stopAgent()
                 btnPlayPause.text = "▶ START"
                 tvStatus?.text = "[PAUSED] Idle"
-                Toast.makeText(this, "⏸ Macro Paused", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "⏸ Ari AI Agent Paused", Toast.LENGTH_SHORT).show()
             }
         }
 
         // 2. Clean Base Obstacles / Gem Box
         btnClean?.setOnClickListener {
-            val sup = supervisor
-            if (sup == null) {
+            val agent = ariAgent
+            if (agent == null) {
                 Toast.makeText(this, "Enable Accessibility Service first!", Toast.LENGTH_SHORT).show()
             } else {
-                sup.cleanBaseObstacles {
+                agent.supervisor.cleanBaseObstacles {
                     Toast.makeText(this, "Base Obstacles & Gem Boxes Cleaned!", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -124,8 +119,8 @@ class FloatingOverlayService : Service() {
 
         // 3. Macro Console Button
         btnConsole?.setOnClickListener {
-            val raids = farmingEngine?.raidsCompleted ?: 0
-            Toast.makeText(this, "💻 Console: Raids: $raids | VolDown Stop: READY | Multi-Touch: ON", Toast.LENGTH_SHORT).show()
+            val raids = ariAgent?.totalRaids ?: 0
+            Toast.makeText(this, "🏛️ Ari Agent: Raids: $raids | VolDown: ARMED | Hermes Loop: ACTIVE", Toast.LENGTH_SHORT).show()
         }
 
         // 4. Close / Exit Button
@@ -145,7 +140,7 @@ class FloatingOverlayService : Service() {
             }
             btnStrategy.text = selectedStrategy.name.take(8)
             tvStatus?.text = "[IDLE] ${selectedStrategy.name.replace("_", " ")}"
-            Toast.makeText(this, "Selected: ${selectedStrategy.name}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Selected Strategy: ${selectedStrategy.name}", Toast.LENGTH_SHORT).show()
         }
 
         // Dragging gesture
@@ -179,8 +174,7 @@ class FloatingOverlayService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        farmingEngine?.stopEngine()
-        supervisor?.stopSupervisor()
+        ariAgent?.stopAgent()
         if (floatingView != null) {
             windowManager?.removeView(floatingView)
         }
