@@ -23,14 +23,14 @@ def main():
     file_size_str = f"{file_size_mb:.2f} MB"
     print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id}...")
 
-    caption_text = f"""👑 🎯 <b>Ai Marco coc v7.5 (Fixed-UI &amp; Builder Overview Architecture)</b>
-📦 <b>File:</b> Ai-Marco-coc-v7.5.apk ({file_size_str})
-🎯 <b>Fixed-UI State Machine:</b> 100% reliable clicks on Supercell HUD buttons
-🧱 <b>Builder Overview Wall Dump:</b> Auto-selects walls via top builder icon
-🔥 <b>Red-Line 4-Finger Wave:</b> Guaranteed legal troop deployment along base border
-🔍 <b>Smart Nexting:</b> Continuous multiplayer searching until target base found
-⚡ <b>0-Cost Army Double-Queue:</b> Zero wait time between farming raids
-📐 <b>Universal Screen Scaler:</b> Dynamic resolution mapping for all Android phones
+    caption_text = f"""👑 🌟 <b>Ai Marco coc v8.0 (Universal Game-Engine Master Edition)</b>
+📦 <b>File:</b> Ai-Marco-coc-v8.0.apk ({file_size_str})
+📐 <b>100% Screen-Percentage Scaling:</b> Works on any phone resolution (1080p, 1440p, 720p, 20:9)
+🎯 <b>Fixed-UI State Machine:</b> Clicks real Supercell HUD buttons with zero guesswork
+🧱 <b>Builder Overview Wall Dump:</b> Auto-selects walls via top builder hammer icon
+🔥 <b>Red-Line 4-Finger Wave:</b> Simultaneous legal troop drops + Grand Warden invincibility
+⚡ <b>0-Cost Army Double-Queue:</b> Continuous zero-wait time farming
+✨ <b>AAA Cyber Gaming UI:</b> Modern glassmorphism, glowing cards &amp; sleek tabs
 🛡️ <b>Anti-Ban Biometrics:</b> 2D Gaussian touch jitter &amp; log-normal latency
 🚨 <b>Panic Stop:</b> Volume Down Key Override"""
 
@@ -43,7 +43,7 @@ def main():
         "-F", f"chat_id={chat_id}",
         "-F", "parse_mode=HTML",
         "-F", f"caption=<{caption_file}",
-        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v7.5.apk",
+        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v8.0.apk",
         f"https://api.telegram.org/bot{bot_token}/sendDocument"
     ]
 

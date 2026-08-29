@@ -1,5 +1,6 @@
 package com.cocai.autoclicker.engine
 
+import android.graphics.PointF
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -7,13 +8,13 @@ import com.cocai.autoclicker.service.AutoClickAccessibilityService
 import kotlin.random.Random
 
 /**
- * 👑 CLASH AUTOMATION CORE ENGINE
+ * 👑 CLASH AUTOMATION CORE ENGINE (Percentage-Driven Fixed UI State Machine)
  *
- * 100% Guaranteed Reliability Architecture:
- * - Operates EXCLUSIVELY on fixed Supercell UI HUD anchors
- * - Zero dependency on building coordinates (no blind clicking!)
- * - Uses Top-Center Builder Overview to auto-select Walls for upgrade
- * - 4-Finger Red Line deployment with Warden Eternal Tome invincibility
+ * 100% Reliable Architecture:
+ * - Operates EXCLUSIVELY on fixed Supercell UI HUD percentage anchors
+ * - Zero dependency on building coordinates on the grass
+ * - Auto-upgrades walls via the top Builder Overview icon
+ * - 4-Finger Red Line deployment with Grand Warden invincibility
  */
 class ClashAutomationCore(
     private val accessibilityService: AutoClickAccessibilityService
@@ -32,9 +33,9 @@ class ClashAutomationCore(
     fun startLoop() {
         if (isRunning) return
         isRunning = true
-        updateStatus("🚀 [LOOP STARTED] Resetting Camera & Zoom...")
+        updateStatus("🚀 [STARTING] Standardizing Camera View...")
 
-        // Step 1: Pinch Zoom Out to standardize view
+        // Step 1: Smooth 2-finger zoom out
         zoomOutAndResetCamera {
             executeVillageRoutine()
         }
@@ -43,14 +44,14 @@ class ClashAutomationCore(
     fun stopLoop() {
         isRunning = false
         handler.removeCallbacksAndMessages(null)
-        updateStatus("⏸ [STOPPED] Idle")
+        updateStatus("⏸ [PAUSED] Idle")
     }
 
     /**
-     * 1. Pinch to Zoom Out 100%
+     * 1. Standardize Camera Zoom (Pinch Out)
      */
     private fun zoomOutAndResetCamera(onComplete: () -> Unit) {
-        accessibilityService.performPinchZoom(960f, 540f, zoomIn = false, durationMs = 450L) {
+        accessibilityService.performPinchZoomOut(durationMs = 450L) {
             handler.postDelayed({
                 if (isRunning) onComplete()
             }, 800L)
@@ -58,20 +59,20 @@ class ClashAutomationCore(
     }
 
     /**
-     * 2. Village Routine: Upgrade Walls with Free Builder -> Train Army -> Attack
+     * 2. Village Routine: Upgrade Walls via Builder Menu -> Train Army -> Attack
      */
     private fun executeVillageRoutine() {
         if (!isRunning) return
         updateStatus("🧱 [BUILDER OVERVIEW] Upgrading Walls with Free Builder...")
 
-        // Open Builder Overview at Top-Center (x=960, y=50)
-        accessibilityService.performTap(UniversalFixedUiMapper.BTN_BUILDER_DROPDOWN.x, UniversalFixedUiMapper.BTN_BUILDER_DROPDOWN.y, anchor = UiAnchor.TOP_LEFT) {
+        // Tap Top-Center Builder Hammer Icon
+        accessibilityService.performPercentageTap(UniversalFixedUiMapper.PCT_BUILDER_DROPDOWN) {
             handler.postDelayed({
-                // Tap Suggested Wall in Dropdown (x=960, y=220)
-                accessibilityService.performTap(UniversalFixedUiMapper.BTN_SUGGESTED_WALL.x, UniversalFixedUiMapper.BTN_SUGGESTED_WALL.y, anchor = UiAnchor.TOP_LEFT) {
+                // Tap Suggested Wall in Dropdown
+                accessibilityService.performPercentageTap(UniversalFixedUiMapper.PCT_SUGGESTED_WALL) {
                     handler.postDelayed({
-                        // Tap Confirm Upgrade with Gold/Elixir (x=1100, y=750)
-                        accessibilityService.performTap(UniversalFixedUiMapper.BTN_UPGRADE_CONFIRM.x, UniversalFixedUiMapper.BTN_UPGRADE_CONFIRM.y, anchor = UiAnchor.CENTER_STAGE) {
+                        // Tap Confirm Upgrade with Gold/Elixir
+                        accessibilityService.performPercentageTap(UniversalFixedUiMapper.PCT_UPGRADE_CONFIRM) {
                             handler.postDelayed({
                                 // Train Army next
                                 trainArmyRoutine {
@@ -92,17 +93,17 @@ class ClashAutomationCore(
         if (!isRunning) return
         updateStatus("⚡ [QUICK TRAIN] Double-Queuing 0-Cost Army...")
 
-        // Tap Army Overview (Bottom-Left x=95, y=830)
-        accessibilityService.performTap(UniversalFixedUiMapper.BTN_ARMY_OVERVIEW.x, UniversalFixedUiMapper.BTN_ARMY_OVERVIEW.y, anchor = UiAnchor.BOTTOM_LEFT) {
+        // Tap Bottom-Left Army Bottle Icon
+        accessibilityService.performPercentageTap(UniversalFixedUiMapper.PCT_ARMY_OVERVIEW) {
             handler.postDelayed({
-                // Tap Quick Train Tab (x=1350, y=150)
-                accessibilityService.performTap(UniversalFixedUiMapper.TAB_QUICK_TRAIN.x, UniversalFixedUiMapper.TAB_QUICK_TRAIN.y, anchor = UiAnchor.TOP_RIGHT) {
+                // Tap Quick Train Tab
+                accessibilityService.performPercentageTap(UniversalFixedUiMapper.PCT_QUICK_TRAIN_TAB) {
                     handler.postDelayed({
-                        // Tap Train Army Slot 1 (x=1580, y=380)
-                        accessibilityService.performTap(UniversalFixedUiMapper.BTN_TRAIN_SLOT_1.x, UniversalFixedUiMapper.BTN_TRAIN_SLOT_1.y, anchor = UiAnchor.TOP_RIGHT) {
+                        // Tap Train Slot 1
+                        accessibilityService.performPercentageTap(UniversalFixedUiMapper.PCT_TRAIN_SLOT_1) {
                             handler.postDelayed({
-                                // Tap Close X (x=1820, y=85)
-                                accessibilityService.performTap(UniversalFixedUiMapper.BTN_CLOSE_MODAL.x, UniversalFixedUiMapper.BTN_CLOSE_MODAL.y, anchor = UiAnchor.TOP_RIGHT) {
+                                // Tap Close X
+                                accessibilityService.performPercentageTap(UniversalFixedUiMapper.PCT_CLOSE_MODAL) {
                                     handler.postDelayed({
                                         if (isRunning) onComplete()
                                     }, 700L)
@@ -116,18 +117,18 @@ class ClashAutomationCore(
     }
 
     /**
-     * 4. Attack Routine: Search Base -> Deploy 4-Finger Wave -> Return Home
+     * 4. Attack Routine: Search Match -> Smart Nexting -> Deploy
      */
     private fun startMatchmakingAndAttack() {
         if (!isRunning) return
         updateStatus("⚔️ [ATTACK] Opening Matchmaking...")
 
-        // Tap Attack Button (Bottom-Left x=115, y=950)
-        accessibilityService.performTap(UniversalFixedUiMapper.BTN_ATTACK.x, UniversalFixedUiMapper.BTN_ATTACK.y, anchor = UiAnchor.BOTTOM_LEFT) {
+        // Tap Bottom-Left Attack Swords Icon
+        accessibilityService.performPercentageTap(UniversalFixedUiMapper.PCT_ATTACK) {
             handler.postDelayed({
-                // Tap "Find a Match" (Bottom-Right x=1550, y=750)
-                accessibilityService.performTap(UniversalFixedUiMapper.BTN_FIND_MATCH.x, UniversalFixedUiMapper.BTN_FIND_MATCH.y, anchor = UiAnchor.BOTTOM_RIGHT) {
-                    // Allow 3.5s for clouds & match search
+                // Tap "Find a Match" (Bottom-Right)
+                accessibilityService.performPercentageTap(UniversalFixedUiMapper.PCT_FIND_MATCH) {
+                    // Allow 3.5s for matchmaking clouds to clear
                     handler.postDelayed({
                         searchAndNextBase(searchCount = 0)
                     }, 3500L)
@@ -139,47 +140,47 @@ class ClashAutomationCore(
     private fun searchAndNextBase(searchCount: Int) {
         if (!isRunning) return
 
-        // Smart nexting 3 to 6 times to find high loot base
         val maxNexts = Random.nextInt(2, 5)
         if (searchCount < maxNexts) {
-            updateStatus("🔍 [SEARCHING] Nexting base (#${searchCount + 1})...")
-            accessibilityService.performTap(UniversalFixedUiMapper.BTN_NEXT_BASE.x, UniversalFixedUiMapper.BTN_NEXT_BASE.y, anchor = UiAnchor.BOTTOM_RIGHT) {
+            updateStatus("🔍 [SEARCHING] Nexting Base (#${searchCount + 1})...")
+            accessibilityService.performPercentageTap(UniversalFixedUiMapper.PCT_NEXT_BASE) {
                 handler.postDelayed({
                     searchAndNextBase(searchCount + 1)
                 }, Random.nextLong(2800L, 3800L))
             }
         } else {
-            // Target Base Found! Execute Full 4-Finger Red-Line Deployment
+            // Target Base Selected! Execute 4-Finger Red Line Deployment
             executeRedLineDeployment()
         }
     }
 
     /**
-     * 5. Red-Line 4-Finger Deployment & Hero Equipment Surge
+     * 5. Red-Line 4-Finger Wave Deployment & Hero Equipment Surge
      */
     private fun executeRedLineDeployment() {
         if (!isRunning) return
         updateStatus("🔥 [RAIDING] Deploying 4-Finger Line Wave...")
 
-        // Select Troop Slot 1 (x=200, y=980)
-        accessibilityService.performTap(200f, 980f, anchor = UiAnchor.BOTTOM_LEFT) {
+        // Select Troop Slot 1 (Root Riders / Dragons)
+        accessibilityService.performPercentageTap(0.105f, 0.900f) {
             handler.postDelayed({
                 // 4-Finger Line Wave along South Red Line
-                val start = UniversalFixedUiMapper.DEPLOY_SOUTH_LINE_START
-                val end = UniversalFixedUiMapper.DEPLOY_SOUTH_LINE_END
-                val lines = listOf(Pair(start, end), Pair(PointF(start.x, start.y - 15f), PointF(end.x, end.y - 15f)))
+                val start = UniversalFixedUiMapper.PCT_DEPLOY_SOUTH_START
+                val end = UniversalFixedUiMapper.PCT_DEPLOY_SOUTH_END
+                val lines = listOf(
+                    Pair(start, end),
+                    Pair(PointF(start.x, start.y - 0.015f), PointF(end.x, end.y - 0.015f))
+                )
 
-                accessibilityService.performMultiFingerSwipeLines(lines, durationMs = 400L) {
+                accessibilityService.performPercentageMultiFingerSwipes(lines, durationMs = 400L) {
                     handler.postDelayed({
-                        // Select Troop Slot 2 (Valkyries/Apprentices at x=290, y=980)
-                        accessibilityService.performTap(290f, 980f, anchor = UiAnchor.BOTTOM_LEFT) {
-                            accessibilityService.performMultiFingerSwipeLines(lines, durationMs = 400L) {
+                        // Select Troop Slot 2 (Valkyries / Loons)
+                        accessibilityService.performPercentageTap(0.145f, 0.900f) {
+                            accessibilityService.performPercentageMultiFingerSwipes(lines, durationMs = 400L) {
                                 // Deploy Heroes (King, Queen, Warden, Champion)
                                 deployAllHeroes {
-                                    // Battle in progress (allow 35s for destruction)
-                                    updateStatus("🛡️ [BATTLE] Army smashing base (Warden Tome Active)...")
+                                    updateStatus("🛡️ [BATTLE] Core Charge (Warden Tome Active)...")
                                     handler.postDelayed({
-                                        // Return Home
                                         finishAttackAndReturnHome()
                                     }, 35000L)
                                 }
@@ -192,13 +193,18 @@ class ClashAutomationCore(
     }
 
     private fun deployAllHeroes(onComplete: () -> Unit) {
-        val heroSlots = listOf(300f, 400f, 500f, 600f)
+        val heroSlots = listOf(
+            UniversalFixedUiMapper.PCT_HERO_1_KING,
+            UniversalFixedUiMapper.PCT_HERO_2_QUEEN,
+            UniversalFixedUiMapper.PCT_HERO_3_WARDEN,
+            UniversalFixedUiMapper.PCT_HERO_4_CHAMPION
+        )
         var idx = 0
         fun deployNext() {
             if (idx < heroSlots.size && isRunning) {
-                val slotX = heroSlots[idx++]
-                accessibilityService.performTap(slotX, 980f, anchor = UiAnchor.BOTTOM_LEFT) {
-                    accessibilityService.performTap(960f, 850f, anchor = UiAnchor.DEPLOY_PERIMETER) {
+                val heroSlot = heroSlots[idx++]
+                accessibilityService.performPercentageTap(heroSlot) {
+                    accessibilityService.performPercentageTap(0.500f, 0.785f) {
                         handler.postDelayed({ deployNext() }, 250L)
                     }
                 }
@@ -210,22 +216,22 @@ class ClashAutomationCore(
     }
 
     /**
-     * 6. End Battle -> Return to Home Village -> Loop!
+     * 6. End Battle -> Return to Village -> Loop!
      */
     private fun finishAttackAndReturnHome() {
         if (!isRunning) return
-        updateStatus("🏆 [VICTORY] Ending battle and returning Home...")
+        updateStatus("🏆 [VICTORY] Ending Battle & Returning Home...")
 
-        // Tap Surrender / End Battle (Bottom-Left x=120, y=820)
-        accessibilityService.performTap(UniversalFixedUiMapper.BTN_SURRENDER.x, UniversalFixedUiMapper.BTN_SURRENDER.y, anchor = UiAnchor.BOTTOM_LEFT) {
+        // Tap Surrender / End Battle (Bottom-Left)
+        accessibilityService.performPercentageTap(UniversalFixedUiMapper.PCT_SURRENDER) {
             handler.postDelayed({
-                // Tap "Okay" Confirm (Center x=1100, y=680)
-                accessibilityService.performTap(UniversalFixedUiMapper.BTN_CONFIRM_SURRENDER.x, UniversalFixedUiMapper.BTN_CONFIRM_SURRENDER.y, anchor = UiAnchor.CENTER_STAGE) {
+                // Tap "Okay" Confirm
+                accessibilityService.performPercentageTap(UniversalFixedUiMapper.PCT_CONFIRM_SURRENDER) {
                     handler.postDelayed({
-                        // Tap "Return Home" (Center-Bottom x=960, y=920)
-                        accessibilityService.performTap(UniversalFixedUiMapper.BTN_RETURN_HOME.x, UniversalFixedUiMapper.BTN_RETURN_HOME.y, anchor = UiAnchor.CENTER_STAGE) {
+                        // Tap "Return Home"
+                        accessibilityService.performPercentageTap(UniversalFixedUiMapper.PCT_RETURN_HOME) {
                             handler.postDelayed({
-                                updateStatus("✨ [HOME] Raid complete! Starting next cycle in 3s...")
+                                updateStatus("✨ [HOME] Raid complete! Next cycle in 3s...")
                                 handler.postDelayed({
                                     if (isRunning) executeVillageRoutine()
                                 }, 3000L)

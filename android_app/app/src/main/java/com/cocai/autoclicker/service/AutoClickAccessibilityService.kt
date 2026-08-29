@@ -11,7 +11,6 @@ import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
 import android.widget.Toast
 import com.cocai.autoclicker.engine.ScreenCoordinateScaler
-import com.cocai.autoclicker.engine.UiAnchor
 import kotlin.random.Random
 
 class AutoClickAccessibilityService : AccessibilityService() {
@@ -31,7 +30,7 @@ class AutoClickAccessibilityService : AccessibilityService() {
         super.onServiceConnected()
         instance = this
         scaler = ScreenCoordinateScaler(this)
-        Log.i("AutoClickService", "Accessibility Service Connected with Dynamic Screen Scaling & Panic Stop!")
+        Log.i("AutoClickService", "Accessibility Service Connected with Universal Percentage Scaler!")
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {}
@@ -50,7 +49,7 @@ class AutoClickAccessibilityService : AccessibilityService() {
                 Toast.makeText(this, "🚨 EMERGENCY PANIC STOP: Macro Halted via Volume Down!", Toast.LENGTH_LONG).show()
                 emergencyStopListener?.invoke()
             }
-            return true // Consume key event
+            return true
         }
         return super.onKeyEvent(event)
     }
@@ -61,13 +60,11 @@ class AutoClickAccessibilityService : AccessibilityService() {
     }
 
     /**
-     * Single Tap with Dynamic Resolution Scaling and 80ms Contact Duration
+     * Percentage Tap (0.0f - 1.0f Screen Percentage) with 85ms game-engine touch duration
      */
-    fun performTap(
-        x: Float,
-        y: Float,
-        durationMs: Long = 80L,
-        anchor: UiAnchor = UiAnchor.CENTER_STAGE,
+    fun performPercentageTap(
+        pct: PointF,
+        durationMs: Long = 85L,
         jitter: Boolean = true,
         callback: (() -> Unit)? = null
     ) {
@@ -75,11 +72,9 @@ class AutoClickAccessibilityService : AccessibilityService() {
             scaler = ScreenCoordinateScaler(this)
         }
 
-        // Scale design coordinate to physical device resolution
-        val scaled = scaler.scaleCoordinate(PointF(x, y), anchor)
-
-        val jitterX = if (jitter) scaled.x + Random.nextDouble(-4.0, 4.0).toFloat() else scaled.x
-        val jitterY = if (jitter) scaled.y + Random.nextDouble(-4.0, 4.0).toFloat() else scaled.y
+        val px = scaler.toScreenPixel(pct)
+        val jitterX = if (jitter) px.x + Random.nextDouble(-3.5, 3.5).toFloat() else px.x
+        val jitterY = if (jitter) px.y + Random.nextDouble(-3.5, 3.5).toFloat() else px.y
 
         val path = Path().apply {
             moveTo(jitterX, jitterY)
@@ -95,19 +90,21 @@ class AutoClickAccessibilityService : AccessibilityService() {
             }
             override fun onCancelled(gestureDescription: GestureDescription?) {
                 super.onCancelled(gestureDescription)
-                Log.w("AutoClickService", "Gesture cancelled at ($jitterX, $jitterY)")
                 callback?.invoke()
             }
         }, null)
     }
 
+    fun performPercentageTap(pctX: Float, pctY: Float, durationMs: Long = 85L, callback: (() -> Unit)? = null) {
+        performPercentageTap(PointF(pctX, pctY), durationMs, jitter = true, callback)
+    }
+
     /**
-     * Multi-Touch Simultaneous Taps with Dynamic Scaling
+     * Multi-Touch Simultaneous Percentage Taps
      */
-    fun performMultiTouchTaps(
-        points: List<PointF>,
+    fun performPercentageMultiTouch(
+        pointsPct: List<PointF>,
         durationMs: Long = 85L,
-        anchor: UiAnchor = UiAnchor.DEPLOY_PERIMETER,
         callback: (() -> Unit)? = null
     ) {
         if (!::scaler.isInitialized) {
@@ -115,11 +112,11 @@ class AutoClickAccessibilityService : AccessibilityService() {
         }
 
         val builder = GestureDescription.Builder()
-        for (pt in points.take(10)) {
-            val scaled = scaler.scaleCoordinate(pt, anchor)
+        for (pct in pointsPct.take(10)) {
+            val px = scaler.toScreenPixel(pct)
             val path = Path().apply {
-                val jX = scaled.x + Random.nextDouble(-3.5, 3.5).toFloat()
-                val jY = scaled.y + Random.nextDouble(-3.5, 3.5).toFloat()
+                val jX = px.x + Random.nextDouble(-3.0, 3.0).toFloat()
+                val jY = px.y + Random.nextDouble(-3.0, 3.0).toFloat()
                 moveTo(jX, jY)
             }
             builder.addStroke(GestureDescription.StrokeDescription(path, 0, durationMs))
@@ -138,34 +135,32 @@ class AutoClickAccessibilityService : AccessibilityService() {
     }
 
     /**
-     * Curved Bezier swipe gesture
+     * Multi-Finger Simultaneous Percentage Line Swipes
      */
-    fun performBezierSwipe(
-        startX: Float,
-        startY: Float,
-        endX: Float,
-        endY: Float,
-        durationMs: Long = 320L,
+    fun performPercentageMultiFingerSwipes(
+        linesPct: List<Pair<PointF, PointF>>,
+        durationMs: Long = 380L,
         callback: (() -> Unit)? = null
     ) {
         if (!::scaler.isInitialized) {
             scaler = ScreenCoordinateScaler(this)
         }
 
-        val sP = scaler.scaleCoordinate(PointF(startX, startY), UiAnchor.DEPLOY_PERIMETER)
-        val eP = scaler.scaleCoordinate(PointF(endX, endY), UiAnchor.DEPLOY_PERIMETER)
+        val builder = GestureDescription.Builder()
+        for (line in linesPct.take(5)) {
+            val sP = scaler.toScreenPixel(line.first)
+            val eP = scaler.toScreenPixel(line.second)
 
-        val path = Path().apply {
-            moveTo(sP.x, sP.y)
-            val controlX = (sP.x + eP.x) / 2 + Random.nextInt(-25, 25)
-            val controlY = (sP.y + eP.y) / 2 + Random.nextInt(-25, 25)
-            quadTo(controlX.toFloat(), controlY.toFloat(), eP.x, eP.y)
+            val path = Path().apply {
+                moveTo(sP.x, sP.y)
+                val cX = (sP.x + eP.x) / 2 + Random.nextInt(-10, 10)
+                val cY = (sP.y + eP.y) / 2 + Random.nextInt(-10, 10)
+                quadTo(cX.toFloat(), cY.toFloat(), eP.x, eP.y)
+            }
+            builder.addStroke(GestureDescription.StrokeDescription(path, 0, durationMs))
         }
 
-        val stroke = GestureDescription.StrokeDescription(path, 0, durationMs)
-        val gesture = GestureDescription.Builder().addStroke(stroke).build()
-
-        dispatchGesture(gesture, object : GestureResultCallback() {
+        dispatchGesture(builder.build(), object : GestureResultCallback() {
             override fun onCompleted(gestureDescription: GestureDescription?) {
                 super.onCompleted(gestureDescription)
                 callback?.invoke()
@@ -178,30 +173,32 @@ class AutoClickAccessibilityService : AccessibilityService() {
     }
 
     /**
-     * Multi-Finger Simultaneous Line Deployment (2, 3, or 4 fingers swiping simultaneously)
+     * Smooth Pinch Zoom Out
      */
-    fun performMultiFingerSwipeLines(
-        lines: List<Pair<PointF, PointF>>,
-        durationMs: Long = 350L,
-        callback: (() -> Unit)? = null
-    ) {
+    fun performPinchZoomOut(durationMs: Long = 450L, callback: (() -> Unit)? = null) {
         if (!::scaler.isInitialized) {
             scaler = ScreenCoordinateScaler(this)
         }
 
-        val builder = GestureDescription.Builder()
-        for (line in lines.take(5)) {
-            val sP = scaler.scaleCoordinate(line.first, UiAnchor.DEPLOY_PERIMETER)
-            val eP = scaler.scaleCoordinate(line.second, UiAnchor.DEPLOY_PERIMETER)
+        val cX = scaler.screenWidth / 2f
+        val cY = scaler.screenHeight / 2f
 
-            val path = Path().apply {
-                moveTo(sP.x, sP.y)
-                val cX = (sP.x + eP.x) / 2 + Random.nextInt(-15, 15)
-                val cY = (sP.y + eP.y) / 2 + Random.nextInt(-15, 15)
-                quadTo(cX.toFloat(), cY.toFloat(), eP.x, eP.y)
-            }
-            builder.addStroke(GestureDescription.StrokeDescription(path, 0, durationMs))
+        val spanStart = 300f
+        val spanEnd = 80f
+
+        val pathFinger1 = Path().apply {
+            moveTo(cX - spanStart, cY - spanStart)
+            lineTo(cX - spanEnd, cY - spanEnd)
         }
+
+        val pathFinger2 = Path().apply {
+            moveTo(cX + spanStart, cY + spanStart)
+            lineTo(cX + spanEnd, cY + spanEnd)
+        }
+
+        val builder = GestureDescription.Builder()
+        builder.addStroke(GestureDescription.StrokeDescription(pathFinger1, 0, durationMs))
+        builder.addStroke(GestureDescription.StrokeDescription(pathFinger2, 0, durationMs))
 
         dispatchGesture(builder.build(), object : GestureResultCallback() {
             override fun onCompleted(gestureDescription: GestureDescription?) {

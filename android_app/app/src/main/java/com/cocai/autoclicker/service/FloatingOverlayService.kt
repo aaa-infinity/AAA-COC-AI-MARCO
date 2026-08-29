@@ -11,7 +11,6 @@ import android.widget.TextView
 import android.widget.Toast
 import com.cocai.autoclicker.R
 import com.cocai.autoclicker.engine.ClashAutomationCore
-import com.cocai.autoclicker.engine.UiAnchor
 
 class FloatingOverlayService : Service() {
 
@@ -88,7 +87,7 @@ class FloatingOverlayService : Service() {
         val btnClose = floatingView?.findViewById<Button>(R.id.btn_hud_close)
         val tvStatus = floatingView?.findViewById<TextView>(R.id.tv_hud_status)
 
-        // 1. Play / Pause Button (100% Guaranteed Clash Automation Core)
+        // 1. Play / Pause Button
         btnPlayPause?.setOnClickListener {
             if (automationCore == null) {
                 initCore()
@@ -117,7 +116,7 @@ class FloatingOverlayService : Service() {
         btnTools?.setOnClickListener {
             val acc = AutoClickAccessibilityService.instance
             if (acc != null) {
-                acc.performTap(960f, 540f, anchor = UiAnchor.CENTER_STAGE) {
+                acc.performPercentageTap(0.500f, 0.500f) {
                     Toast.makeText(this, "🎯 Screen Calibrated! Center Tap Dispatched.", Toast.LENGTH_SHORT).show()
                 }
             } else {
@@ -129,7 +128,7 @@ class FloatingOverlayService : Service() {
         btnVision?.setOnClickListener {
             val acc = AutoClickAccessibilityService.instance
             if (acc != null) {
-                acc.performTap(960f, 540f, anchor = UiAnchor.CENTER_STAGE) {
+                acc.performPercentageTap(0.500f, 0.500f) {
                     Toast.makeText(this, "👁️ Test Click dispatched successfully!", Toast.LENGTH_SHORT).show()
                 }
             } else {
