@@ -23,15 +23,17 @@ def main():
     file_size_str = f"{file_size_mb:.2f} MB"
     print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id}...")
 
-    caption_text = f"""👑 🌟 <b>Ai Marco coc v8.1 (Universal Fixed-UI Master Release)</b>
-📦 <b>File:</b> Ai-Marco-coc-v8.1.apk ({file_size_str})
-📐 <b>100% Screen-Percentage Scaling:</b> Works on any phone resolution (1080p, 1440p, 720p, 20:9)
-🎯 <b>Fixed-UI State Machine:</b> Clicks real Supercell HUD buttons with zero guesswork
-🧱 <b>Builder Overview Wall Dump:</b> Auto-selects walls via top builder hammer icon
-🔥 <b>Red-Line 4-Finger Wave:</b> Simultaneous legal troop drops + Grand Warden invincibility
-⚡ <b>0-Cost Army Double-Queue:</b> Continuous zero-wait time farming
-✨ <b>AAA Cyber Gaming UI:</b> Modern glassmorphism, glowing cards &amp; sleek tabs
-🛡️ <b>Anti-Ban Biometrics:</b> 2D Gaussian touch jitter &amp; log-normal latency
+    caption_text = f"""👑 🔥 <b>Ai Marco coc v8.5 (Titan Pro Multi-Account &amp; Watchdog Edition)</b>
+📦 <b>File:</b> Ai-Marco-coc-v8.5.apk ({file_size_str})
+🔄 <b>Supercell ID Auto-Cycle:</b> Seamless 4-account rotation across multiple villages
+🔋 <b>Battery &amp; Thermal Watchdog:</b> Auto-pauses on &gt;42°C overheat or &lt;15% battery
+⏳ <b>Personal Break Handler:</b> 15-min cooldown timer for village lockouts
+🛡️ <b>Clan Castle Auto-Requester:</b> Requests reinforcements every 12 minutes
+🏛️ <b>Clan Capital Weekend Engine:</b> Forge collection + District raids + auto-contribution
+🎪 <b>Clan Games Task Automator:</b> Auto-selects &amp; claims quests up to 4,000 pts
+🎁 <b>Merchant 24h Freebie Claimer:</b> Claims daily magic snacks, potions &amp; ores
+🐉 <b>5th Hero &amp; Pet Dispatch:</b> Dragon Duke + Greedy Raven active abilities
+📐 <b>100% Percentage Scaling:</b> Precision across all Android screen sizes
 🚨 <b>Panic Stop:</b> Volume Down Key Override"""
 
     caption_file = "/tmp/telegram_caption.txt"
@@ -43,7 +45,7 @@ def main():
         "-F", f"chat_id={chat_id}",
         "-F", "parse_mode=HTML",
         "-F", f"caption=<{caption_file}",
-        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v8.1.apk",
+        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v8.5.apk",
         f"https://api.telegram.org/bot{bot_token}/sendDocument"
     ]
 

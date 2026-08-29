@@ -17,6 +17,7 @@ class FloatingOverlayService : Service() {
     private var windowManager: WindowManager? = null
     private var floatingView: View? = null
     private var automationCore: ClashAutomationCore? = null
+    private var accountsCount = 2
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -30,7 +31,7 @@ class FloatingOverlayService : Service() {
     private fun initCore() {
         val acc = AutoClickAccessibilityService.instance
         if (acc != null) {
-            automationCore = ClashAutomationCore(acc)
+            automationCore = ClashAutomationCore(this, acc)
 
             // Live status updater
             automationCore?.onStatusUpdate = { newStatus ->
@@ -100,8 +101,8 @@ class FloatingOverlayService : Service() {
             }
 
             if (!core.isRunning) {
-                Toast.makeText(this, "🚀 AI Starting! Ensure Clash of Clans is open.", Toast.LENGTH_LONG).show()
-                core.startLoop()
+                Toast.makeText(this, "🚀 AI Starting! Multi-Account ($accountsCount Accs) & Anti-Ban active.", Toast.LENGTH_LONG).show()
+                core.startLoop(accountsCount)
                 btnPlayPause.text = "⏸"
                 tvStatus?.text = "🚀 [ACTIVE] Camera Reset..."
             } else {
@@ -112,7 +113,7 @@ class FloatingOverlayService : Service() {
             }
         }
 
-        // 2. Tools Button: Test Screen Tap
+        // 2. Tools Button: Instant Wall Dump
         btnTools?.setOnClickListener {
             val acc = AutoClickAccessibilityService.instance
             if (acc != null) {
@@ -124,21 +125,26 @@ class FloatingOverlayService : Service() {
             }
         }
 
-        // 3. Vision / Calibration Button
+        // 3. Vision Button: Switch Supercell ID Account Now
         btnVision?.setOnClickListener {
-            val acc = AutoClickAccessibilityService.instance
-            if (acc != null) {
-                acc.performPercentageTap(0.500f, 0.500f) {
-                    Toast.makeText(this, "👁️ Test Click dispatched successfully!", Toast.LENGTH_SHORT).show()
+            val core = automationCore
+            if (core != null) {
+                core.accountSwitcher.switchToNextAccount(accountsCount) {
+                    Toast.makeText(this, "🔄 Switched to Supercell ID Account #${core.accountSwitcher.currentAccountIndex + 1}!", Toast.LENGTH_SHORT).show()
                 }
             } else {
                 Toast.makeText(this, "Enable Accessibility Service first!", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // 4. Macro Console Info Button
+        // 4. Macro Console Info Button: Displays Battery, Temp, Raids & Account
         btnConsole?.setOnClickListener {
-            Toast.makeText(this, "🏛️ Clash Core: Fixed-UI State Machine | Red-Line Deploy: READY", Toast.LENGTH_SHORT).show()
+            val core = automationCore
+            val temp = core?.watchdog?.currentTemperatureCelsius ?: 30.0f
+            val batt = core?.watchdog?.batteryPercentage ?: 100
+            val raids = core?.totalRaidsCompleted ?: 0
+            val accIdx = (core?.accountSwitcher?.currentAccountIndex ?: 0) + 1
+            Toast.makeText(this, "🔋 Battery: $batt% | 🌡️ Temp: ${temp}°C | ⚔️ Raids: $raids | 🔄 Acc: #$accIdx", Toast.LENGTH_LONG).show()
         }
 
         // 5. Close Button
@@ -146,9 +152,16 @@ class FloatingOverlayService : Service() {
             stopSelf()
         }
 
-        // 6. Strategy Button
+        // 6. Strategy / Account Switcher Count Button (Cycles 1, 2, 3, 4 accounts)
         btnStrategy?.setOnClickListener {
-            Toast.makeText(this, "Strategy: 4-Finger Root Rider + Zap Dragon Red Line Wave", Toast.LENGTH_SHORT).show()
+            accountsCount = when (accountsCount) {
+                1 -> 2
+                2 -> 3
+                3 -> 4
+                else -> 1
+            }
+            btnStrategy.text = "${accountsCount} Accs"
+            Toast.makeText(this, "Multi-Account Auto-Cycle set to $accountsCount Accounts!", Toast.LENGTH_SHORT).show()
         }
 
         // Dragging gesture

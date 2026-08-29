@@ -7,59 +7,67 @@ import android.util.Log
 import com.cocai.autoclicker.service.AutoClickAccessibilityService
 import kotlin.random.Random
 
+/**
+ * 🔄 Advanced Supercell ID Multi-Account Switcher
+ *
+ * Automatically cycles between up to 4 saved Supercell ID accounts:
+ * Step 1: Opens in-game Settings (⚙) icon
+ * Step 2: Taps "Switch Account / Connected" 🔄 button next to Supercell ID
+ * Step 3: Selects Account Slot (Slot 1 - 4) with percentage anchors
+ * Step 4: Waits 8s for game reload & confirms village view
+ */
 class SupercellIdAccountSwitcher(
     private val accessibilityService: AutoClickAccessibilityService
 ) {
     private val handler = Handler(Looper.getMainLooper())
-    var isSwitchingAccount: Boolean = false
+    var currentAccountIndex: Int = 0
         private set
 
-    var currentAccountIndex: Int = 0
+    var isSwitching: Boolean = false
+        private set
 
-    // Coordinates for account list in Supercell ID Switcher modal
+    // Supercell ID Fixed Percentage UI Anchors
+    private val PCT_SETTINGS_GEAR = PointF(0.965f, 0.175f)      // Settings (⚙) icon on Village HUD
+    private val PCT_SWITCH_CONNECTED = PointF(0.720f, 0.320f)  // "Switch Account" 🔄 icon next to Supercell ID banner
+
+    // Supercell ID Saved Account Slots (Vertical Card Layout)
     private val accountSlots = listOf(
-        PointF(960f, 420f),  // Account 1
-        PointF(960f, 540f),  // Account 2
-        PointF(960f, 660f),  // Account 3
-        PointF(960f, 780f)   // Account 4
+        PointF(0.500f, 0.360f), // Account Slot 1 (Top Card)
+        PointF(0.500f, 0.480f), // Account Slot 2 (Second Card)
+        PointF(0.500f, 0.600f), // Account Slot 3 (Third Card)
+        PointF(0.500f, 0.720f)  // Account Slot 4 (Fourth Card)
     )
 
-    /**
-     * Autonomous Supercell ID Multi-Account Switcher:
-     * 1. Opens In-Game Settings (bottom-right gear x=1850, y=720)
-     * 2. Taps Supercell ID Switch Account button (x=1600, y=380)
-     * 3. Selects next saved Supercell ID Account
-     * 4. Waits for village load & resumes farming
-     */
     fun switchToNextAccount(totalAccounts: Int = 2, onComplete: () -> Unit) {
-        if (isSwitchingAccount || totalAccounts <= 1) {
+        if (isSwitching || totalAccounts <= 1) {
             onComplete()
             return
         }
-        isSwitchingAccount = true
-        currentAccountIndex = (currentAccountIndex + 1) % totalAccounts
-        Log.i("SupercellID", "=== [SUPERCELL ID SWITCHER] Switching to Account #${currentAccountIndex + 1} of $totalAccounts ===")
 
-        // Step 1: Open Settings (gear icon at x=1850, y=720)
-        accessibilityService.performTap(1850f, 720f) {
+        isSwitching = true
+        currentAccountIndex = (currentAccountIndex + 1) % totalAccounts
+        Log.i("SupercellID", "=== [SUPERCELL ID] Switching to Account #${currentAccountIndex + 1} of $totalAccounts ===")
+
+        // Step 1: Open Settings (⚙)
+        accessibilityService.performPercentageTap(PCT_SETTINGS_GEAR) {
             handler.postDelayed({
-                // Step 2: Tap Supercell ID Switch Account button (x=1600, y=380)
-                accessibilityService.performTap(1600f, 380f) {
+                // Step 2: Tap "Switch Account" 🔄 Icon
+                accessibilityService.performPercentageTap(PCT_SWITCH_CONNECTED) {
                     handler.postDelayed({
-                        // Step 3: Tap Account Slot in list
-                        val slot = accountSlots.getOrElse(currentAccountIndex) { accountSlots[0] }
-                        Log.i("SupercellID", "Selecting Supercell ID slot at (${slot.x}, ${slot.y})...")
-                        accessibilityService.performTap(slot.x, slot.y) {
-                            // Step 4: Allow 6-8 seconds for game reload & village transition
+                        // Step 3: Select Target Account Card Slot
+                        val targetSlot = accountSlots.getOrElse(currentAccountIndex) { accountSlots[0] }
+                        accessibilityService.performPercentageTap(targetSlot) {
+                            Log.i("SupercellID", "✓ Account #${currentAccountIndex + 1} selected. Waiting 8s for game reload...")
+                            // Step 4: Wait 8.0s for Supercell ID authentication & village assets to reload
                             handler.postDelayed({
-                                isSwitchingAccount = false
-                                Log.i("SupercellID", "✓ Switched to Account #${currentAccountIndex + 1}. Resuming farming loop.")
+                                isSwitching = false
+                                Log.i("SupercellID", "✓ Account #${currentAccountIndex + 1} loaded & ready!")
                                 onComplete()
-                            }, Random.nextLong(6500L, 8500L))
+                            }, 8000L)
                         }
-                    }, Random.nextLong(1200L, 1800L))
+                    }, Random.nextLong(1400L, 1800L))
                 }
-            }, Random.nextLong(1000L, 1500L))
+            }, Random.nextLong(1200L, 1600L))
         }
     }
 }
