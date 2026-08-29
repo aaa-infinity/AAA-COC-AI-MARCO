@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "AAA-COC-AI-MARCO"
+rootProject.name = "TITAN-COC-AI"
 include(":app")

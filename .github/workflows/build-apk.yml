@@ -1,4 +1,4 @@
-name: AAA COC AI MARCO - Autonomous Cloud Builder & Monitor
+name: TITAN COC AI - Autonomous Cloud Builder & Monitor
 
 on:
   push:
@@ -38,7 +38,7 @@ jobs:
           TELEGRAM_CHAT_ID: "-1004447017934"
         run: |
           if [ -n "$TELEGRAM_BOT_TOKEN" ]; then
-            curl -s "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=🚀+[AAA+COC+AI+MARCO]+Cloud+APK+Build+Started+on+GitHub+Runner...%0ACommit:+${{ github.sha }}%0AStatus:+Compiling+Android+Codebase" || true
+            curl -s "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=🚀+[TITAN+COC+AI+v3.0]+Cloud+APK+Build+Started+on+GitHub+Runner...%0ACommit:+${{ github.sha }}%0AStatus:+Compiling+Apex+Macro+Edition" || true
           fi
 
       - name: Compile Commercial Debug APK
@@ -51,7 +51,7 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: AAA-COC-AI-MARCO-APK
+          name: TITAN-COC-AI-v3.0-APK
           path: android_app/app/build/outputs/apk/debug/*.apk
           retention-days: 30
 
@@ -67,7 +67,7 @@ jobs:
               FILE_SIZE=$(du -h "$APK_FILE" | cut -f1)
               echo "Found APK: $APK_FILE (Size: $FILE_SIZE)"
               curl -F "document=@${APK_FILE}" \
-                   -F "caption=✅ ⚔️ AAA COC AI MARCO v2.0 APK Build Success!%0A📦 Size: ${FILE_SIZE}%0A🐉 Home Village Zap Dragon Auto-Farming Ready%0A📱 Universal Android Compatibility + Google ML Kit Vision & Self-Healing Telemetry" \
+                   -F "caption=🐉 ⚔️ TITAN COC AI v3.0 - Apex Edition Released!%0A📦 Size: ${FILE_SIZE}%0A✨ Cyber Dragon Brand Icon & Dark Glassmorphic Dashboard%0A🖐️ Macrorify-Style 6-Button Floating Control Bar%0A🤝 Clan Chat Auto-Donate & Anti-AFK Base Patrol%0A📸 Multimodal Screenshot-to-Code Vision AI Integration%0A📱 Universal Android Compatibility (All Resolutions)" \
                    "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument?chat_id=${TELEGRAM_CHAT_ID}"
             else
               echo "No APK file found to send"
@@ -81,5 +81,5 @@ jobs:
           TELEGRAM_CHAT_ID: "-1004447017934"
         run: |
           if [ -n "$TELEGRAM_BOT_TOKEN" ]; then
-            curl -s "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=❌+[AAA+COC+AI+MARCO]+Cloud+APK+Build+Failed!%0A⚠️+Reason:+Compilation+Error%0A🔍+Commit:+${{ github.sha }}" || true
+            curl -s "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=❌+[TITAN+COC+AI]+Cloud+APK+Build+Failed!%0A⚠️+Reason:+Compilation+Error%0A🔍+Commit:+${{ github.sha }}" || true
           fi

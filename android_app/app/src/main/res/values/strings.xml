@@ -1,4 +1,5 @@
 <resources>
-    <string name="app_name">AAA COC AI MARCO</string>
-    <string name="accessibility_service_description">AAA COC AI MARCO - Commercial Grade Autonomous Vision &amp; Touch Engine for Modern Clash of Clans (TH16/TH17, Ores, Hero Equipment, Overgrowth Spell).</string>
+    <string name="app_name">TITAN COC AI</string>
+    <string name="app_full_name">TITAN COC AI - Apex Macro &amp; Vision Bot</string>
+    <string name="accessibility_service_description">TITAN COC AI non-root accessibility service for humanized auto-farming, Zap Dragon attacks, Clan Chat Auto-Donate, and anti-ban gestures.</string>
 </resources>
