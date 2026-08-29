@@ -16,12 +16,7 @@ import com.cocai.autoclicker.service.FloatingOverlayService
 class MainActivity : AppCompatActivity() {
 
     private lateinit var keyRotator: ApiKeyRotator
-    private lateinit var visionEngine: ScreenshotVisionEngine
-    private lateinit var modelFetcher: LiveModelFetcher
-    private lateinit var clanEngine: ClanWarAutomationEngine
-    private lateinit var tacticsEngine: AdvancedTacticsEngine
     private lateinit var memoryEngine: AiMemoryEngine
-    private lateinit var telemetryBridge: WebTelemetryBridge
 
     private lateinit var tabBtnDashboard: Button
     private lateinit var tabBtnStrategy: Button
@@ -35,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var spinnerProvider: Spinner
     private lateinit var spinnerLiveModels: Spinner
+    private lateinit var spinnerStrategyPicker: Spinner
     private lateinit var etApiKeyInput: EditText
     private lateinit var tvActiveKeysCount: TextView
     private lateinit var tvVisionStatus: TextView
@@ -46,11 +42,12 @@ class MainActivity : AppCompatActivity() {
         "DeepSeek API (V3 / R1)"
     )
 
-    private val providerUrls = arrayOf(
-        "https://generativelanguage.googleapis.com/v1beta",
-        "https://api.groq.com/openai/v1",
-        "https://openrouter.ai/api/v1",
-        "https://api.deepseek.com/v1"
+    private val strategies = arrayOf(
+        "TH17 Root Rider + Overgrowth Smash",
+        "TH11-TH14 Zap Dragon Farming",
+        "Electro Dragon Perimeter Spam",
+        "TH15-TH16 Dragon Rider Smash",
+        "Sneaky Goblin Ore & Resource Farm"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,9 +65,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun initEngines() {
         keyRotator = ApiKeyRotator(this)
-        visionEngine = ScreenshotVisionEngine(keyRotator)
-        modelFetcher = LiveModelFetcher()
-        telemetryBridge = WebTelemetryBridge()
         memoryEngine = AiMemoryEngine(this)
     }
 
@@ -87,6 +81,7 @@ class MainActivity : AppCompatActivity() {
 
         spinnerProvider = findViewById(R.id.spinner_provider)
         spinnerLiveModels = findViewById(R.id.spinner_live_models)
+        spinnerStrategyPicker = findViewById(R.id.spinner_strategy_picker)
         etApiKeyInput = findViewById(R.id.et_api_key_input)
         tvActiveKeysCount = findViewById(R.id.tv_active_keys_count)
         tvVisionStatus = findViewById(R.id.tv_vision_status)
@@ -157,29 +152,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupStrategyTab() {
-        findViewById<Button>(R.id.btn_select_th17_overgrowth).setOnClickListener {
-            Toast.makeText(this, "TH17 Root Rider + Overgrowth Smash active!", Toast.LENGTH_SHORT).show()
-        }
-
-        findViewById<Button>(R.id.btn_select_zap_dragons).setOnClickListener {
-            Toast.makeText(this, "TH11-TH14 Zap Dragon Farm active!", Toast.LENGTH_SHORT).show()
-        }
-
-        findViewById<Button>(R.id.btn_select_edrag_spam).setOnClickListener {
-            Toast.makeText(this, "Electro Dragon Spam active!", Toast.LENGTH_SHORT).show()
-        }
-
-        findViewById<Button>(R.id.btn_select_dragon_riders).setOnClickListener {
-            Toast.makeText(this, "TH15-TH16 Dragon Rider Smash active!", Toast.LENGTH_SHORT).show()
-        }
-
-        findViewById<Button>(R.id.btn_select_sneaky_goblins).setOnClickListener {
-            Toast.makeText(this, "Sneaky Goblin Ore & Resource Farm active!", Toast.LENGTH_SHORT).show()
-        }
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, strategies)
+        spinnerStrategyPicker.adapter = adapter
     }
 
     private fun setupClanTab() {
-        findViewById<Button>(R.id.btn_trigger_instant_wall_dump).setOnClickListener {
+        findViewById<Button>(R.id.btn_trigger_collect_loot).setOnClickListener {
+            val service = AutoClickAccessibilityService.instance
+            if (service == null) {
+                Toast.makeText(this, "Accessibility Service is not running!", Toast.LENGTH_SHORT).show()
+            } else {
+                val daily = DailyRewardsCollectorEngine(service)
+                daily.collectAllDailyRewards {
+                    Toast.makeText(this, "💰 Harvested Mines & Treasury!", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        findViewById<Button>(R.id.btn_trigger_upgrade_walls).setOnClickListener {
             val service = AutoClickAccessibilityService.instance
             if (service == null) {
                 Toast.makeText(this, "Accessibility Service is not running!", Toast.LENGTH_SHORT).show()
@@ -189,6 +179,14 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "🧱 Upgraded 3 Walls with Free Builder!", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+
+        findViewById<Button>(R.id.btn_trigger_donate_now).setOnClickListener {
+            Toast.makeText(this, "🤝 Auto-Donating to Clan members...", Toast.LENGTH_SHORT).show()
+        }
+
+        findViewById<Button>(R.id.btn_trigger_cc_request).setOnClickListener {
+            Toast.makeText(this, "🛡️ Requested Clan Castle reinforcements!", Toast.LENGTH_SHORT).show()
         }
 
         findViewById<Button>(R.id.btn_trigger_clean_obstacles).setOnClickListener {

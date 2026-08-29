@@ -14,40 +14,53 @@ class DailyRewardsCollectorEngine(
         private set
 
     /**
-     * Autonomous Daily Rewards & Trader Gift Collector:
-     * 1. Opens Daily Trader Tent
-     * 2. Claims Free Daily Gift
-     * 3. Collects Star Bonus Ores
+     * Autonomous Daily Rewards & Trader Gift Collector
      */
     fun collectAllDailyRewards(onComplete: () -> Unit) {
         if (isCollecting) return
         isCollecting = true
         Log.i("DailyRewards", "=== [DAILY REWARDS] Claiming Free Trader Gift & Daily Ores ===")
 
-        // Step 1: Tap Daily Trader Tent (x=1650, y=320)
-        accessibilityService.performTap(1650f, 320f) {
+        accessibilityService.performPercentageTap(0.850f, 0.300f) {
             handler.postDelayed({
-                // Step 2: Tap Free Gift Claim Button (x=550, y=650)
-                accessibilityService.performTap(550f, 650f) {
+                accessibilityService.performPercentageTap(0.300f, 0.600f) {
                     handler.postDelayed({
-                        // Step 3: Close Trader Tent (x=1820, y=85)
-                        accessibilityService.performTap(1820f, 85f) {
-                            handler.postDelayed({
-                                // Step 4: Tap Treasury / Star Bonus Cart (x=1600, y=900)
-                                accessibilityService.performTap(1600f, 900f) {
-                                    handler.postDelayed({
-                                        accessibilityService.performTap(1100f, 750f) {
-                                            isCollecting = false
-                                            Log.i("DailyRewards", "✓ Daily Trader Gift & Star Bonus Ores collected.")
-                                            onComplete()
-                                        }
-                                    }, Random.nextLong(600L, 900L))
-                                }
-                            }, Random.nextLong(600L, 900L))
+                        accessibilityService.performPercentageTap(UniversalFixedUiMapper.PCT_CLOSE_MODAL) {
+                            isCollecting = false
+                            Log.i("DailyRewards", "✓ Daily Trader Gift & Star Bonus Ores collected.")
+                            onComplete()
                         }
-                    }, Random.nextLong(700L, 1000L))
+                    }, 800L)
                 }
-            }, Random.nextLong(1200L, 1600L))
+            }, 1200L)
         }
+    }
+
+    /**
+     * Harvest Gem Boxes & Clear Obstacles for Free Gems
+     */
+    fun cleanObstaclesForGems(onComplete: () -> Unit) {
+        Log.i("DailyRewards", "=== [OBSTACLES] Harvesting Obstacles for Gems ===")
+        val obstaclePts = listOf(
+            PointF(0.350f, 0.350f),
+            PointF(0.650f, 0.350f),
+            PointF(0.350f, 0.650f)
+        )
+        var idx = 0
+        fun clearNext() {
+            if (idx < obstaclePts.size) {
+                val pt = obstaclePts[idx++]
+                accessibilityService.performPercentageTap(pt) {
+                    handler.postDelayed({
+                        accessibilityService.performPercentageTap(UniversalFixedUiMapper.PCT_UPGRADE_CONFIRM) {
+                            handler.postDelayed({ clearNext() }, 700L)
+                        }
+                    }, 500L)
+                }
+            } else {
+                onComplete()
+            }
+        }
+        clearNext()
     }
 }
