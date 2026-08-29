@@ -22,8 +22,10 @@ def main():
     file_size_str = f"{file_size_mb:.2f} MB"
     print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id}...")
 
-    caption = f"""🏛️ ⚔️ <b>Ai Marco coc v6.0 (Ari AI Agent — Hermes Class) Released!</b>
-📦 <b>File:</b> Ai-Marco-coc-v6.0.apk ({file_size_str})
+    caption = f"""🏛️ 🧠 <b>Ai Marco coc v6.1 (Expanded Neural Ari Agent) Released!</b>
+📦 <b>File:</b> Ai-Marco-coc-v6.1.apk ({file_size_str})
+⚡ <b>Neural Vision Engine:</b> 12MB On-Device TFLite Core Defense Detector
+🎨 <b>Expanded Assets:</b> 285+ High-Res Datamined Building & Defense Sprites
 🧠 <b>Ari AI Agent:</b> Hermes-Class Autonomous ReAct Tool-Calling Engine
 🏆 <b>Complex AI Engine:</b> TH16/17 Root Rider Overgrowth & Giga Protection
 🏗️ <b>Auto-Builder:</b> Upgrades suggested defenses & traps automatically
@@ -35,7 +37,6 @@ def main():
 🔍 <b>Smart Nexting:</b> Intelligent base search until rich loot found
 🚨 <b>Panic Stop:</b> Physical Volume Down key override
 🛡️ <b>Supervisor:</b> Auto-Crash & Disconnect Recovery
-✨ <b>Assets:</b> 265+ Real Datamined Supercell PNG Sprites
 🤝 <b>Clan Suite:</b> Auto-Donate & CC Request
 💎 <b>Village Clean:</b> Gem Boxes & Obstacle clearing
 🎮 <b>Auto-Launch:</b> Direct Clash of Clans Game Launcher"""
@@ -48,7 +49,7 @@ def main():
     body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"chat_id\"\r\n\r\n{chat_id}\r\n".encode("utf-8"))
     body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"parse_mode\"\r\n\r\nHTML\r\n".encode("utf-8"))
     body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"caption\"\r\n\r\n{caption}\r\n".encode("utf-8"))
-    body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"document\"; filename=\"Ai-Marco-coc-v6.0.apk\"\r\nContent-Type: application/vnd.android.package-archive\r\n\r\n".encode("utf-8"))
+    body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"document\"; filename=\"Ai-Marco-coc-v6.1.apk\"\r\nContent-Type: application/vnd.android.package-archive\r\n\r\n".encode("utf-8"))
     body.append(file_bytes)
     body.append(f"\r\n--{boundary}--\r\n".encode("utf-8"))
 

@@ -40,6 +40,7 @@ class AriAiAgent(
     val battlePacing = BattlePacingEngine(accessibilityService)
     val geometryEngine = ComplexBaseGeometryEngine(accessibilityService)
     val gigaProtection = TownHallGigaProtectionEngine(accessibilityService)
+    val neuralVision = OnDeviceNeuralVisionEngine(context)
 
     var isAgentActive: Boolean = false
         private set
