@@ -2,6 +2,10 @@ package com.cocai.autoclicker.ui
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -12,6 +16,7 @@ import com.cocai.autoclicker.engine.AiMemoryEngine
 import com.cocai.autoclicker.engine.ApiKeyRotator
 import com.cocai.autoclicker.engine.CrashTelemetryService
 import com.cocai.autoclicker.engine.LiveModelFetcher
+import com.cocai.autoclicker.engine.ScreenshotVisionEngine
 import com.cocai.autoclicker.service.AutoClickAccessibilityService
 import com.cocai.autoclicker.service.FloatingOverlayService
 
@@ -25,12 +30,14 @@ class MainActivity : Activity() {
     private lateinit var tvAccStatus: TextView
     private lateinit var tvMemoryStats: TextView
     private lateinit var tvActiveKeysCount: TextView
+    private lateinit var tvVisionStatus: TextView
     private lateinit var etApiKeyInput: EditText
     private lateinit var spinnerProvider: Spinner
     private lateinit var spinnerLiveModels: Spinner
 
     private lateinit var keyRotator: ApiKeyRotator
     private lateinit var memoryEngine: AiMemoryEngine
+    private lateinit var visionEngine: ScreenshotVisionEngine
     private val modelFetcher = LiveModelFetcher()
 
     private val providers = listOf(
@@ -56,6 +63,7 @@ class MainActivity : Activity() {
 
         keyRotator = ApiKeyRotator(this)
         memoryEngine = AiMemoryEngine(this)
+        visionEngine = ScreenshotVisionEngine(keyRotator)
 
         initViews()
         setupTabSwitching()
@@ -72,6 +80,7 @@ class MainActivity : Activity() {
         tvAccStatus = findViewById(R.id.tv_accessibility_status)
         tvMemoryStats = findViewById(R.id.tv_memory_stats)
         tvActiveKeysCount = findViewById(R.id.tv_active_keys_count)
+        tvVisionStatus = findViewById(R.id.tv_vision_status)
         etApiKeyInput = findViewById(R.id.et_api_key_input)
         spinnerProvider = findViewById(R.id.spinner_provider)
         spinnerLiveModels = findViewById(R.id.spinner_live_models)
@@ -155,6 +164,31 @@ class MainActivity : Activity() {
                 },
                 onError = { err ->
                     Toast.makeText(this, "Fetch Error: $err", Toast.LENGTH_LONG).show()
+                }
+            )
+        }
+
+        findViewById<Button>(R.id.btn_test_vision).setOnClickListener {
+            tvVisionStatus.text = "Vision AI: Processing screenshot with Screenshot-to-Code engine..."
+            // Create sample test bitmap
+            val testBitmap = Bitmap.createBitmap(1920, 1080, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(testBitmap)
+            val paint = Paint().apply { color = Color.DKGRAY }
+            canvas.drawRect(0f, 0f, 1920f, 1080f, paint)
+
+            val selectedIdx = spinnerProvider.selectedItemPosition
+            val url = providerUrls.getOrElse(selectedIdx) { providerUrls[0] }
+            val selectedModel = spinnerLiveModels.selectedItem?.toString() ?: "gemini-2.0-flash"
+
+            visionEngine.analyzeScreenBitmap(
+                bitmap = testBitmap,
+                providerUrl = url,
+                modelName = selectedModel,
+                onResult = { result ->
+                    tvVisionStatus.text = "✓ Game State: ${result.gameState}\n✓ Optimal Entry: ${result.recommendedEntrySide}\n✓ Zap Targets: ${result.zapTargets}\n✓ Action Plan: Ready"
+                },
+                onError = { err ->
+                    tvVisionStatus.text = "Vision Fallback: Heuristic model active (${err})"
                 }
             )
         }
