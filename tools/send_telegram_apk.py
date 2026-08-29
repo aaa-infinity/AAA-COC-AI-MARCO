@@ -24,10 +24,11 @@ def main():
     print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id}...")
 
     # Telegram caption limit is 1024 characters
-    caption_text = f"""👑 🐉 <b>Ai Marco coc v14.0 (Pure Dragon Farming Edition)</b>
-📦 <b>File:</b> Ai-Marco-coc-v14.0.apk ({file_size_str})
-🐉 <b>Pure Dragon Farming:</b> Zap Air Defenses -> 4-finger dragon line -> Warden Tome
-🏠 <b>100% Home Village:</b> Zero Builder Base clutter • Focus on max loot &amp; ores
+    caption_text = f"""👑 🛡️ <b>Ai Marco coc v15.0 (Titan Final Edition)</b>
+📦 <b>File:</b> Ai-Marco-coc-v15.0.apk ({file_size_str})
+🧹 <b>Startup Popup Dismiss:</b> Auto-dismisses defense logs &amp; event sheets
+🐉 <b>Pure Dragon Farming:</b> Zap Air Defenses -> 4-finger line -> Warden Tome
+🧱 <b>Builder Wall Dump:</b> Dumps excess loot into walls via Builder Overview
 🔑 <b>100% Dynamic Live Models:</b> Queries /models endpoint on your API key
 🎯 <b>Macrorify Floating HUD:</b> 44dp bubble + edge snapping &amp; pill toolbar
 🤖 <b>2-Way Telegram Remote:</b> /status, /pause, /resume, /attack, /walls &amp; /schedule
@@ -35,8 +36,7 @@ def main():
 ⚡ <b>Snapshot Fast-Skipper:</b> Instant HSV detection without cloud delays
 🎯 <b>Gaussian Motion Jitter:</b> Organic touch mechanics &amp; anti-detection
 ⚡ <b>API Key Test Ping:</b> Live ms latency check on your loaded models
-🔄 <b>Supercell ID Auto-Cycle:</b> 4-account rotation
-🧱 <b>Builder Wall Dump:</b> Spends excess loot into walls automatically"""
+🔄 <b>Supercell ID Auto-Cycle:</b> 4-account rotation"""
 
     caption_file = "/tmp/telegram_caption.txt"
     with open(caption_file, "w", encoding="utf-8") as f:
@@ -47,7 +47,7 @@ def main():
         "-F", f"chat_id={chat_id}",
         "-F", "parse_mode=HTML",
         "-F", f"caption=<{caption_file}",
-        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v14.0.apk",
+        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v15.0.apk",
         f"https://api.telegram.org/bot{bot_token}/sendDocument"
     ]
 
