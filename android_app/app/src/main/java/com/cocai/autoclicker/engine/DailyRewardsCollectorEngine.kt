@@ -1,5 +1,6 @@
 package com.cocai.autoclicker.engine
 
+import android.graphics.PointF
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
