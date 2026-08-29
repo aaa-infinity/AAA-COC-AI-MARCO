@@ -5,10 +5,11 @@ import android.content.SharedPreferences
 import android.util.Log
 import org.json.JSONArray
 import org.json.JSONObject
+import kotlin.random.Random
 
 data class AttackRecord(
     val timestamp: Long,
-    val entryAngle: String,      // "BOTTOM_LEFT", "TOP_RIGHT", etc.
+    val entryAngle: String,      // "BOTTOM_LEFT", "TOP_LEFT", "BOTTOM_RIGHT", "TOP_RIGHT"
     val zapSuccess: Boolean,
     val goldLooted: Long,
     val elixirLooted: Long,
@@ -20,6 +21,7 @@ data class AttackRecord(
 class AiMemoryEngine(context: Context) {
     private val prefs: SharedPreferences = context.getSharedPreferences("ai_memory_db", Context.MODE_PRIVATE)
     private val attackHistory = mutableListOf<AttackRecord>()
+    private val allSides = listOf("BOTTOM_LEFT", "TOP_LEFT", "BOTTOM_RIGHT", "TOP_RIGHT")
 
     init {
         loadMemory()
@@ -47,21 +49,28 @@ class AiMemoryEngine(context: Context) {
         )
         attackHistory.add(record)
         saveMemory()
-        Log.i("AiMemory", "Recorded attack. Total memory samples: ${attackHistory.size}")
+        Log.i("AiMemory", "Recorded battle memory. Total learned samples: ${attackHistory.size}")
     }
 
     /**
-     * Self-Improving Heuristic:
-     * Analyzes past battle outcomes to recommend the highest-yielding entry side.
+     * Epsilon-Greedy Reinforcement Learning Bandit:
+     * - 90% Exploitation of best historical attack angle
+     * - 10% Exploration of alternative attack angles
      */
-    fun getOptimalEntrySide(): String {
-        if (attackHistory.size < 3) return "BOTTOM_LEFT" // Default baseline
+    fun getOptimalEntrySide(epsilon: Double = 0.10): String {
+        if (attackHistory.size < 3 || Random.nextDouble() < epsilon) {
+            val randomSide = allSides.random()
+            Log.d("AiMemory", "Bandit Exploration: chosen $randomSide")
+            return randomSide
+        }
 
         val sideScores = mutableMapOf<String, Double>()
         val sideCounts = mutableMapOf<String, Int>()
 
-        for (r in attackHistory.takeLast(30)) {
-            val score = r.stars * 35.0 + r.destructionPercent * 0.65
+        for (r in attackHistory.takeLast(40)) {
+            // Reward function = (Stars * 35) + (Destruction * 0.65) + (Loot / 100,000)
+            val lootReward = ((r.goldLooted + r.elixirLooted) / 100000.0).coerceAtMost(20.0)
+            val score = (r.stars * 35.0) + (r.destructionPercent * 0.65) + lootReward
             sideScores[r.entryAngle] = sideScores.getOrDefault(r.entryAngle, 0.0) + score
             sideCounts[r.entryAngle] = sideCounts.getOrDefault(r.entryAngle, 0) + 1
         }
@@ -69,16 +78,18 @@ class AiMemoryEngine(context: Context) {
         var bestSide = "BOTTOM_LEFT"
         var highestAvgScore = -1.0
 
-        for ((side, totalScore) in sideScores) {
-            val count = sideCounts[side] ?: 1
-            val avg = totalScore / count
-            if (avg > highestAvgScore) {
-                highestAvgScore = avg
-                bestSide = side
+        for (side in allSides) {
+            val count = sideCounts[side] ?: 0
+            if (count > 0) {
+                val avg = (sideScores[side] ?: 0.0) / count
+                if (avg > highestAvgScore) {
+                    highestAvgScore = avg
+                    bestSide = side
+                }
             }
         }
 
-        Log.i("AiMemory", "AI Self-Improvement selected best entry side: $bestSide (Avg Score: $highestAvgScore)")
+        Log.i("AiMemory", "Bandit Exploitation: selected best learned side: $bestSide (Avg Score: $highestAvgScore)")
         return bestSide
     }
 
@@ -102,7 +113,7 @@ class AiMemoryEngine(context: Context) {
 
     private fun saveMemory() {
         val arr = JSONArray()
-        for (r in attackHistory.takeLast(100)) { // Keep last 100 battles
+        for (r in attackHistory.takeLast(100)) {
             val obj = JSONObject()
                 .put("ts", r.timestamp)
                 .put("angle", r.entryAngle)

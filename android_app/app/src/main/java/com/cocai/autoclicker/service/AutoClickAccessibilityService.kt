@@ -4,8 +4,12 @@ import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
 import android.graphics.Path
 import android.graphics.PointF
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
+import android.widget.Toast
 import kotlin.random.Random
 
 class AutoClickAccessibilityService : AccessibilityService() {
@@ -18,16 +22,33 @@ class AutoClickAccessibilityService : AccessibilityService() {
             get() = instance != null
     }
 
+    var emergencyStopListener: (() -> Unit)? = null
+
     override fun onServiceConnected() {
         super.onServiceConnected()
         instance = this
-        Log.i("AutoClickService", "Accessibility Service Connected with Multi-Touch Support!")
+        Log.i("AutoClickService", "Accessibility Service Connected with Multi-Touch & Hardware Panic Stop!")
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {}
 
     override fun onInterrupt() {
         Log.w("AutoClickService", "Accessibility Service Interrupted")
+    }
+
+    override fun onKeyEvent(event: KeyEvent?): Boolean {
+        if (event == null) return super.onKeyEvent(event)
+
+        // Hardware Volume Down Key Override for Emergency Panic Stop
+        if (event.keyCode == KeyEvent.KEYCODE_VOLUME_DOWN && event.action == KeyEvent.ACTION_DOWN) {
+            Log.w("AutoClickService", "🚨 [PANIC STOP] Hardware Volume Down pressed! Halting all macro actions.")
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(this, "🚨 EMERGENCY PANIC STOP: Macro Halted via Volume Down!", Toast.LENGTH_LONG).show()
+                emergencyStopListener?.invoke()
+            }
+            return true // Consume key event
+        }
+        return super.onKeyEvent(event)
     }
 
     override fun onDestroy() {

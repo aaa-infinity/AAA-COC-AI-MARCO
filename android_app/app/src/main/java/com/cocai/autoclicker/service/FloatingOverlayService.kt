@@ -74,6 +74,15 @@ class FloatingOverlayService : Service() {
 
         var selectedStrategy = CocStrategy.ZAP_DRAGON_FARMING
 
+        // Wire Emergency Panic Stop Listener from Hardware Volume Down Key
+        AutoClickAccessibilityService.instance?.emergencyStopListener = {
+            farmingEngine?.stopEngine()
+            antiAfkEngine?.stopPatrol()
+            btnToggle?.text = "▶"
+            btnToggle?.setBackgroundColor(0xFF10B981.toInt())
+            tvStatus?.text = "[PANIC STOPPED]"
+        }
+
         // 1. Vision Snap / Target Selection
         btnVision?.setOnClickListener {
             Toast.makeText(this, "📸 Vision AI: Multi-Touch Screenshot-to-Code triggered!", Toast.LENGTH_SHORT).show()
@@ -103,7 +112,7 @@ class FloatingOverlayService : Service() {
 
         // 3. Settings Button
         btnSettings?.setOnClickListener {
-            Toast.makeText(this, "⚙️ Multi-Touch: 4-FINGER | Min Gold: 500k | Min Elixir: 500k | Strategy: ${selectedStrategy.name}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "⚙️ Panic Key: VOL DOWN | Multi-Touch: 4-FINGER | Min Gold/Elixir: 500k", Toast.LENGTH_LONG).show()
         }
 
         // 4. Tools: Auto Donate, CC Request & Anti-AFK
@@ -128,7 +137,7 @@ class FloatingOverlayService : Service() {
         // 5. Macro Console Button
         btnConsole?.setOnClickListener {
             val raids = farmingEngine?.raidsCompleted ?: 0
-            Toast.makeText(this, "💻 Macro Console: Raids: $raids | Multi-Touch: 4-FINGER ACTIVE | Supervisor: WATCHDOG ON", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "💻 Console: Raids: $raids | VolDown Stop: READY | Multi-Touch: ON", Toast.LENGTH_SHORT).show()
         }
 
         // 6. Close / Exit Button
