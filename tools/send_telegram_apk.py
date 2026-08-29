@@ -23,7 +23,7 @@ def main():
     file_size_str = f"{file_size_mb:.2f} MB"
     print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id}...")
 
-    caption = f"""🌾 🧱 <b>Ai Marco coc v6.5 (Dead Base Hunter &amp; Wall Maxer)</b>
+    caption_text = f"""🏛️ 🌾 <b>Ai Marco coc v6.5 (Dead Base Hunter &amp; Wall Maxer)</b>
 📦 <b>File:</b> Ai-Marco-coc-v6.5.apk ({file_size_str})
 🏡 <b>100% Home Village Focus:</b> Pure fast loot farming &amp; wall upgrades
 🎯 <b>Dead Base Hunter:</b> Surgical outside collector strip on dead bases
@@ -34,11 +34,15 @@ def main():
 🎨 <b>New AAA Icon:</b> Glowing Cyber-Dragon &amp; Crown
 🚨 <b>Panic Stop:</b> Volume Down Key Override"""
 
+    caption_file = "/tmp/telegram_caption.txt"
+    with open(caption_file, "w", encoding="utf-8") as f:
+        f.write(caption_text)
+
     cmd = [
         "curl", "-s", "-S", "--connect-timeout", "60", "--max-time", "600",
         "-F", f"chat_id={chat_id}",
         "-F", "parse_mode=HTML",
-        "-F", f"caption={caption}",
+        "-F", f"caption=<{caption_file}",
         "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v6.5.apk",
         f"https://api.telegram.org/bot{bot_token}/sendDocument"
     ]
