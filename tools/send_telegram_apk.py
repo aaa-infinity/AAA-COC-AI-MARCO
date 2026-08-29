@@ -23,10 +23,11 @@ def main():
     file_size_str = f"{file_size_mb:.2f} MB"
     print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id}...")
 
-    caption_text = f"""📐 ⚡ <b>Ai Marco coc v7.3 (Universal Screen Calibrator &amp; Pro Engine)</b>
-📦 <b>File:</b> Ai-Marco-coc-v7.3.apk ({file_size_str})
-📐 <b>Universal Resolution Scaler:</b> Dynamic edge-anchored coordinates for all devices
-⚡ <b>Reliable 80ms Game Taps:</b> Guaranteed touch capture in Clash of Clans engine
+    caption_text = f"""👑 🚀 <b>Ai Marco coc v7.4 (Game-Aware Master Edition)</b>
+📦 <b>File:</b> Ai-Marco-coc-v7.4.apk ({file_size_str})
+🛡️ <b>Game-Aware Safety:</b> 3.5s Village startup buffer (No premature tapping!)
+📐 <b>Universal Resolution Scaler:</b> Edge-anchored precision for every screen size
+⚡ <b>Reliable 80ms Game Taps:</b> Captures perfectly in Clash of Clans engine
 ✨ <b>AAA Cyber Gaming UI:</b> Modern glassmorphism, glowing cards &amp; sleek tabs
 🛡️ <b>Anti-Ban Biometrics:</b> 2D Gaussian touch jitter &amp; log-normal latency
 ⚔️ <b>Hero Equipment Auto-Trigger:</b> Giant Gauntlet, Spiky Ball, Invisibility, Eternal Tome
@@ -44,7 +45,7 @@ def main():
         "-F", f"chat_id={chat_id}",
         "-F", "parse_mode=HTML",
         "-F", f"caption=<{caption_file}",
-        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v7.3.apk",
+        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v7.4.apk",
         f"https://api.telegram.org/bot{bot_token}/sendDocument"
     ]
 

@@ -12,6 +12,7 @@ import android.widget.Toast
 import com.cocai.autoclicker.R
 import com.cocai.autoclicker.engine.AriAiAgent
 import com.cocai.autoclicker.engine.CocStrategy
+import com.cocai.autoclicker.engine.UiAnchor
 
 class FloatingOverlayService : Service() {
 
@@ -35,6 +36,14 @@ class FloatingOverlayService : Service() {
         if (acc != null) {
             ariAgent = AriAiAgent(this, acc)
 
+            // Listen for AI live state changes to update HUD text
+            ariAgent?.onStatusChangeListener = { newStatus ->
+                floatingView?.post {
+                    val tvStatus = floatingView?.findViewById<TextView>(R.id.tv_hud_status)
+                    tvStatus?.text = newStatus
+                }
+            }
+
             // Wire Hardware Volume Down Panic Stop
             acc.emergencyStopListener = {
                 stopMacroExecution()
@@ -47,7 +56,7 @@ class FloatingOverlayService : Service() {
         ariAgent?.stopAgent()
         val tvStatus = floatingView?.findViewById<TextView>(R.id.tv_hud_status)
         val btnPlayPause = floatingView?.findViewById<Button>(R.id.btn_toggle_play)
-        tvStatus?.text = "[PANIC STOPPED] Idle"
+        tvStatus?.text = "⏸ [PANIC STOPPED] Idle"
         btnPlayPause?.text = "▶"
     }
 
@@ -82,7 +91,7 @@ class FloatingOverlayService : Service() {
         val btnClose = floatingView?.findViewById<Button>(R.id.btn_hud_close)
         val tvStatus = floatingView?.findViewById<TextView>(R.id.tv_hud_status)
 
-        // 1. Play / Pause Button (Anti-Ban Humanized Hermes Ari Agent)
+        // 1. Play / Pause Button (Game-Aware Hermes Ari Agent)
         btnPlayPause?.setOnClickListener {
             if (ariAgent == null) {
                 initAgent()
@@ -95,26 +104,26 @@ class FloatingOverlayService : Service() {
             }
 
             if (!agent.isAgentActive) {
+                Toast.makeText(this, "⏳ Starting in 3.5s... Make sure your Village is open!", Toast.LENGTH_LONG).show()
                 agent.startAgent(selectedStrategy, accountsCount)
                 btnPlayPause.text = "⏸"
-                tvStatus?.text = "🛡️ [HUMAN] ${selectedStrategy.name.replace("_", " ")}"
-                Toast.makeText(this, "🛡️ Anti-Ban Humanized Ari AI Started: ${selectedStrategy.name}", Toast.LENGTH_SHORT).show()
+                tvStatus?.text = "⏳ [STARTING] 3.5s Village Buffer..."
             } else {
                 agent.stopAgent()
                 btnPlayPause.text = "▶"
-                tvStatus?.text = "[PAUSED] Idle"
+                tvStatus?.text = "⏸ [PAUSED] Idle"
                 Toast.makeText(this, "⏸ Ari AI Agent Paused", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // 2. Tools Button: Wall Dump & Clean Obstacles
+        // 2. Tools Button: Wall Dump
         btnTools?.setOnClickListener {
             val agent = ariAgent
             if (agent == null) {
                 Toast.makeText(this, "Enable Accessibility Service first!", Toast.LENGTH_SHORT).show()
             } else {
-                agent.wallUpgrader.performWallUpgrades(wallsToUpgrade = 3) {
-                    Toast.makeText(this, "🧱 Upgraded 3 Walls with Free Builder!", Toast.LENGTH_SHORT).show()
+                agent.wallUpgrader.performWallUpgrades(wallsToUpgrade = 2) {
+                    Toast.makeText(this, "🧱 Upgraded 2 Walls with Free Builder!", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -123,20 +132,20 @@ class FloatingOverlayService : Service() {
         btnVision?.setOnClickListener {
             val acc = AutoClickAccessibilityService.instance
             if (acc != null) {
-                acc.performTap(960f, 540f) {
-                    Toast.makeText(this, "🎯 Screen Calibrated! Test tap dispatched at center.", Toast.LENGTH_SHORT).show()
+                acc.performTap(960f, 540f, anchor = UiAnchor.CENTER_STAGE) {
+                    Toast.makeText(this, "🎯 Screen Calibrated! Center Tap Dispatched.", Toast.LENGTH_SHORT).show()
                 }
             } else {
                 Toast.makeText(this, "Enable Accessibility Service first!", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // 4. Macro Console Button: Shows Raids & Supercell ID rotation status
+        // 4. Macro Console Button
         btnConsole?.setOnClickListener {
             val raids = ariAgent?.totalRaids ?: 0
             val walls = ariAgent?.totalWallsUpgraded ?: 0
             val currentAcc = (ariAgent?.accountSwitcher?.currentAccountIndex ?: 0) + 1
-            Toast.makeText(this, "🏛️ Ari Agent: Raids: $raids | Walls: $walls | Account: #$currentAcc | Anti-Ban: ACTIVE", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "🏛️ Ari Agent: Raids: $raids | Walls: $walls | Account: #$currentAcc | Screen Scaler: ACTIVE", Toast.LENGTH_SHORT).show()
         }
 
         // 5. Close / Exit Button
@@ -155,7 +164,7 @@ class FloatingOverlayService : Service() {
                 else -> CocStrategy.ROOT_RIDER_OVERGROWTH_SMASH
             }
             btnStrategy.text = selectedStrategy.name.take(8)
-            tvStatus?.text = "[IDLE] ${selectedStrategy.name.replace("_", " ")}"
+            tvStatus?.text = "[READY] ${selectedStrategy.name.replace("_", " ")}"
             Toast.makeText(this, "Selected Strategy: ${selectedStrategy.name}", Toast.LENGTH_SHORT).show()
         }
 
