@@ -119,9 +119,16 @@ class FloatingOverlayService : Service() {
             }
         }
 
-        // 3. Vision Button: Test Screen Analysis
+        // 3. Vision Button: Performs Test Tap & Screen Calibration
         btnVision?.setOnClickListener {
-            Toast.makeText(this, "👁️ On-Device Neural Vision: 12MB TFLite & 285+ Sprites Active", Toast.LENGTH_SHORT).show()
+            val acc = AutoClickAccessibilityService.instance
+            if (acc != null) {
+                acc.performTap(960f, 540f) {
+                    Toast.makeText(this, "🎯 Screen Calibrated! Test tap dispatched at center.", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this, "Enable Accessibility Service first!", Toast.LENGTH_SHORT).show()
+            }
         }
 
         // 4. Macro Console Button: Shows Raids & Supercell ID rotation status
