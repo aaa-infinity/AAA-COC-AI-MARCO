@@ -108,8 +108,17 @@ class MainActivity : Activity() {
             }
 
             startService(Intent(this, FloatingOverlayService::class.java))
-            Toast.makeText(this, "🚀 Dragon Farm HUD Launched! Open Clash of Clans.", Toast.LENGTH_SHORT).show()
-            moveTaskToBack(true)
+
+            // Auto-Launch Clash of Clans Game
+            val launchIntent = packageManager.getLaunchIntentForPackage("com.supercell.clashofclans")
+            if (launchIntent != null) {
+                launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(launchIntent)
+                Toast.makeText(this, "🚀 Ai Marco coc: Launching Clash of Clans...", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "🚀 Ai Marco coc Controller Launched! Open Clash of Clans.", Toast.LENGTH_SHORT).show()
+                moveTaskToBack(true)
+            }
         }
     }
 
@@ -170,7 +179,6 @@ class MainActivity : Activity() {
 
         findViewById<Button>(R.id.btn_test_vision).setOnClickListener {
             tvVisionStatus.text = "Vision AI: Processing screenshot with Screenshot-to-Code engine..."
-            // Create sample test bitmap
             val testBitmap = Bitmap.createBitmap(1920, 1080, Bitmap.Config.ARGB_8888)
             val canvas = Canvas(testBitmap)
             val paint = Paint().apply { color = Color.DKGRAY }
