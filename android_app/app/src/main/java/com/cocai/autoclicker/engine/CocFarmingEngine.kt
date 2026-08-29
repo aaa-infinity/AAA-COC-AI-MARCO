@@ -23,6 +23,8 @@ class CocFarmingEngine(
     val matchmaker = SmartMatchmakingEngine(accessibilityService)
     val wallUpgrader = WallUpgradeEngine(accessibilityService)
     val telegramNotifier = TelegramNotifierService()
+    val tacticsEngine = AdvancedTacticsEngine(accessibilityService)
+    val battlePacing = BattlePacingEngine(accessibilityService)
 
     var isRunning: Boolean = false
         private set
@@ -36,7 +38,7 @@ class CocFarmingEngine(
     fun startEngine(strategy: CocStrategy = CocStrategy.ZAP_DRAGON_FARMING) {
         currentStrategy = strategy
         isRunning = true
-        Log.i("CocEngine", "Starting Home Village 24/7 Autonomous Farming Engine: " + strategy.name)
+        Log.i("CocEngine", "Starting Home Village 24/7 Pro AI Farming Engine: " + strategy.name)
         scheduleNextStep(800L) {
             runHomeVillageLoop()
         }
@@ -63,7 +65,7 @@ class CocFarmingEngine(
      * 2. Auto Wall Upgrade (resource sink)
      * 3. 0-Cost Quick Train Dragon Army
      * 4. Smart Matchmaking & Nexting Loop (find rich base)
-     * 5. Multi-Touch Simultaneous Deployment (4-Finger Wave + 2-Finger Funnel)
+     * 5. Smooth Multi-Phase Humanized Deployment
      * 6. Return Home & Loop
      */
     private fun runHomeVillageLoop() {
@@ -135,84 +137,15 @@ class CocFarmingEngine(
     }
 
     /**
-     * Dedicated Home Village Zap Dragon Attack with Multi-Touch & Smart Matchmaking:
-     * 1. Smart Matchmaking & Nexting Loop (find rich base)
-     * 2. Zap Lightning Spells on top Air Defenses
-     * 3. 2-Finger Simultaneous Corner Funnel (King Left, Queen Right)
-     * 4. 4-Finger Simultaneous Dragon Wave Line
-     * 5. Multi-Touch Balloon & Grand Warden drop
-     * 6. Activate Grand Warden & Hero Equipment
-     * 7. Collect 100% Home Village loot
+     * Dedicated Home Village Zap Dragon Attack with Smooth Multi-Phase Execution:
      */
     private fun executeZapDragonAttack() {
-        Log.i("CocEngine", "Starting Home Village Smart Matchmaking & Zap Dragon Raid...")
+        Log.i("CocEngine", "Starting Home Village Smart Matchmaking & Smooth Zap Dragon Raid...")
         matchmaker.findTargetBase(LootRequirement(minGold = 450000L, minElixir = 450000L)) { nextCount ->
-            scheduleNextStep(1200L) {
-                // Step 1: Zap Air Defenses (Slot 5: Lightning Spells)
-                Log.i("CocEngine", "Step 1: Destroying Air Defenses with Lightning Spells...")
-                accessibilityService.performTap(620f, 980f) // Slot 5: Lightning Spell
-                val ad1 = PointF(750f, 480f)
-                val ad2 = PointF(1170f, 480f)
-                
-                accessibilityService.performTap(ad1.x, ad1.y)
-                scheduleNextStep(200L) { accessibilityService.performTap(ad1.x, ad1.y) }
-                scheduleNextStep(400L) { accessibilityService.performTap(ad1.x, ad1.y) }
-                scheduleNextStep(600L) { accessibilityService.performTap(ad2.x, ad2.y) }
-                scheduleNextStep(800L) { accessibilityService.performTap(ad2.x, ad2.y) }
-                scheduleNextStep(1000L) { accessibilityService.performTap(ad2.x, ad2.y) }
-
-                scheduleNextStep(1500L) {
-                    // Step 2: 2-Finger Simultaneous Corner Funnel
-                    Log.i("CocEngine", "Step 2: 2-Finger Simultaneous Hero Funnel...")
-                    accessibilityService.performTap(300f, 980f) // Select King
-                    multiTouch.deployTwoFingerFunnel(
-                        leftCorner = PointF(450f, 850f),
-                        rightCorner = PointF(1450f, 850f),
-                        taps = 2
-                    ) {
-                        scheduleNextStep(1000L) {
-                            // Step 3: 4-Finger Simultaneous Dragon Wave (Slot 1)
-                            Log.i("CocEngine", "Step 3: 4-Finger Simultaneous Dragon Wave...")
-                            accessibilityService.performTap(200f, 980f) // Slot 1: Dragons
-                            multiTouch.deployFourFingerWave(
-                                startCorner = PointF(550f, 830f),
-                                endCorner = PointF(1380f, 830f),
-                                waves = 3
-                            ) {
-                                scheduleNextStep(800L) {
-                                    // Step 4: Multi-Touch Balloons (Slot 2) & Grand Warden
-                                    Log.i("CocEngine", "Step 4: Deploying Balloons & Grand Warden...")
-                                    accessibilityService.performTap(290f, 980f) // Slot 2: Balloons
-                                    multiTouch.deployFourFingerWave(
-                                        startCorner = PointF(650f, 840f),
-                                        endCorner = PointF(1280f, 840f),
-                                        waves = 2
-                                    ) {
-                                        accessibilityService.performTap(500f, 980f) // Grand Warden
-                                        accessibilityService.performTap(960f, 850f)
-
-                                        // Step 5: Rage Spell into base core (Slot 6)
-                                        scheduleNextStep(7000L) {
-                                            Log.i("CocEngine", "Step 5: Casting Rage Spell in core...")
-                                            accessibilityService.performTap(720f, 980f)
-                                            accessibilityService.performTap(960f, 540f)
-
-                                            // Step 6: Trigger Hero Equipment & Warden Ability
-                                            scheduleNextStep(7000L) {
-                                                Log.i("CocEngine", "Step 6: Triggering Hero Equipment abilities...")
-                                                modernFeatures.triggerHeroEquipmentCombos()
-
-                                                // Wait for dragon destruction & exit
-                                                scheduleNextStep(38000L) {
-                                                    surrenderAndReturnHome()
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+            scheduleNextStep(1000L) {
+                val plan = tacticsEngine.computeTacticalPlan()
+                battlePacing.executeSmoothZapDragonBattle(plan) {
+                    surrenderAndReturnHome()
                 }
             }
         }
