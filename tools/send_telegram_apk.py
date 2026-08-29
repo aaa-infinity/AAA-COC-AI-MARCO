@@ -5,6 +5,7 @@ Dispatches compiled APK binary to Telegram channel via robust curl multipart str
 import os
 import sys
 import glob
+import json
 import subprocess
 
 def main():
@@ -20,16 +21,16 @@ def main():
     apk_path = apk_candidates[0]
     file_size_mb = os.path.getsize(apk_path) / (1024 * 1024)
     file_size_str = f"{file_size_mb:.2f} MB"
-    print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id} via robust curl stream...")
+    print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id}...")
 
     caption = f"""🌾 🧱 <b>Ai Marco coc v6.4 (Home Village Farm &amp; Wall Maxer)</b>
 📦 <b>File:</b> Ai-Marco-coc-v6.4.apk ({file_size_str})
 🏡 <b>100% Home Village Focus:</b> Pure fast loot farming &amp; wall upgrades
-🧱 <b>Continuous Wall Dump:</b> Upgrades walls with free builder every raid
-⚡ <b>0-Cost Quick Train:</b> Infinite Root Rider, Zap Dragon &amp; Goblin farm
+🧱 <b>Dedicated Wall Builder:</b> Auto-dumps full loot into wall upgrades
+⚡ <b>0-Cost Quick Train:</b> Root Riders, Zap Dragons &amp; Sneaky Goblins
 🔍 <b>Smart Nexting Search:</b> 500k+ Gold &amp; Elixir hunter
 🖐️ <b>Multi-Touch Raid:</b> 4-Finger Line Wave &amp; 2-Finger Funnel
-🎨 <b>New AAA Icon:</b> Glowing Neon Cyber-Dragon &amp; Royal Crown
+🎨 <b>New AAA Icon:</b> Glowing Cyber-Dragon &amp; Crown
 🚨 <b>Panic Stop:</b> Volume Down Key Override"""
 
     cmd = [
@@ -42,13 +43,15 @@ def main():
     ]
 
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
-        print("Telegram Dispatch Successful!")
-        print("Response:", result.stdout[:200])
-    except subprocess.CalledProcessError as e:
+        proc = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        print("Curl output:", proc.stdout[:250])
+        res = json.loads(proc.stdout)
+        if not res.get("ok"):
+            print("Telegram API returned error:", res)
+            sys.exit(1)
+        print(f"Telegram Dispatch Successful! Message ID: {res['result']['message_id']}")
+    except Exception as e:
         print(f"ERROR uploading to Telegram: {e}")
-        print("Stderr:", e.stderr)
-        print("Stdout:", e.stdout)
         sys.exit(1)
 
 if __name__ == "__main__":
