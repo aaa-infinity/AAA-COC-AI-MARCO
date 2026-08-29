@@ -76,6 +76,10 @@ class CocFarmingEngine(
         }
     }
 
+    fun collectHomeVillageResourcesNow(onComplete: () -> Unit) {
+        collectHomeVillageResources(onComplete)
+    }
+
     private fun collectHomeVillageResources(onComplete: () -> Unit) {
         val tapPoints = listOf(
             PointF(750f, 450f),   // Gold Mine

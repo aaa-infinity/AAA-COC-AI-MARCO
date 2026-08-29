@@ -40,7 +40,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Multi-Touch • 260+ Assets • Self-Independent Supervisor"
+                android:text="Home Village AI Macro • Multi-Touch • 265+ Assets"
                 android:textColor="#38BDF8"
                 android:textSize="10sp" />
         </LinearLayout>
@@ -94,7 +94,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="#131C2E"
-            android:text="🤝 CLAN &amp; BB"
+            android:text="🏡 VILLAGE &amp; CLAN"
             android:textColor="#94A3B8"
             android:textSize="9sp"
             android:textStyle="bold"
@@ -201,7 +201,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🖐️ Multi-Touch Gestures Engine (Active)"
+                        android:text="🖐️ Multi-Touch Gestures &amp; Panic Stop"
                         android:textColor="#10B981"
                         android:textSize="12sp"
                         android:textStyle="bold" />
@@ -210,7 +210,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="• 4-Finger Wave: Simultaneous dragon &amp; balloon line drop&#10;• 2-Finger Funnel: King &amp; Queen corner drops in 1ms&#10;• Multi-Line Swipes &amp; Smooth Pinch Zoom"
+                        android:text="• 4-Finger Wave: Simultaneous dragon &amp; balloon line drop&#10;• 2-Finger Funnel: King &amp; Queen corner drops in 1ms&#10;• 🚨 Panic Stop: Press Volume Down key to halt instantly"
                         android:textColor="#E2E8F0"
                         android:textSize="11sp" />
                 </LinearLayout>
@@ -227,7 +227,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📊 Live Battle Statistics &amp; AI Supervisor"
+                        android:text="📊 Home Village Battle Statistics &amp; AI Memory"
                         android:textColor="#38BDF8"
                         android:textSize="12sp"
                         android:textStyle="bold" />
@@ -237,7 +237,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
-                        android:text="Total Raids: 0 | Win Rate: 100% | Optimal Angle: BOTTOM_LEFT&#10;Auto-Crash &amp; Sync Recovery: ON | 260+ Assets: LOADED"
+                        android:text="Total Raids: 0 | Win Rate: 100% | Optimal Angle: BOTTOM_LEFT&#10;Auto-Crash &amp; Sync Recovery: ON | 265+ Assets: LOADED"
                         android:textColor="#E2E8F0"
                         android:textSize="11sp" />
                 </LinearLayout>
@@ -254,7 +254,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="⚔️ Tactical Attack &amp; Loot Filter Settings"
+                    android:text="⚔️ Home Village Tactical Army Strategies"
                     android:textColor="#F59E0B"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -264,7 +264,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Active Army Strategy:"
+                    android:text="Active Home Village Strategy:"
                     android:textColor="#F8FAFC"
                     android:textSize="11sp"
                     android:textStyle="bold" />
@@ -288,7 +288,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="💰 Minimum Loot Filter Thresholds"
+                        android:text="💰 Home Village Loot Filters"
                         android:textColor="#38BDF8"
                         android:textSize="12sp"
                         android:textStyle="bold" />
@@ -305,13 +305,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Air Sweeper Avoidance: AUTOMATIC (Attacks from Sweeper Back/Flank)"
+                        android:text="Air Sweeper Avoidance: AUTOMATIC (Flank/Rear Entry Calculation)"
                         android:textColor="#10B981"
                         android:textSize="10sp" />
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- TAB 3: CLAN & BUILDER BASE -->
+            <!-- TAB 3: HOME VILLAGE & CLAN AUTOMATION -->
             <LinearLayout
                 android:id="@+id/tab_content_clan"
                 android:layout_width="match_parent"
@@ -322,7 +322,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🤝 Autonomous Clan &amp; Builder Base Suite"
+                    android:text="🏡 Home Village &amp; Clan Automation Suite"
                     android:textColor="#38BDF8"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -354,9 +354,20 @@
                         android:textColor="#FFFFFF"
                         android:textSize="11sp"
                         android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btn_trigger_cc_request"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="6dp"
+                        android:backgroundTint="#6366F1"
+                        android:text="🛡️ REQUEST CLAN CASTLE REINFORCEMENTS"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
-                <!-- Builder Base 2.0 Card -->
+                <!-- Base Maintenance Card -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -368,19 +379,30 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="⛵ Builder Base 2.0 Instant Loop"
+                        android:text="💎 Base Maintenance &amp; Resource Harvesting"
                         android:textColor="#10B981"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
                     <Button
-                        android:id="@+id/btn_trigger_bb_loop"
+                        android:id="@+id/btn_trigger_clean_obstacles"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_marginTop="8dp"
                         android:backgroundTint="#10B981"
-                        android:text="⛵ RUN BUILDER BASE ATTACK &amp; HARVEST"
+                        android:text="💎 CLEAN GEM BOXES &amp; OBSTACLES NOW"
                         android:textColor="#FFFFFF"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btn_trigger_collect_loot"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="6dp"
+                        android:backgroundTint="#F59E0B"
+                        android:text="💰 COLLECT MINES, DRILLS &amp; TREASURY"
+                        android:textColor="#070B14"
                         android:textSize="11sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -397,7 +419,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🧠 Multimodal Vision AI &amp; 260+ Asset Hub"
+                    android:text="🧠 Multimodal Vision AI &amp; 265+ Asset Hub"
                     android:textColor="#38BDF8"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -523,7 +545,7 @@
                         android:layout_marginTop="8dp"
                         android:background="#070B14"
                         android:padding="8dp"
-                        android:text="Vision Status: Ready. 260+ Supercell Datamined Assets active."
+                        android:text="Vision Status: Ready. 265+ Supercell Datamined Assets active."
                         android:textColor="#E2E8F0"
                         android:textSize="10sp"
                         android:fontFamily="monospace" />

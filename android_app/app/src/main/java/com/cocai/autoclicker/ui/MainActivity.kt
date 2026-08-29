@@ -57,10 +57,10 @@ class MainActivity : Activity() {
     )
 
     private val strategies = listOf(
-        "⚡ Zap Dragon Farming (4-Finger Multi-Touch)",
+        "⚡ Home Village Zap Dragon Farming (4-Finger Multi-Touch)",
         "⚡ Electro Dragon Core Wipeout",
         "🐉 Dragon + Dragon Rider Smash",
-        "🏹 Sneaky Goblin Ore Harvesting"
+        "🏹 Sneaky Goblin Ore & Resource Sniping"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +75,7 @@ class MainActivity : Activity() {
 
         initViews()
         setupTabSwitching()
-        setupStrategyAndClanTabs()
+        setupStrategyAndVillageTabs()
         setupAiProviderTab()
         updateKeyPoolCount()
     }
@@ -128,7 +128,7 @@ class MainActivity : Activity() {
             if (launchIntent != null) {
                 launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(launchIntent)
-                Toast.makeText(this, "🚀 Ai Marco coc: Launching Clash of Clans...", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "🚀 Ai Marco coc: Launching Clash of Clans Home Village...", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(this, "🚀 Controller Launched! Open Clash of Clans.", Toast.LENGTH_SHORT).show()
                 moveTaskToBack(true)
@@ -154,7 +154,7 @@ class MainActivity : Activity() {
         tabBtnAi.setOnClickListener { selectTab(3) }
     }
 
-    private fun setupStrategyAndClanTabs() {
+    private fun setupStrategyAndVillageTabs() {
         val stratAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, strategies)
         spinnerStrategyPicker.adapter = stratAdapter
 
@@ -164,20 +164,46 @@ class MainActivity : Activity() {
                 val donate = AutoDonateEngine(accService)
                 Toast.makeText(this, "🤝 Scanning Clan Chat for troop requests...", Toast.LENGTH_SHORT).show()
                 donate.startAutoDonate {
-                    Toast.makeText(this, "✓ Auto-Donate complete!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "✓ Auto-Donate scan complete!", Toast.LENGTH_SHORT).show()
                 }
             } else {
                 Toast.makeText(this, "Enable Accessibility Service first!", Toast.LENGTH_SHORT).show()
             }
         }
 
-        findViewById<Button>(R.id.btn_trigger_bb_loop).setOnClickListener {
+        findViewById<Button>(R.id.btn_trigger_cc_request).setOnClickListener {
             val accService = AutoClickAccessibilityService.instance
             if (accService != null) {
-                val bb = BuilderBaseEngine(accService)
-                Toast.makeText(this, "⛵ Sailing to Builder Base 2.0...", Toast.LENGTH_SHORT).show()
-                bb.startBuilderBaseLoop {
-                    Toast.makeText(this, "✓ Builder Base raid complete!", Toast.LENGTH_SHORT).show()
+                val supervisor = AutonomousSupervisor(this, accService)
+                Toast.makeText(this, "🛡️ Requesting Clan Castle troops...", Toast.LENGTH_SHORT).show()
+                supervisor.performClanCastleRequest {
+                    Toast.makeText(this, "✓ Clan Castle request sent!", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this, "Enable Accessibility Service first!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        findViewById<Button>(R.id.btn_trigger_clean_obstacles).setOnClickListener {
+            val accService = AutoClickAccessibilityService.instance
+            if (accService != null) {
+                val supervisor = AutonomousSupervisor(this, accService)
+                Toast.makeText(this, "💎 Clearing Gem Boxes and base obstacles...", Toast.LENGTH_SHORT).show()
+                supervisor.cleanBaseObstacles {
+                    Toast.makeText(this, "✓ Base obstacles and Gem Boxes cleaned!", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this, "Enable Accessibility Service first!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        findViewById<Button>(R.id.btn_trigger_collect_loot).setOnClickListener {
+            val accService = AutoClickAccessibilityService.instance
+            if (accService != null) {
+                val engine = CocFarmingEngine(accService)
+                Toast.makeText(this, "💰 Collecting Mines, Drills and Treasury Ores...", Toast.LENGTH_SHORT).show()
+                engine.collectHomeVillageResourcesNow {
+                    Toast.makeText(this, "✓ Home Village resources collected!", Toast.LENGTH_SHORT).show()
                 }
             } else {
                 Toast.makeText(this, "Enable Accessibility Service first!", Toast.LENGTH_SHORT).show()
@@ -240,7 +266,7 @@ class MainActivity : Activity() {
                 providerUrl = url,
                 modelName = selectedModel,
                 onResult = { result ->
-                    tvVisionStatus.text = "✓ Game State: ${result.gameState}\n✓ Optimal Entry: ${result.recommendedEntrySide}\n✓ Zap Targets: ${result.zapTargets}\n✓ 4-Finger Wave: Ready"
+                    tvVisionStatus.text = "✓ Home Village Game State: ${result.gameState}\n✓ Optimal Entry Side: ${result.recommendedEntrySide}\n✓ Zap Targets: ${result.zapTargets}\n✓ 4-Finger Wave: Ready"
                 },
                 onError = { err ->
                     tvVisionStatus.text = "Vision Fallback: Heuristic model active (${err})"
@@ -264,6 +290,6 @@ class MainActivity : Activity() {
 
         val bestSide = memoryEngine.getOptimalEntrySide()
         val stats = memoryEngine.getSuccessStatistics()
-        tvMemoryStats.text = "Raids Learned: ${stats.optInt("total_raids", 0)} | Optimal Attack Angle: $bestSide\nMulti-Touch: 4-FINGER | 260+ Real Assets: READY"
+        tvMemoryStats.text = "Home Village Raids Learned: ${stats.optInt("total_raids", 0)} | Optimal Attack Angle: $bestSide\nMulti-Touch: 4-FINGER | 265+ Real Assets: READY"
     }
 }

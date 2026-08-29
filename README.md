@@ -1,29 +1,38 @@
-# Ai Marco coc — Autonomous Game Agent & Multi-Touch Automation
+# Ai Marco coc — Pure Home Village Autonomous AI Game Agent
 
-Autonomous AI Game Agent and Multi-Touch Vision Automation Engine for **Clash of Clans**.
-Featuring **True Multi-Touch Gestures (4-Finger Waves & 2-Finger Funnels)**, **Self-Independent Auto-Healing Supervisor**, **260+ Real Datamined Transparent Supercell Assets**, **Screenshot-to-Code Multimodal Vision AI**, **Zap Dragon Home Village Farming Loop**, **Universal Screen Scaling**, **Google ML Kit OCR**, and **Multi-Key 429 Auto-Rotator**.
+Autonomous AI Game Agent and Multi-Touch Vision Automation Engine for **Clash of Clans Home Village**.
+Featuring **True Multi-Touch Gestures (4-Finger Waves & 2-Finger Funnels)**, **Hardware Volume Down Emergency Panic Stop**, **Self-Independent Auto-Healing Supervisor**, **265+ Real Datamined Transparent Supercell Assets**, **Home Village Resource & Treasury Harvester**, **Zap Dragon Home Village Farming Loop**, **Google ML Kit OCR**, and **Multi-Key 429 Auto-Rotator**.
 
 ---
 
-## 🖐️ True Multi-Touch Gesture Emulation
+## 🖐️ True Multi-Touch Gesture Emulation & Panic Stop
 
-- **4-Finger Simultaneous Line Drop**: Deploys entire waves of Dragons, Root Riders, and Balloons across the border simultaneously in under 0.4 seconds.
+- **🚨 Hardware Volume Down Panic Stop**: Pressing the physical Volume Down key immediately halts all gestures and macro loops.
+- **4-Finger Simultaneous Line Drop**: Deploys entire waves of Dragons, Root Riders, and Balloons across the Home Village attack border simultaneously in under 0.4 seconds.
 - **2-Finger Simultaneous Corner Funnel**: Drops Barbarian King and Archer Queen on opposite corners at the exact same millisecond.
-- **4-Quadrant Simultaneous BARCH Surround**: Surrounds target bases with simultaneous perimeter drops.
 - **Smooth 2-Finger Pinch Zoom**: Real-time camera zoom and village panning.
 
 ---
 
-## 🛡️ Self-Independent Supervisor & Auto-Recovery
+## 🏡 Complete Home Village 24/7 Automation Loop
 
-- **Auto-Crash & Sync Error Recovery**: Detects "Client and Server Out of Sync" or "Connection Lost" popups and automatically taps "Reload Game" / "Try Again" without user intervention.
-- **Autonomous Clan Castle Auto-Request**: Detects empty Clan Castle, opens request menu, and requests configured farming troops & spells.
-- **Village Obstacle & Gem Box Auto-Cleaner**: Periodically clears trees, trunks, bushes, and Gem Boxes for free gems.
-- **Continuous Anti-AFK Base Patrol**: Performs gentle Bezier camera sweeps to prevent inactivity disconnects.
+1. **Resource & Treasury Harvesting**: Collects Gold Mines, Elixir Collectors, Dark Elixir Drills, Gem Mine, and Treasury / Daily Star Bonus Ores.
+2. **Obstacle & Gem Box Cleaner**: Automatically detects and clears trees, trunks, bushes, and Gem Boxes for free gems.
+3. **Clan Castle Auto-Request**: Sends reinforcement requests automatically between raids.
+4. **Clan Chat Auto-Donate**: Monitors clan chat and donates requested troops with human-like randomized delays.
+5. **0-Cost Quick Training**: Queues full dragon / e-drag / ground armies at 0 elixir cost.
+6. **Multi-Touch Tactical Attack**:
+   - Sweeper avoidance calculation (attacks from rear/flank).
+   - Lightning zap on top Air Defenses.
+   - 2-Finger simultaneous corner hero funnels.
+   - 4-Finger simultaneous dragon wave line drop.
+   - Rage spell drop in core defense clusters.
+   - Hero equipment ability activation.
+7. **Continuous Anti-AFK Patrol**: Performs gentle Bezier camera sweeps to prevent inactivity disconnects.
 
 ---
 
-## 🎨 260+ Real Datamined Transparent Supercell Game Assets
+## 🎨 265+ Real Datamined Transparent Supercell Assets
 
 All templates inside [`android_app/app/src/main/assets/templates/`](file:///root/projects/Ai-marco/android_app/app/src/main/assets/templates/), [`vision/templates/`](file:///root/projects/Ai-marco/vision/templates/), and [`uploads/templates/`](file:///root/projects/Ai-marco/uploads/templates/) are 100% real, transparent, pixel-exact game sprites sourced from `Statscell/clash-assets` & `ClashKingAssets`:
 - **74 Troop, Spell, and Hero Icons**: Dragon, Electro Dragon, Dragon Rider, Balloon, Sneaky Goblin, Root Rider, Barbarian King, Archer Queen, Grand Warden, Royal Champion, Lightning, Rage, Freeze, Jump, Bat.
@@ -35,19 +44,8 @@ All templates inside [`android_app/app/src/main/assets/templates/`](file:///root
 
 ---
 
-## 🎮 Macrorify-Style 6-Button Floating Controller
-
-- 🖐️ **Vision Snap:** Real-time Screenshot-to-Code base analysis.
-- ▶️ **Play / ⏸️ Pause:** Starts and pauses autonomous farming.
-- ⚙️ **Settings:** Displays loot filters and attack delay settings.
-- 🛠️ **Tools:** Runs Clan Chat Auto-Donate, CC Request & Anti-AFK Base Patrol.
-- 💻 **Console:** Real-time log inspector and macro action debugger.
-- ❌ **Close:** Safely stops background services and dismisses overlay.
-
----
-
 ## 🚀 GitHub Actions Cloud Build & Telegram Dispatch
 
 - **Repository**: [https://github.com/aaa-infinity/AAA-COC-AI-MARCO](https://github.com/aaa-infinity/AAA-COC-AI-MARCO)
 - **Telegram Channel**: [https://t.me/aaafreecloud](https://t.me/aaafreecloud) (`@aaafreecloud`)
-- Automatically compiles `Ai-Marco-coc-v5.0-APK` on cloud runners with Gradle 8.7 & JDK 17 and delivers the APK directly to the Telegram channel.
+- Automatically compiles `Ai-Marco-coc-v5.1-APK` on cloud runners with Gradle 8.7 & JDK 17 and delivers the APK directly to the Telegram channel.

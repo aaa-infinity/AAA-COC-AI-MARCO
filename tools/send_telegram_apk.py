@@ -22,14 +22,15 @@ def main():
     file_size_str = f"{file_size_mb:.2f} MB"
     print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id}...")
 
-    caption = f"""🐉 ⚔️ <b>Ai Marco coc v5.0 Released!</b>
-📦 <b>File:</b> Ai-Marco-coc-v5.0.apk ({file_size_str})
+    caption = f"""🐉 ⚔️ <b>Ai Marco coc v5.1 Released!</b>
+📦 <b>File:</b> Ai-Marco-coc-v5.1.apk ({file_size_str})
+🏡 <b>Pure Home Village:</b> 24/7 AI Farming & Resource Loop
 🖐️ <b>True Multi-Touch:</b> 4-Finger Line Wave & 2-Finger Funnel
 🚨 <b>Panic Stop:</b> Physical Volume Down key override
 🛡️ <b>Supervisor:</b> Auto-Crash & Disconnect Recovery
 ✨ <b>Assets:</b> 265+ Real Datamined Supercell PNG Sprites
-⛵ <b>Builder Base:</b> 2.0 Instant Loop & Daily Ores
-🤝 <b>Clan Suite:</b> Auto-Donate & CC Request
+🤝 <b>Clan Suite:</b> Auto-Donate & CC Auto-Request
+💎 <b>Village Clean:</b> Gem Boxes & Obstacle clearing
 🎮 <b>Auto-Launch:</b> Direct Clash of Clans Game Launcher"""
 
     boundary = "----AiMarcoTelegramBoundary987654321"
@@ -40,7 +41,7 @@ def main():
     body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"chat_id\"\r\n\r\n{chat_id}\r\n".encode("utf-8"))
     body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"parse_mode\"\r\n\r\nHTML\r\n".encode("utf-8"))
     body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"caption\"\r\n\r\n{caption}\r\n".encode("utf-8"))
-    body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"document\"; filename=\"Ai-Marco-coc-v5.0.apk\"\r\nContent-Type: application/vnd.android.package-archive\r\n\r\n".encode("utf-8"))
+    body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"document\"; filename=\"Ai-Marco-coc-v5.1.apk\"\r\nContent-Type: application/vnd.android.package-archive\r\n\r\n".encode("utf-8"))
     body.append(file_bytes)
     body.append(f"\r\n--{boundary}--\r\n".encode("utf-8"))
 
