@@ -8,10 +8,11 @@ import com.cocai.autoclicker.service.AutoClickAccessibilityService
 import kotlin.random.Random
 
 enum class CocStrategy {
-    ZAP_DRAGON_FARMING,      // Premier Home Village Dragon & Zap Attack with 4-Finger Multi-Touch
-    ELECTRO_DRAGON_SPAM,     // Chain Lightning E-Drag core wipeout
-    DRAGON_RIDER_SMASH,      // High TH Dragon + Dragon Rider air assault
-    SNEAKY_GOBLIN_ORE_FARM   // Quick 1-Star & Ores with Multi-Touch Perimeter Drop
+    ROOT_RIDER_OVERGROWTH_SMASH, // Pro #1 CWL Tournament Meta (TH16/17)
+    ZAP_DRAGON_FARMING,          // Premier Home Village Dragon & Zap Attack with 4-Finger Multi-Touch
+    ELECTRO_DRAGON_SPAM,         // Chain Lightning E-Drag core wipeout
+    DRAGON_RIDER_SMASH,          // High TH Dragon + Dragon Rider air assault
+    SNEAKY_GOBLIN_ORE_FARM       // Quick 1-Star & Ores with Multi-Touch Perimeter Drop
 }
 
 class CocFarmingEngine(
@@ -25,6 +26,8 @@ class CocFarmingEngine(
     val telegramNotifier = TelegramNotifierService()
     val tacticsEngine = AdvancedTacticsEngine(accessibilityService)
     val battlePacing = BattlePacingEngine(accessibilityService)
+    val geometryEngine = ComplexBaseGeometryEngine(accessibilityService)
+    val gigaProtection = TownHallGigaProtectionEngine(accessibilityService)
 
     var isRunning: Boolean = false
         private set
@@ -38,7 +41,7 @@ class CocFarmingEngine(
     fun startEngine(strategy: CocStrategy = CocStrategy.ZAP_DRAGON_FARMING) {
         currentStrategy = strategy
         isRunning = true
-        Log.i("CocEngine", "Starting Home Village 24/7 Pro AI Farming Engine: " + strategy.name)
+        Log.i("CocEngine", "Starting Home Village 24/7 Complex Pro AI Farming Engine: " + strategy.name)
         scheduleNextStep(800L) {
             runHomeVillageLoop()
         }
@@ -63,19 +66,19 @@ class CocFarmingEngine(
      * Complete Home Village 24/7 Autonomous Loop:
      * 1. Collect Mines, Pumps, Drills, Treasury, Ores
      * 2. Auto Wall Upgrade (resource sink)
-     * 3. 0-Cost Quick Train Dragon Army
+     * 3. 0-Cost Quick Train Dragon/Root Rider Army
      * 4. Smart Matchmaking & Nexting Loop (find rich base)
-     * 5. Smooth Multi-Phase Humanized Deployment
+     * 5. Smooth Multi-Phase Humanized Complex Deployment
      * 6. Return Home & Loop
      */
     private fun runHomeVillageLoop() {
         Log.i("CocEngine", "=== [HOME VILLAGE] Collecting Resources & Daily Ores ===")
 
         collectHomeVillageResources {
-            // Optional wall dump before army training
             wallUpgrader.performWallUpgrades(wallsToUpgrade = 1) {
                 trainDragonArmy {
                     when (currentStrategy) {
+                        CocStrategy.ROOT_RIDER_OVERGROWTH_SMASH -> executeRootRiderSmash()
                         CocStrategy.ZAP_DRAGON_FARMING -> executeZapDragonAttack()
                         CocStrategy.ELECTRO_DRAGON_SPAM -> executeElectroDragonAttack()
                         CocStrategy.DRAGON_RIDER_SMASH -> executeDragonRiderAttack()
@@ -114,19 +117,55 @@ class CocFarmingEngine(
     }
 
     private fun trainDragonArmy(onComplete: () -> Unit) {
-        Log.i("CocEngine", "Queuing 0-Cost Dragon Army Preset...")
+        Log.i("CocEngine", "Queuing 0-Cost Pro Meta Army Preset...")
         // Tap Train Icon (bottom-left)
         accessibilityService.performTap(90f, 830f) {
             scheduleNextStep(1000L) {
                 // Tap Quick Train Tab
                 accessibilityService.performTap(1350f, 150f) {
                     scheduleNextStep(700L) {
-                        // Tap Train Slot #1 (Dragon Army Preset)
+                        // Tap Train Slot #1 (Preset)
                         accessibilityService.performTap(1580f, 380f) {
                             scheduleNextStep(700L) {
                                 // Close Window
                                 accessibilityService.performTap(1820f, 85f) {
                                     scheduleNextStep(900L, onComplete)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Pro Root Rider & Valkyrie Overgrowth Smash:
+     */
+    private fun executeRootRiderSmash() {
+        Log.i("CocEngine", "Starting Pro Root Rider Overgrowth Tournament Attack...")
+        matchmaker.findTargetBase(LootRequirement(minGold = 500000L, minElixir = 500000L)) {
+            scheduleNextStep(1200L) {
+                val plan = tacticsEngine.computeTacticalPlan()
+                // Step 1: Cast Overgrowth on side defenses (Slot 7: x=820, y=980)
+                accessibilityService.performTap(820f, 980f)
+                accessibilityService.performTap(plan.rightFunnelHero.x, plan.rightFunnelHero.y)
+                
+                scheduleNextStep(1000L) {
+                    // Step 2: 4-Finger Root Rider + Valkyrie Drop (Slot 1 & 2)
+                    accessibilityService.performTap(200f, 980f) // Root Riders
+                    multiTouch.deployFourFingerWave(plan.startDeployLine, plan.endDeployLine, 2) {
+                        accessibilityService.performTap(290f, 980f) // Valkyries
+                        multiTouch.deployFourFingerWave(plan.startDeployLine, plan.endDeployLine, 2) {
+                            deployHeroes(PointF(960f, 850f))
+                            
+                            // Step 3: Core Town Hall Giga Protection & Rage
+                            scheduleNextStep(14000L) {
+                                gigaProtection.protectArmyFromGigaExplosion {
+                                    modernFeatures.triggerHeroEquipmentCombos()
+                                    scheduleNextStep(38000L) {
+                                        surrenderAndReturnHome()
+                                    }
                                 }
                             }
                         }
