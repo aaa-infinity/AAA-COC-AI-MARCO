@@ -38,7 +38,7 @@ jobs:
           TELEGRAM_CHAT_ID: "-1004447017934"
         run: |
           if [ -n "$TELEGRAM_BOT_TOKEN" ]; then
-            curl -s "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=🚀+[Ai+Marco+coc+v5.0]+Cloud+APK+Build+Started+on+GitHub+Runner...%0ACommit:+${{ github.sha }}%0AStatus:+Compiling+with+Multi-Touch+Engine+%26+260%2B+Real+Assets" || true
+            curl -s "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=🚀+Ai+Marco+coc+v5.0+Cloud+APK+Build+Started+on+GitHub+Runner...%0ACommit:+${{ github.sha }}%0AStatus:+Compiling+with+Multi-Touch+Engine+%26+260%2B+Real+Assets" || true
           fi
 
       - name: Compile Commercial Debug APK
@@ -46,13 +46,15 @@ jobs:
         working-directory: android_app
         run: |
           gradle assembleDebug --stacktrace --no-daemon
+          mkdir -p ../dist
+          cp app/build/outputs/apk/debug/app-debug.apk ../dist/Ai-Marco-coc-v5.0.apk
 
       - name: Upload APK to GitHub Artifacts
         if: success()
         uses: actions/upload-artifact@v4
         with:
           name: Ai-Marco-coc-v5.0-APK
-          path: android_app/app/build/outputs/apk/debug/*.apk
+          path: dist/Ai-Marco-coc-v5.0.apk
           retention-days: 30
 
       - name: Send APK to Telegram Channel on Success
@@ -62,15 +64,49 @@ jobs:
           TELEGRAM_CHAT_ID: "-1004447017934"
         run: |
           if [ -n "$TELEGRAM_BOT_TOKEN" ]; then
-            APK_FILE=$(find android_app/app/build/outputs/apk/debug -name "*.apk" | head -n 1)
-            if [ -n "$APK_FILE" ] && [ -f "$APK_FILE" ]; then
+            APK_FILE="dist/Ai-Marco-coc-v5.0.apk"
+            if [ -f "$APK_FILE" ]; then
               FILE_SIZE=$(du -h "$APK_FILE" | cut -f1)
               echo "Found APK: $APK_FILE (Size: $FILE_SIZE)"
-              curl -F "document=@${APK_FILE}" \
-                   -F "caption=🐉 ⚔️ Ai Marco coc v5.0 Released!%0A📦 Size: ${FILE_SIZE}%0A🖐️ True Multi-Touch Gestures (4-Finger Wave & 2-Finger Funnel)%0A🛡️ Self-Independent Supervisor & Auto-Crash/Sync Recovery%0A✨ 260+ Real Datamined Transparent Supercell Assets (Pets, Defenses, Traps, Obstacles)%0A🤝 Clan Castle Auto-Request & Base Obstacle Cleaner%0A🎮 Auto-Launches Clash of Clans Directly%0A📱 Dark Cyber Glassmorphic UI" \
-                   "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument?chat_id=${TELEGRAM_CHAT_ID}"
-            else
-              echo "No APK file found to send"
+              python3 -c "
+import urllib.request, mimetypes, os
+
+bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
+chat_id = os.environ.get('TELEGRAM_CHAT_ID')
+apk_path = 'dist/Ai-Marco-coc-v5.0.apk'
+file_size = '$FILE_SIZE'
+
+boundary = '----AiMarcoBoundary7MA4YWxkTrZu0gW'
+caption = f'''🐉 ⚔️ <b>Ai Marco coc v5.0 Released!</b>
+📦 <b>File:</b> Ai-Marco-coc-v5.0.apk ({file_size})
+🖐️ <b>True Multi-Touch:</b> 4-Finger Line Wave & 2-Finger Funnel
+🚨 <b>Panic Stop:</b> Physical Volume Down key override
+🛡️ <b>Supervisor:</b> Auto-Crash & Disconnect Recovery
+✨ <b>Assets:</b> 265+ Real Datamined Supercell PNG Sprites
+⛵ <b>Builder Base:</b> 2.0 Instant Loop & Daily Ores
+🤝 <b>Clan Suite:</b> Auto-Donate & CC Request
+🎮 <b>Auto-Launch:</b> Direct Clash of Clans Game Launcher'''
+
+with open(apk_path, 'rb') as f:
+    file_bytes = f.read()
+
+body = []
+body.append(f'--{boundary}\r\nContent-Disposition: form-data; name=\"chat_id\"\r\n\r\n{chat_id}\r\n'.encode())
+body.append(f'--{boundary}\r\nContent-Disposition: form-data; name=\"parse_mode\"\r\n\r\nHTML\r\n'.encode())
+body.append(f'--{boundary}\r\nContent-Disposition: form-data; name=\"caption\"\r\n\r\n{caption}\r\n'.encode())
+body.append(f'--{boundary}\r\nContent-Disposition: form-data; name=\"document\"; filename=\"Ai-Marco-coc-v5.0.apk\"\r\nContent-Type: application/vnd.android.package-archive\r\n\r\n'.encode())
+body.append(file_bytes)
+body.append(f'\r\n--{boundary}--\r\n'.encode())
+
+payload = b''.join(body)
+req = urllib.request.Request(
+    f'https://api.telegram.org/bot{bot_token}/sendDocument',
+    data=payload,
+    headers={'Content-Type': f'multipart/form-data; boundary={boundary}'}
+)
+with urllib.request.urlopen(req, timeout=120) as resp:
+    print('Telegram Dispatch Result:', resp.status)
+"
             fi
           fi
 
