@@ -3,73 +3,117 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="#F20A0F1D"
-    android:padding="10dp"
-    android:elevation="12dp">
+    android:background="#DD090D16"
+    android:padding="6dp">
 
-    <!-- Header -->
+    <!-- Macrorify-Style 6-Button Control Toolbar -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- 1. Vision Snap / Target Selection -->
+        <Button
+            android:id="@+id/btn_hud_vision"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:background="#2563EB"
+            android:text="🖐️"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:padding="0dp" />
+
+        <!-- 2. Play / Pause Button -->
+        <Button
+            android:id="@+id/btn_toggle_play"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="4dp"
+            android:background="#10B981"
+            android:text="▶"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:padding="0dp" />
+
+        <!-- 3. Settings / Loot Threshold -->
+        <Button
+            android:id="@+id/btn_hud_settings"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="4dp"
+            android:background="#3B82F6"
+            android:text="⚙️"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:padding="0dp" />
+
+        <!-- 4. Tools: Auto-Donate & Anti-AFK -->
+        <Button
+            android:id="@+id/btn_hud_tools"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="4dp"
+            android:background="#6366F1"
+            android:text="🛠️"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:padding="0dp" />
+
+        <!-- 5. Code / Macro Console -->
+        <Button
+            android:id="@+id/btn_hud_console"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="4dp"
+            android:background="#F59E0B"
+            android:text="💻"
+            android:textColor="#090D16"
+            android:textSize="14sp"
+            android:padding="0dp" />
+
+        <!-- 6. Close / Exit Button -->
+        <Button
+            android:id="@+id/btn_hud_close"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="4dp"
+            android:background="#EF4444"
+            android:text="✕"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:padding="0dp" />
+    </LinearLayout>
+
+    <!-- Sub-badge with live Status & Active Strategy -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginTop="4dp"
         android:gravity="center_vertical">
 
         <TextView
+            android:id="@+id/tv_hud_status"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="🐉 AAA COC AI - DRAGON FARM"
-            android:textColor="#F59E0B"
-            android:textSize="11sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tv_hud_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="[IDLE]"
-            android:textColor="#10B981"
+            android:text="[IDLE] Zap Dragon"
+            android:textColor="#38BDF8"
             android:textSize="10sp"
             android:textStyle="bold" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/tv_ore_stats"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:text="🏰 Home Village | Zap Dragons Ready"
-        android:textColor="#94A3B8"
-        android:textSize="9sp" />
-
-    <!-- Button Row -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="6dp">
 
         <Button
             android:id="@+id/btn_strategy"
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:backgroundTint="#DC2626"
-            android:text="ZAP DRAGON FARMING"
-            android:textColor="#FFFFFF"
+            android:layout_height="26dp"
+            android:background="#1E293B"
+            android:text="STRATEGY"
+            android:textColor="#F59E0B"
             android:textSize="9sp"
-            android:paddingHorizontal="6dp" />
-
-        <Button
-            android:id="@+id/btn_toggle_play"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:layout_marginStart="6dp"
-            android:backgroundTint="#10B981"
-            android:text="▶ START"
-            android:textColor="#FFFFFF"
-            android:textSize="9sp"
-            android:textStyle="bold"
-            android:paddingHorizontal="8dp" />
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="0dp" />
     </LinearLayout>
 
 </LinearLayout>

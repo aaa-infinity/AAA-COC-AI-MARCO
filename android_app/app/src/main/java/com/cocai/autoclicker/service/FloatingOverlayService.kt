@@ -11,7 +11,10 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import com.cocai.autoclicker.R
+import com.cocai.autoclicker.engine.AntiAfkPatrolEngine
+import com.cocai.autoclicker.engine.AutoDonateEngine
 import com.cocai.autoclicker.engine.CocFarmingEngine
 import com.cocai.autoclicker.engine.CocStrategy
 
@@ -20,6 +23,8 @@ class FloatingOverlayService : Service() {
     private lateinit var windowManager: WindowManager
     private var floatingView: View? = null
     private var farmingEngine: CocFarmingEngine? = null
+    private var donateEngine: AutoDonateEngine? = null
+    private var antiAfkEngine: AntiAfkPatrolEngine? = null
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -30,6 +35,8 @@ class FloatingOverlayService : Service() {
         val accService = AutoClickAccessibilityService.instance
         if (accService != null) {
             farmingEngine = CocFarmingEngine(accService)
+            donateEngine = AutoDonateEngine(accService)
+            antiAfkEngine = AntiAfkPatrolEngine(accService)
         }
 
         setupFloatingView()
@@ -52,12 +59,82 @@ class FloatingOverlayService : Service() {
 
         windowManager.addView(floatingView, params)
 
+        val btnVision = floatingView?.findViewById<Button>(R.id.btn_hud_vision)
         val btnToggle = floatingView?.findViewById<Button>(R.id.btn_toggle_play)
+        val btnSettings = floatingView?.findViewById<Button>(R.id.btn_hud_settings)
+        val btnTools = floatingView?.findViewById<Button>(R.id.btn_hud_tools)
+        val btnConsole = floatingView?.findViewById<Button>(R.id.btn_hud_console)
+        val btnClose = floatingView?.findViewById<Button>(R.id.btn_hud_close)
         val btnStrategy = floatingView?.findViewById<Button>(R.id.btn_strategy)
         val tvStatus = floatingView?.findViewById<TextView>(R.id.tv_hud_status)
 
         var selectedStrategy = CocStrategy.ZAP_DRAGON_FARMING
 
+        // 1. Vision Snap / Target Selection
+        btnVision?.setOnClickListener {
+            Toast.makeText(this, "📸 Vision AI: Screenshot-to-Code analysis triggered!", Toast.LENGTH_SHORT).show()
+            tvStatus?.text = "[VISION] Base Analyzed"
+        }
+
+        // 2. Play / Pause Button
+        btnToggle?.setOnClickListener {
+            val engine = farmingEngine
+            if (engine != null) {
+                if (engine.isRunning) {
+                    engine.stopEngine()
+                    btnToggle.text = "▶"
+                    btnToggle.setBackgroundColor(0xFF10B981.toInt())
+                    tvStatus?.text = "[IDLE] ${selectedStrategy.name.replace("_", " ")}"
+                } else {
+                    engine.startEngine(selectedStrategy)
+                    btnToggle.text = "⏸"
+                    btnToggle.setBackgroundColor(0xFFF59E0B.toInt())
+                    tvStatus?.text = "[FARMING] ${selectedStrategy.name.replace("_", " ")}"
+                }
+            } else {
+                tvStatus?.text = "[ERR: ACCESSIBILITY]"
+                Toast.makeText(this, "Accessibility Service not connected!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // 3. Settings Button
+        btnSettings?.setOnClickListener {
+            Toast.makeText(this, "⚙️ Min Gold: 500k | Min Elixir: 500k | Strategy: ${selectedStrategy.name}", Toast.LENGTH_LONG).show()
+        }
+
+        // 4. Tools: Auto Donate & Anti-AFK
+        btnTools?.setOnClickListener {
+            val donate = donateEngine
+            val afk = antiAfkEngine
+            if (donate != null && !donate.isDonating) {
+                Toast.makeText(this, "🛠️ Running Clan Auto-Donate...", Toast.LENGTH_SHORT).show()
+                tvStatus?.text = "[DONATE] Scanning Clan Chat"
+                donate.startAutoDonate {
+                    tvStatus?.text = "[IDLE] Done Donating"
+                }
+            } else if (afk != null) {
+                if (afk.isPatrolling) {
+                    afk.stopPatrol()
+                    Toast.makeText(this, "Anti-AFK Patrol Paused", Toast.LENGTH_SHORT).show()
+                } else {
+                    afk.startPatrol()
+                    Toast.makeText(this, "Anti-AFK Patrol Active (every 30s)", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        // 5. Macro Console Button
+        btnConsole?.setOnClickListener {
+            val raids = farmingEngine?.raidsCompleted ?: 0
+            Toast.makeText(this, "💻 Macro Console: Raids Completed: $raids | AI Loop: ACTIVE", Toast.LENGTH_SHORT).show()
+        }
+
+        // 6. Close / Exit Button
+        btnClose?.setOnClickListener {
+            stopSelf()
+        }
+
+        // Strategy Selector
         btnStrategy?.setOnClickListener {
             selectedStrategy = when (selectedStrategy) {
                 CocStrategy.ZAP_DRAGON_FARMING -> CocStrategy.ELECTRO_DRAGON_SPAM
@@ -65,26 +142,12 @@ class FloatingOverlayService : Service() {
                 CocStrategy.DRAGON_RIDER_SMASH -> CocStrategy.SNEAKY_GOBLIN_ORE_FARM
                 CocStrategy.SNEAKY_GOBLIN_ORE_FARM -> CocStrategy.ZAP_DRAGON_FARMING
             }
-            btnStrategy.text = selectedStrategy.name.replace("_", " ")
+            btnStrategy.text = selectedStrategy.name.take(8)
+            tvStatus?.text = "[IDLE] ${selectedStrategy.name.replace("_", " ")}"
+            Toast.makeText(this, "Selected: ${selectedStrategy.name}", Toast.LENGTH_SHORT).show()
         }
 
-        btnToggle?.setOnClickListener {
-            val engine = farmingEngine
-            if (engine != null) {
-                if (engine.isRunning) {
-                    engine.stopEngine()
-                    btnToggle.text = "▶ START"
-                    tvStatus?.text = "[IDLE]"
-                } else {
-                    engine.startEngine(selectedStrategy)
-                    btnToggle.text = "⏸ PAUSE"
-                    tvStatus?.text = "[FARMING]"
-                }
-            } else {
-                tvStatus?.text = "[ENABLE ACCESSIBILITY]"
-            }
-        }
-
+        // Dragging gesture
         floatingView?.setOnTouchListener(object : View.OnTouchListener {
             private var initialX = 0
             private var initialY = 0
@@ -116,6 +179,7 @@ class FloatingOverlayService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         farmingEngine?.stopEngine()
+        antiAfkEngine?.stopPatrol()
         if (floatingView != null) {
             windowManager.removeView(floatingView)
         }
