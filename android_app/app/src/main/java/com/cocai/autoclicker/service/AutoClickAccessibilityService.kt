@@ -235,6 +235,37 @@ class AutoClickAccessibilityService : AccessibilityService() {
     }
 
     /**
+     * Multi-Finger Simultaneous Line Swipes (Pixel Backwards Compatible)
+     */
+    fun performMultiFingerSwipeLines(
+        lines: List<Pair<PointF, PointF>>,
+        durationMs: Long = 350L,
+        callback: (() -> Unit)? = null
+    ) {
+        val builder = GestureDescription.Builder()
+        for (line in lines.take(5)) {
+            val path = Path().apply {
+                moveTo(line.first.x, line.first.y)
+                val cX = (line.first.x + line.second.x) / 2 + Random.nextInt(-10, 10)
+                val cY = (line.first.y + line.second.y) / 2 + Random.nextInt(-10, 10)
+                quadTo(cX.toFloat(), cY.toFloat(), line.second.x, line.second.y)
+            }
+            builder.addStroke(GestureDescription.StrokeDescription(path, 0, durationMs))
+        }
+
+        dispatchGesture(builder.build(), object : GestureResultCallback() {
+            override fun onCompleted(gestureDescription: GestureDescription?) {
+                super.onCompleted(gestureDescription)
+                callback?.invoke()
+            }
+            override fun onCancelled(gestureDescription: GestureDescription?) {
+                super.onCancelled(gestureDescription)
+                callback?.invoke()
+            }
+        }, null)
+    }
+
+    /**
      * Bezier Swipe (Backwards Compatible)
      */
     fun performBezierSwipe(
