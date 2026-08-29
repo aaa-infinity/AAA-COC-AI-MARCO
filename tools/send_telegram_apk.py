@@ -23,17 +23,19 @@ def main():
     file_size_str = f"{file_size_mb:.2f} MB"
     print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id}...")
 
-    caption_text = f"""👑 🔥 <b>Ai Marco coc v8.5 (Titan Pro Multi-Account &amp; Watchdog Edition)</b>
-📦 <b>File:</b> Ai-Marco-coc-v8.5.apk ({file_size_str})
-🔄 <b>Supercell ID Auto-Cycle:</b> Seamless 4-account rotation across multiple villages
-🔋 <b>Battery &amp; Thermal Watchdog:</b> Auto-pauses on &gt;42°C overheat or &lt;15% battery
+    caption_text = f"""👑 🧠 <b>Ai Marco coc v9.0 (CognitivePeak Edition)</b>
+📦 <b>File:</b> Ai-Marco-coc-v9.0.apk ({file_size_str})
+🧠 <b>Multi-Provider Vision Failover:</b> Gemini 2.0 -> OpenRouter -> Groq -> Local Neural
+🗺️ <b>Defense Heatmap &amp; Base DNA:</b> 64-bit spatial fingerprinting &amp; kill-zone avoidance
+🌊 <b>3-Phase Wave Funnel Orchestrator:</b> Outer clear -> 4-finger core push -> Hero equipment surge
+🔄 <b>Supercell ID Auto-Cycle:</b> 4-account rotation across multiple villages
+🔋 <b>Device Health Watchdog:</b> Auto-pauses on &gt;42°C overheat or &lt;15% battery
 ⏳ <b>Personal Break Handler:</b> 15-min cooldown timer for village lockouts
 🛡️ <b>Clan Castle Auto-Requester:</b> Requests reinforcements every 12 minutes
-🏛️ <b>Clan Capital Weekend Engine:</b> Forge collection + District raids + auto-contribution
-🎪 <b>Clan Games Task Automator:</b> Auto-selects &amp; claims quests up to 4,000 pts
-🎁 <b>Merchant 24h Freebie Claimer:</b> Claims daily magic snacks, potions &amp; ores
-🐉 <b>5th Hero &amp; Pet Dispatch:</b> Dragon Duke + Greedy Raven active abilities
-📐 <b>100% Percentage Scaling:</b> Precision across all Android screen sizes
+🏛️ <b>Clan Capital &amp; Clan Games:</b> Auto-contributes gold &amp; finishes quests up to 4,000 pts
+🎁 <b>Merchant 24h Freebie:</b> Claims daily snacks, potions &amp; ores
+🐉 <b>5th Hero &amp; Pet Dispatch:</b> Dragon Duke + Greedy Raven active frenzy boost
+📐 <b>100% Percentage Scaling:</b> Precision across all Android devices
 🚨 <b>Panic Stop:</b> Volume Down Key Override"""
 
     caption_file = "/tmp/telegram_caption.txt"
@@ -45,7 +47,7 @@ def main():
         "-F", f"chat_id={chat_id}",
         "-F", "parse_mode=HTML",
         "-F", f"caption=<{caption_file}",
-        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v8.5.apk",
+        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v9.0.apk",
         f"https://api.telegram.org/bot{bot_token}/sendDocument"
     ]
 

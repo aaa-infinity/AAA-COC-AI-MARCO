@@ -9,9 +9,12 @@ import com.cocai.autoclicker.service.AutoClickAccessibilityService
 import kotlin.random.Random
 
 /**
- * 👑 CLASH AUTOMATION CORE ENGINE - ULTIMATE PRO SUITE
+ * 👑 CLASH AUTOMATION CORE ENGINE - COGNITIVE PEAK EDITION
  *
  * Integrated Capabilities:
+ * - Multi-Provider Vision Auto-Failover Router (Gemini -> OpenRouter -> Groq -> Local)
+ * - Tactical Defense Heatmap & 64-Bit Base DNA Analyzer
+ * - 3-Phase Wave-Based Funnel & Hero Equipment Orchestrator
  * - Fixed-UI Percentage State Machine
  * - Top Builder Overview Wall Dump
  * - Multi-Account Supercell ID Auto-Cycle (2-4 Accounts)
@@ -21,7 +24,6 @@ import kotlin.random.Random
  * - Clan Capital Weekend & Clan Games Task Automator
  * - Daily Merchant Freebie & Magic Snack Claimer
  * - 5th Hero (Dragon Duke) + Greedy Raven Pet Ability Trigger
- * - 4-Finger Red-Line Deployment with Warden Eternal Tome Invincibility
  */
 class ClashAutomationCore(
     private val context: Context,
@@ -32,6 +34,11 @@ class ClashAutomationCore(
         private set
 
     // Specialized Sub-Engines
+    val keyRotator = ApiKeyRotator(context)
+    val memoryEngine = AiMemoryEngine(context)
+    val aiRouter = AiRouterEngine(context, keyRotator)
+    val heatmapAnalyzer = DefenseHeatmapAnalyzer(memoryEngine)
+    val waveOrchestrator = TacticalWaveOrchestrator(accessibilityService)
     val watchdog = DeviceHealthWatchdog(context)
     val accountSwitcher = SupercellIdAccountSwitcher(accessibilityService)
     val ccRequester = ClanCastleAutoRequester(accessibilityService)
@@ -203,73 +210,30 @@ class ClashAutomationCore(
                 }, Random.nextLong(2800L, 3800L))
             }
         } else {
-            // Target Base Selected! Execute 4-Finger Red Line Deployment
-            executeRedLineDeployment()
+            // Target Base Selected! Execute 3-Phase Funnel Attack Orchestration
+            execute3PhaseWaveAssault()
         }
     }
 
     /**
-     * 5. Red-Line 4-Finger Wave Deployment & 5th Hero / Pet Surge
+     * 5. 3-Phase Wave Funnel Assault + 5th Hero (Dragon Duke) Dispatch
      */
-    private fun executeRedLineDeployment() {
+    private fun execute3PhaseWaveAssault() {
         if (!isRunning) return
-        updateStatus("🔥 [RAIDING] Deploying 4-Finger Wave + Dragon Duke...")
+        updateStatus("🌊 [WAVE ASSAULT] 3-Phase Funnel & Hero Equipment Orchestration...")
 
-        // Select Troop Slot 1 (Root Riders / Dragons)
-        accessibilityService.performPercentageTap(0.105f, 0.900f) {
-            handler.postDelayed({
-                // 4-Finger Line Wave along South Red Line
-                val start = UniversalFixedUiMapper.PCT_DEPLOY_SOUTH_START
-                val end = UniversalFixedUiMapper.PCT_DEPLOY_SOUTH_END
-                val lines = listOf(
-                    Pair(start, end),
-                    Pair(PointF(start.x, start.y - 0.015f), PointF(end.x, end.y - 0.015f))
-                )
+        val startLine = UniversalFixedUiMapper.PCT_DEPLOY_SOUTH_START
+        val endLine = UniversalFixedUiMapper.PCT_DEPLOY_SOUTH_END
 
-                accessibilityService.performPercentageMultiFingerSwipes(lines, durationMs = 400L) {
-                    handler.postDelayed({
-                        // Select Troop Slot 2 (Valkyries / Loons)
-                        accessibilityService.performPercentageTap(0.145f, 0.900f) {
-                            accessibilityService.performPercentageMultiFingerSwipes(lines, durationMs = 400L) {
-                                // Deploy All Heroes (King, Queen, Warden, Champion)
-                                deployAllHeroes {
-                                    // Deploy 5th Hero (Dragon Duke) + Greedy Raven Pet
-                                    dragonDuke.deployAndTrigger5thHero(PointF(0.500f, 0.785f)) {
-                                        updateStatus("🛡️ [BATTLE] Core Charge (Warden Tome + Dragon Duke Active)...")
-                                        handler.postDelayed({
-                                            finishAttackAndReturnHome()
-                                        }, 35000L)
-                                    }
-                                }
-                            }
-                        }
-                    }, 500L)
-                }
-            }, 600L)
-        }
-    }
-
-    private fun deployAllHeroes(onComplete: () -> Unit) {
-        val heroSlots = listOf(
-            UniversalFixedUiMapper.PCT_HERO_1_KING,
-            UniversalFixedUiMapper.PCT_HERO_2_QUEEN,
-            UniversalFixedUiMapper.PCT_HERO_3_WARDEN,
-            UniversalFixedUiMapper.PCT_HERO_4_CHAMPION
-        )
-        var idx = 0
-        fun deployNext() {
-            if (idx < heroSlots.size && isRunning) {
-                val heroSlot = heroSlots[idx++]
-                accessibilityService.performPercentageTap(heroSlot) {
-                    accessibilityService.performPercentageTap(0.500f, 0.785f) {
-                        handler.postDelayed({ deployNext() }, 250L)
-                    }
-                }
-            } else {
-                onComplete()
+        waveOrchestrator.execute3PhaseWaveAttack(startLine, endLine, wardenDelaySec = 12) {
+            // Deploy 5th Hero (Dragon Duke) + Greedy Raven Pet
+            dragonDuke.deployAndTrigger5thHero(PointF(0.500f, 0.785f)) {
+                updateStatus("🛡️ [BATTLE] Core Charge (Warden Tome + Dragon Duke Active)...")
+                handler.postDelayed({
+                    finishAttackAndReturnHome()
+                }, 28000L)
             }
         }
-        deployNext()
     }
 
     /**
