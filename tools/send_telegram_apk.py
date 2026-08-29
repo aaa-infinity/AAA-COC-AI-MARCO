@@ -22,16 +22,14 @@ def main():
     file_size_str = f"{file_size_mb:.2f} MB"
     print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id} via robust curl stream...")
 
-    caption = f"""🏛️ 🐉 <b>Ai Marco coc v6.3 (Cyber Dragon Edition)</b>
-📦 <b>File:</b> Ai-Marco-coc-v6.3.apk ({file_size_str})
+    caption = f"""🌾 🧱 <b>Ai Marco coc v6.4 (Home Village Farm &amp; Wall Maxer)</b>
+📦 <b>File:</b> Ai-Marco-coc-v6.4.apk ({file_size_str})
+🏡 <b>100% Home Village Focus:</b> Pure fast loot farming &amp; wall upgrades
+🧱 <b>Continuous Wall Dump:</b> Upgrades walls with free builder every raid
+⚡ <b>0-Cost Quick Train:</b> Infinite Root Rider, Zap Dragon &amp; Goblin farm
+🔍 <b>Smart Nexting Search:</b> 500k+ Gold &amp; Elixir hunter
+🖐️ <b>Multi-Touch Raid:</b> 4-Finger Line Wave &amp; 2-Finger Funnel
 🎨 <b>New AAA Icon:</b> Glowing Neon Cyber-Dragon &amp; Royal Crown
-🔨 <b>Blacksmith Auto-Upgrader:</b> Hero Equipment &amp; Ores
-🏰 <b>Clan Capital:</b> Auto Weekend Raid &amp; Gold Contribution
-⚡ <b>Neural Vision:</b> 12MB TFLite On-Device Core Detector
-🧠 <b>Ari AI Agent:</b> Hermes ReAct Autonomous Engine
-🏆 <b>Pro Meta:</b> TH16/17 Root Rider &amp; Zap Dragons
-🧪 <b>Spell Brewer &amp; Pass:</b> Auto-Brew &amp; Season Claims
-🖐️ <b>Multi-Touch:</b> 4-Finger Line Wave &amp; 2-Finger Funnel
 🚨 <b>Panic Stop:</b> Volume Down Key Override"""
 
     cmd = [
@@ -39,7 +37,7 @@ def main():
         "-F", f"chat_id={chat_id}",
         "-F", "parse_mode=HTML",
         "-F", f"caption={caption}",
-        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v6.3.apk",
+        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v6.4.apk",
         f"https://api.telegram.org/bot{bot_token}/sendDocument"
     ]
 

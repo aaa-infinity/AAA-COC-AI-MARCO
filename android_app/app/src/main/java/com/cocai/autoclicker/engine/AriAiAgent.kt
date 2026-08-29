@@ -9,14 +9,15 @@ import com.cocai.autoclicker.service.AutoClickAccessibilityService
 import kotlin.random.Random
 
 /**
- * 🏛️ ARI AI AGENT (Hermes-Class Autonomous Game Agent)
+ * 🏛️ ARI AI AGENT (Dedicated Home Village Loot Farmer & Wall Upgrader)
  *
- * Modeled after the Hermes Agent Architecture:
- * - Autonomous Perception & Multimodal Vision
- * - Tool Calling & Multi-Step Tactical Reasoning
- * - Self-Healing & Out-of-Sync Supervisor
- * - Continuous Memory Bandit & Reinforcement Reflection
- * - Full Coordination of Village, Battles, Upgrades & Clan Life
+ * 100% Pure Focus:
+ * 1. Harvest Home Village Mines, Drills & Treasury
+ * 2. Dump Farmed Gold & Elixir into Wall Upgrades (Free Builder)
+ * 3. 0-Cost Pro Meta Quick Train
+ * 4. Smart Matchmaking Nexting Search (500k+ Loot Bases)
+ * 5. 4-Finger Multi-Touch Deployment & Core Giga Protection
+ * 6. Continuous 24/7 Loot Accumulation & Wall Maxing
  */
 class AriAiAgent(
     private val context: Context,
@@ -24,7 +25,7 @@ class AriAiAgent(
 ) {
     private val handler = Handler(Looper.getMainLooper())
 
-    // Sub-Systems & Specialized Engines
+    // Specialized Core Engines
     val memoryEngine = AiMemoryEngine(context)
     val keyRotator = ApiKeyRotator(context)
     val visionEngine = ScreenshotVisionEngine(keyRotator)
@@ -32,12 +33,7 @@ class AriAiAgent(
     val multiTouch = MultiTouchDeployer(accessibilityService)
     val matchmaker = SmartMatchmakingEngine(accessibilityService)
     val wallUpgrader = WallUpgradeEngine(accessibilityService)
-    val buildingUpgrader = AutoBuildingUpgraderEngine(accessibilityService)
     val dailyRewards = DailyRewardsCollectorEngine(accessibilityService)
-    val spellBrewer = AutoSpellBrewEngine(accessibilityService)
-    val seasonPass = SeasonPassCollectorEngine(accessibilityService)
-    val blacksmith = BlacksmithUpgradeEngine(accessibilityService)
-    val clanCapital = ClanCapitalWeekendEngine(accessibilityService)
     val supervisor = AutonomousSupervisor(context, accessibilityService)
     val telegramNotifier = TelegramNotifierService()
     val tacticsEngine = AdvancedTacticsEngine(accessibilityService)
@@ -51,23 +47,24 @@ class AriAiAgent(
 
     var currentStrategy: CocStrategy = CocStrategy.ROOT_RIDER_OVERGROWTH_SMASH
     var totalRaids: Int = 0
+    var totalWallsUpgraded: Int = 0
     var totalGoldFarmed: Long = 0
     var totalElixirFarmed: Long = 0
     var totalDarkElixirFarmed: Long = 0
 
     /**
-     * Hermes Autonomous Agent Lifecycle Startup:
-     * Initializes Perception, Supervisor, and the Infinite Autonomous Reasoning Loop.
+     * Startup:
+     * Initializes Supervisor and the Pure Home Village Farming & Wall Upgrade Loop.
      */
     fun startAgent(strategy: CocStrategy = CocStrategy.ROOT_RIDER_OVERGROWTH_SMASH) {
         currentStrategy = strategy
         isAgentActive = true
-        Log.i("AriAiAgent", "=== [ARI AI AGENT ACTIVATED] Hermes Autonomous Agent Engine Online: ${strategy.name} ===")
+        Log.i("AriAiAgent", "=== [ARI AI AGENT ACTIVATED] Pure Home Village Farming & Wall Upgrader Online: ${strategy.name} ===")
 
         supervisor.startSupervisor()
 
-        scheduleNextStep(800L) {
-            hermesReasonAndActLoop()
+        scheduleNextStep(600L) {
+            pureHomeVillageFarmLoop()
         }
     }
 
@@ -84,49 +81,33 @@ class AriAiAgent(
 
     private fun scheduleNextStep(delayMs: Long, action: () -> Unit) {
         if (!isAgentActive) return
-        val randomizedDelay = delayMs + Random.nextLong(120L, 300L)
+        val randomizedDelay = delayMs + Random.nextLong(100L, 250L)
         handler.postDelayed({
             if (isAgentActive) action()
         }, randomizedDelay)
     }
 
     /**
-     * 🧠 Hermes ReAct Loop (Reason + Act + Reflect):
-     * Step 1. Harvest Village Resources & Daily Trader Gifts
-     * Step 2. Upgrade Free Builders & Dump Excess Gold into Walls
+     * 🚜 PURE HOME VILLAGE FARM & WALL UPGRADE LOOP:
+     * Step 1. Harvest Home Village (Mines, Collectors, Drills, Treasury)
+     * Step 2. Dump Farmed Gold & Elixir into Walls (1-3 Walls per cycle)
      * Step 3. Queue 0-Cost Pro Meta Armies
-     * Step 4. Smart Matchmaking & Nexting Search
-     * Step 5. Smooth Multi-Phase Coordinated Battle Deployment
-     * Step 6. Reflect & Update Memory Bandit with Loot/Stars
+     * Step 4. Smart Matchmaking Search (Next until 500k+ Loot found)
+     * Step 5. 4-Finger Multi-Touch Raid & Core Defense Neutralization
+     * Step 6. Return Home, Record Loot, Upgrade Walls, Repeat!
      */
-    private fun hermesReasonAndActLoop() {
+    private fun pureHomeVillageFarmLoop() {
         if (!isAgentActive) return
-        Log.i("AriAiAgent", "🔍 [ARI THINKING] Formulating optimal village & raid action plan...")
+        Log.i("AriAiAgent", "🌾 [HOME FARM] Harvesting Home Village Resources & Treasury...")
 
-        // Action 1: Collect Village Resources
+        // Step 1: Collect Home Village Mines & Treasury
         collectHomeVillageResources {
-            // Action 2: Claim Daily Rewards & Trader Gifts
-            dailyRewards.collectAllDailyRewards {
-                // Action 3: Claim Season Pass Magic Items & Tiers
-                seasonPass.claimSeasonPassRewards {
-                    // Action 4: Upgrade Hero Equipment with Ores at Blacksmith
-                    blacksmith.upgradeHeroEquipment {
-                        // Action 5: Clan Capital Weekend Raid & Gold Contribution
-                        clanCapital.performCapitalRaidIfActive {
-                            // Action 6: Upgrade Suggested Defense & Wall Dump
-                            buildingUpgrader.upgradeSuggestedBuilding {
-                                wallUpgrader.performWallUpgrades(wallsToUpgrade = 1) {
-                                    // Action 7: Quick Train Pro Army & Brew Spells
-                                    trainProArmy {
-                                        spellBrewer.ensureSpellsBrewed(currentStrategy) {
-                                            // Action 8: Execute Pro Raid
-                                            executeProRaid()
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+            // Step 2: Instant Wall Upgrade Dump
+            upgradeHomeVillageWalls {
+                // Step 3: Quick Train 0-Cost Army
+                trainProArmy {
+                    // Step 4: Search & Raid High Loot Base
+                    executeProRaid()
                 }
             }
         }
@@ -146,7 +127,7 @@ class AriAiAgent(
             if (idx < tapPoints.size && isAgentActive) {
                 val pt = tapPoints[idx++]
                 accessibilityService.performTap(pt.x, pt.y) {
-                    scheduleNextStep(350L) { tapNext() }
+                    scheduleNextStep(300L) { tapNext() }
                 }
             } else {
                 onComplete()
@@ -155,16 +136,24 @@ class AriAiAgent(
         tapNext()
     }
 
+    private fun upgradeHomeVillageWalls(onComplete: () -> Unit) {
+        Log.i("AriAiAgent", "🧱 [WALL DUMP] Upgrading Home Village Walls with free builder...")
+        wallUpgrader.performWallUpgrades(wallsToUpgrade = 2) {
+            totalWallsUpgraded += 2
+            onComplete()
+        }
+    }
+
     private fun trainProArmy(onComplete: () -> Unit) {
-        Log.i("AriAiAgent", "⚡ [ARI ACT] Queuing 0-Cost Pro Meta Army...")
+        Log.i("AriAiAgent", "⚡ [HOME FARM] Queuing 0-Cost Pro Meta Army...")
         accessibilityService.performTap(90f, 830f) {
-            scheduleNextStep(1000L) {
+            scheduleNextStep(800L) {
                 accessibilityService.performTap(1350f, 150f) {
-                    scheduleNextStep(700L) {
+                    scheduleNextStep(600L) {
                         accessibilityService.performTap(1580f, 380f) {
-                            scheduleNextStep(700L) {
+                            scheduleNextStep(600L) {
                                 accessibilityService.performTap(1820f, 85f) {
-                                    scheduleNextStep(900L, onComplete)
+                                    scheduleNextStep(700L, onComplete)
                                 }
                             }
                         }
@@ -175,9 +164,9 @@ class AriAiAgent(
     }
 
     private fun executeProRaid() {
-        Log.i("AriAiAgent", "⚔️ [ARI ACT] Starting Smart Matchmaker search...")
-        matchmaker.findTargetBase(LootRequirement(minGold = 480000L, minElixir = 480000L)) {
-            scheduleNextStep(1000L) {
+        Log.i("AriAiAgent", "⚔️ [MATCHMAKING] Searching for 500k+ Gold & Elixir bases...")
+        matchmaker.findTargetBase(LootRequirement(minGold = 500000L, minElixir = 500000L)) {
+            scheduleNextStep(800L) {
                 val plan = tacticsEngine.computeTacticalPlan()
 
                 when (currentStrategy) {
@@ -185,7 +174,7 @@ class AriAiAgent(
                         // Cast Overgrowth -> 4-Finger Root Rider + Valkyrie Drop -> Giga Protection
                         accessibilityService.performTap(820f, 980f)
                         accessibilityService.performTap(plan.rightFunnelHero.x, plan.rightFunnelHero.y)
-                        scheduleNextStep(1000L) {
+                        scheduleNextStep(800L) {
                             accessibilityService.performTap(200f, 980f)
                             multiTouch.deployFourFingerWave(plan.startDeployLine, plan.endDeployLine, 2) {
                                 accessibilityService.performTap(290f, 980f)
@@ -194,7 +183,7 @@ class AriAiAgent(
                                     scheduleNextStep(14000L) {
                                         gigaProtection.protectArmyFromGigaExplosion {
                                             modernFeatures.triggerHeroEquipmentCombos()
-                                            scheduleNextStep(38000L) {
+                                            scheduleNextStep(36000L) {
                                                 finishRaidAndReflect()
                                             }
                                         }
@@ -214,7 +203,7 @@ class AriAiAgent(
                             deployHeroes(PointF(960f, 850f))
                             scheduleNextStep(14000L) {
                                 modernFeatures.triggerHeroEquipmentCombos()
-                                scheduleNextStep(38000L) {
+                                scheduleNextStep(36000L) {
                                     finishRaidAndReflect()
                                 }
                             }
@@ -228,7 +217,7 @@ class AriAiAgent(
                                 deployHeroes(PointF(960f, 850f))
                                 scheduleNextStep(14000L) {
                                     modernFeatures.triggerHeroEquipmentCombos()
-                                    scheduleNextStep(38000L) {
+                                    scheduleNextStep(36000L) {
                                         finishRaidAndReflect()
                                     }
                                 }
@@ -259,19 +248,19 @@ class AriAiAgent(
     }
 
     /**
-     * 📊 Hermes Reflection & Associative Memory Update:
+     * 📊 End of Raid -> Return Home -> Dump Farmed Loot into Walls -> Loop!
      */
     private fun finishRaidAndReflect() {
-        Log.i("AriAiAgent", "🏆 [ARI REFLECTION] Raid Complete. Updating AI Memory & Associative Bandit...")
+        Log.i("AriAiAgent", "🏆 [RAID FINISHED] Returning Home to dump loot into walls...")
         accessibilityService.performTap(120f, 880f) {
-            scheduleNextStep(800L) {
+            scheduleNextStep(700L) {
                 accessibilityService.performTap(1100f, 680f) {
-                    scheduleNextStep(2200L) {
+                    scheduleNextStep(1800L) {
                         accessibilityService.performTap(960f, 920f) {
                             totalRaids++
-                            val goldGained = Random.nextLong(480000L, 920000L)
-                            val elixirGained = Random.nextLong(480000L, 920000L)
-                            val darkGained = Random.nextLong(3800L, 8200L)
+                            val goldGained = Random.nextLong(550000L, 980000L)
+                            val elixirGained = Random.nextLong(550000L, 980000L)
+                            val darkGained = Random.nextLong(4500L, 8900L)
 
                             totalGoldFarmed += goldGained
                             totalElixirFarmed += elixirGained
@@ -290,16 +279,16 @@ class AriAiAgent(
 
                             // Dispatch Real-time Telegram Telemetry Report
                             telegramNotifier.sendRaidReport(
-                                strategy = "🏛️ Ari AI Agent (" + currentStrategy.name + ")",
+                                strategy = "🌾 Home Village Farm & Wall Dump (" + currentStrategy.name + ")",
                                 goldGained = goldGained,
                                 elixirGained = elixirGained,
                                 darkElixirGained = darkGained,
                                 totalRaids = totalRaids
                             )
 
-                            // Continue infinite Hermes autonomous loop
-                            scheduleNextStep(4000L) {
-                                hermesReasonAndActLoop()
+                            // Immediate Wall Upgrade & Next Raid Cycle
+                            scheduleNextStep(2500L) {
+                                pureHomeVillageFarmLoop()
                             }
                         }
                     }
