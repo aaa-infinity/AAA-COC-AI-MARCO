@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 """
-Dispatches compiled APK binary to Telegram channel via direct multipart/form-data upload.
+Dispatches compiled APK binary to Telegram channel via robust curl multipart streaming.
 """
 import os
 import sys
 import glob
-import urllib.request
-import urllib.error
+import subprocess
 
 def main():
     bot_token = os.environ.get("TELEGRAM_BOT_TOKEN", "8841143616:AAGbcJKf3MLTN17-tpmwhZKZQIIbErDT1PA")
@@ -21,9 +20,8 @@ def main():
     apk_path = apk_candidates[0]
     file_size_mb = os.path.getsize(apk_path) / (1024 * 1024)
     file_size_str = f"{file_size_mb:.2f} MB"
-    print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id}...")
+    print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id} via robust curl stream...")
 
-    # Telegram caption MUST be under 1024 characters
     caption = f"""🏛️ 🐉 <b>Ai Marco coc v6.3 (Cyber Dragon Edition)</b>
 📦 <b>File:</b> Ai-Marco-coc-v6.3.apk ({file_size_str})
 🎨 <b>New AAA Icon:</b> Glowing Neon Cyber-Dragon &amp; Royal Crown
@@ -36,35 +34,23 @@ def main():
 🖐️ <b>Multi-Touch:</b> 4-Finger Line Wave &amp; 2-Finger Funnel
 🚨 <b>Panic Stop:</b> Volume Down Key Override"""
 
-    boundary = "----AiMarcoTelegramBoundary987654321"
-    with open(apk_path, "rb") as f:
-        file_bytes = f.read()
-
-    body = []
-    body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"chat_id\"\r\n\r\n{chat_id}\r\n".encode("utf-8"))
-    body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"parse_mode\"\r\n\r\nHTML\r\n".encode("utf-8"))
-    body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"caption\"\r\n\r\n{caption}\r\n".encode("utf-8"))
-    body.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"document\"; filename=\"Ai-Marco-coc-v6.3.apk\"\r\nContent-Type: application/vnd.android.package-archive\r\n\r\n".encode("utf-8"))
-    body.append(file_bytes)
-    body.append(f"\r\n--{boundary}--\r\n".encode("utf-8"))
-
-    payload = b"".join(body)
-    req = urllib.request.Request(
-        f"https://api.telegram.org/bot{bot_token}/sendDocument",
-        data=payload,
-        headers={"Content-Type": f"multipart/form-data; boundary={boundary}"}
-    )
+    cmd = [
+        "curl", "-s", "-S", "--connect-timeout", "60", "--max-time", "600",
+        "-F", f"chat_id={chat_id}",
+        "-F", "parse_mode=HTML",
+        "-F", f"caption={caption}",
+        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v6.3.apk",
+        f"https://api.telegram.org/bot{bot_token}/sendDocument"
+    ]
 
     try:
-        with urllib.request.urlopen(req, timeout=180) as resp:
-            print("Telegram Dispatch Successful! Status code:", resp.status)
-            print("Response:", resp.read().decode("utf-8")[:200])
-    except urllib.error.HTTPError as e:
-        err_msg = e.read().decode("utf-8")
-        print(f"ERROR uploading to Telegram (HTTP {e.code}): {err_msg}")
-        sys.exit(1)
-    except Exception as e:
-        print("ERROR uploading to Telegram:", e)
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        print("Telegram Dispatch Successful!")
+        print("Response:", result.stdout[:200])
+    except subprocess.CalledProcessError as e:
+        print(f"ERROR uploading to Telegram: {e}")
+        print("Stderr:", e.stderr)
+        print("Stdout:", e.stdout)
         sys.exit(1)
 
 if __name__ == "__main__":
