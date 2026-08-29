@@ -24,17 +24,18 @@ def main():
     print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id}...")
 
     # Telegram caption limit is 1024 characters
-    caption_text = f"""👑 ⚡ <b>Ai Marco coc v9.2 (CognitivePeak Edition)</b>
-📦 <b>File:</b> Ai-Marco-coc-v9.2.apk ({file_size_str})
-⚡ <b>API Key Test Ping:</b> Live ms latency &amp; validation check
+    caption_text = f"""👑 🤖 <b>Ai Marco coc v9.5 (Telegram 2-Way Remote Edition)</b>
+📦 <b>File:</b> Ai-Marco-coc-v9.5.apk ({file_size_str})
+🤖 <b>2-Way Telegram Remote:</b> /status, /pause, /resume, /attack, /walls &amp; /schedule
+⏰ <b>Smart Sleep Scheduler:</b> Humanized farming windows &amp; rest breaks
+⚡ <b>Snapshot Fast-Skipper:</b> Instant HSV detection without cloud delays
+🎯 <b>Gaussian Motion Jitter:</b> Organic touch mechanics &amp; anti-detection
+⚡ <b>API Key Test Ping:</b> Live ms latency &amp; model validation check
 🧠 <b>Vision Failover:</b> Gemini -> OpenRouter -> Groq -> Local TFLite
 🗺️ <b>Defense Heatmap:</b> 64-bit base DNA &amp; kill-zone avoidance
 🌊 <b>3-Phase Wave Funnel:</b> Outer clear -> 4-finger push -> Hero surge
 🔄 <b>Supercell ID Auto-Cycle:</b> 4-account rotation
 🔋 <b>Health Watchdog:</b> 42°C overheat &amp; 15% battery safety halts
-🛡️ <b>Clan Routines:</b> 12m CC Request, Capital Raids &amp; Clan Games
-🎁 <b>24h Freebie Claimer:</b> Daily snacks, potions &amp; ores
-🐉 <b>5th Hero &amp; Pet:</b> Dragon Duke + Greedy Raven frenzy
 🚨 <b>Panic Stop:</b> Volume Down Key Override"""
 
     caption_file = "/tmp/telegram_caption.txt"
@@ -46,7 +47,7 @@ def main():
         "-F", f"chat_id={chat_id}",
         "-F", "parse_mode=HTML",
         "-F", f"caption=<{caption_file}",
-        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v9.2.apk",
+        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v9.5.apk",
         f"https://api.telegram.org/bot{bot_token}/sendDocument"
     ]
 

@@ -203,6 +203,21 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        findViewById<Button>(R.id.btn_send_telegram_test).setOnClickListener {
+            val token = findViewById<EditText>(R.id.et_telegram_bot_token).text.toString().trim()
+            val chatId = findViewById<EditText>(R.id.et_telegram_chat_id).text.toString().trim()
+            if (token.isNotEmpty() && chatId.isNotEmpty()) {
+                val bot = TelegramBotManager(this, token, chatId)
+                bot.sendMessage("👑 <b>[Ai Marco coc]</b> 2-Way Telegram Remote Connected! You can now send <code>/status</code>, <code>/pause</code>, <code>/resume</code>, <code>/attack</code>, <code>/walls</code>, or <code>/schedule</code>.") { ok ->
+                    if (ok) {
+                        Toast.makeText(this, "✓ Telegram Test Ping Dispatched!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "❌ Telegram Error. Verify Token/Chat ID.", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
     }
 
     private fun setupAiProviderTab() {

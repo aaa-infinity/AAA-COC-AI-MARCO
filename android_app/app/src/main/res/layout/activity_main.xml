@@ -303,7 +303,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- ==================== TAB 3: VILLAGE & CLAN ==================== -->
+            <!-- ==================== TAB 3: TELEGRAM REMOTE & CLAN ==================== -->
             <LinearLayout
                 android:id="@+id/tab_content_clan"
                 android:layout_width="match_parent"
@@ -311,6 +311,66 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
+                <!-- Telegram Remote Hub Card -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_card_cyber_active"
+                    android:orientation="vertical"
+                    android:padding="14dp"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🤖 TELEGRAM 2-WAY REMOTE CONTROL"
+                        android:textColor="#38BDF8"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Bot Token &amp; Chat ID:"
+                        android:textColor="#94A3B8"
+                        android:textSize="11sp" />
+
+                    <EditText
+                        android:id="@+id/et_telegram_bot_token"
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:layout_marginTop="4dp"
+                        android:background="@drawable/bg_input_field"
+                        android:text="8841143616:AAGbcJKf3MLTN17-tpmwhZKZQIIbErDT1PA"
+                        android:textColor="#FFFFFF"
+                        android:paddingHorizontal="10dp"
+                        android:textSize="11sp" />
+
+                    <EditText
+                        android:id="@+id/et_telegram_chat_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/bg_input_field"
+                        android:text="-1004447017934"
+                        android:textColor="#FFFFFF"
+                        android:paddingHorizontal="10dp"
+                        android:textSize="11sp" />
+
+                    <Button
+                        android:id="@+id/btn_send_telegram_test"
+                        android:layout_width="match_parent"
+                        android:layout_height="42dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/bg_btn_primary"
+                        android:text="📡 SEND TELEGRAM TEST PING"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11.5sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- One-Tap Village Routines Card -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
