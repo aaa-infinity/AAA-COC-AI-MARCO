@@ -184,6 +184,19 @@ class MainActivity : Activity() {
             }
         }
 
+        findViewById<Button>(R.id.btn_trigger_upgrade_walls).setOnClickListener {
+            val accService = AutoClickAccessibilityService.instance
+            if (accService != null) {
+                val wallEngine = WallUpgradeEngine(accService)
+                Toast.makeText(this, "🧱 Upgrading walls to dump excess resources...", Toast.LENGTH_SHORT).show()
+                wallEngine.performWallUpgrades(wallsToUpgrade = 3) {
+                    Toast.makeText(this, "✓ Wall upgrades completed!", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this, "Enable Accessibility Service first!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         findViewById<Button>(R.id.btn_trigger_clean_obstacles).setOnClickListener {
             val accService = AutoClickAccessibilityService.instance
             if (accService != null) {

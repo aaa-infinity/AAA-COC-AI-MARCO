@@ -40,7 +40,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Home Village AI Macro • Multi-Touch • 265+ Assets"
+                android:text="Home Village AI Macro • Smart Matchmaker • Wall Dump"
                 android:textColor="#38BDF8"
                 android:textSize="10sp" />
         </LinearLayout>
@@ -288,7 +288,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="💰 Home Village Loot Filters"
+                        android:text="💰 Smart Matchmaking &amp; Loot Filters"
                         android:textColor="#38BDF8"
                         android:textSize="12sp"
                         android:textStyle="bold" />
@@ -297,7 +297,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
-                        android:text="Min Gold: 500,000 | Min Elixir: 500,000 | Min Dark: 4,000"
+                        android:text="Min Gold: 450,000 | Min Elixir: 450,000 | Min Dark: 3,500"
                         android:textColor="#E2E8F0"
                         android:textSize="11sp" />
 
@@ -305,7 +305,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Air Sweeper Avoidance: AUTOMATIC (Flank/Rear Entry Calculation)"
+                        android:text="Smart Nexting: AUTO (Skips poor bases automatically)"
                         android:textColor="#10B981"
                         android:textSize="10sp" />
                 </LinearLayout>
@@ -379,16 +379,27 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="💎 Base Maintenance &amp; Resource Harvesting"
+                        android:text="💎 Base Maintenance &amp; Wall Upgrades"
                         android:textColor="#10B981"
                         android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btn_trigger_upgrade_walls"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="8dp"
+                        android:backgroundTint="#3B82F6"
+                        android:text="🧱 AUTO-UPGRADE WALLS (RESOURCE DUMP)"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp"
                         android:textStyle="bold" />
 
                     <Button
                         android:id="@+id/btn_trigger_clean_obstacles"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="6dp"
                         android:backgroundTint="#10B981"
                         android:text="💎 CLEAN GEM BOXES &amp; OBSTACLES NOW"
                         android:textColor="#FFFFFF"
