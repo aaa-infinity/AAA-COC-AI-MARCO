@@ -19,6 +19,7 @@ class FloatingOverlayService : Service() {
     private var floatingView: View? = null
     private var ariAgent: AriAiAgent? = null
     private var selectedStrategy = CocStrategy.ROOT_RIDER_OVERGROWTH_SMASH
+    private var accountsCount = 1
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -81,7 +82,7 @@ class FloatingOverlayService : Service() {
         val btnClose = floatingView?.findViewById<Button>(R.id.btn_hud_close)
         val tvStatus = floatingView?.findViewById<TextView>(R.id.tv_hud_status)
 
-        // 1. Play / Pause Button (Hermes Ari Agent)
+        // 1. Play / Pause Button (Anti-Ban Humanized Hermes Ari Agent)
         btnPlayPause?.setOnClickListener {
             if (ariAgent == null) {
                 initAgent()
@@ -94,10 +95,10 @@ class FloatingOverlayService : Service() {
             }
 
             if (!agent.isAgentActive) {
-                agent.startAgent(selectedStrategy)
+                agent.startAgent(selectedStrategy, accountsCount)
                 btnPlayPause.text = "⏸"
-                tvStatus?.text = "🏛️ [ARI] ${selectedStrategy.name.replace("_", " ")}"
-                Toast.makeText(this, "🚀 Ari AI Agent (Hermes Class) Started: ${selectedStrategy.name}", Toast.LENGTH_SHORT).show()
+                tvStatus?.text = "🛡️ [HUMAN] ${selectedStrategy.name.replace("_", " ")}"
+                Toast.makeText(this, "🛡️ Anti-Ban Humanized Ari AI Started: ${selectedStrategy.name}", Toast.LENGTH_SHORT).show()
             } else {
                 agent.stopAgent()
                 btnPlayPause.text = "▶"
@@ -106,27 +107,29 @@ class FloatingOverlayService : Service() {
             }
         }
 
-        // 2. Tools Button: Clean Obstacles & Harvest
+        // 2. Tools Button: Wall Dump & Clean Obstacles
         btnTools?.setOnClickListener {
             val agent = ariAgent
             if (agent == null) {
                 Toast.makeText(this, "Enable Accessibility Service first!", Toast.LENGTH_SHORT).show()
             } else {
-                agent.supervisor.cleanBaseObstacles {
-                    Toast.makeText(this, "Base Obstacles & Gem Boxes Cleaned!", Toast.LENGTH_SHORT).show()
+                agent.wallUpgrader.performWallUpgrades(wallsToUpgrade = 3) {
+                    Toast.makeText(this, "🧱 Upgraded 3 Walls with Free Builder!", Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
         // 3. Vision Button: Test Screen Analysis
         btnVision?.setOnClickListener {
-            Toast.makeText(this, "🖐️ Multimodal Vision AI: 265+ Supercell Templates Active", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "👁️ On-Device Neural Vision: 12MB TFLite & 285+ Sprites Active", Toast.LENGTH_SHORT).show()
         }
 
-        // 4. Macro Console Button
+        // 4. Macro Console Button: Shows Raids & Supercell ID rotation status
         btnConsole?.setOnClickListener {
             val raids = ariAgent?.totalRaids ?: 0
-            Toast.makeText(this, "🏛️ Ari Agent: Raids: $raids | VolDown: ARMED | Hermes Loop: ACTIVE", Toast.LENGTH_SHORT).show()
+            val walls = ariAgent?.totalWallsUpgraded ?: 0
+            val currentAcc = (ariAgent?.accountSwitcher?.currentAccountIndex ?: 0) + 1
+            Toast.makeText(this, "🏛️ Ari Agent: Raids: $raids | Walls: $walls | Account: #$currentAcc | Anti-Ban: ACTIVE", Toast.LENGTH_SHORT).show()
         }
 
         // 5. Close / Exit Button

@@ -23,9 +23,9 @@ def main():
     file_size_str = f"{file_size_mb:.2f} MB"
     print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id}...")
 
-    caption_text = f"""🛡️ 🌾 <b>Ai Marco coc v6.6 (Anti-Ban &amp; Multi-Account Supercell ID)</b>
-📦 <b>File:</b> Ai-Marco-coc-v6.6.apk ({file_size_str})
-🛡️ <b>Anti-Ban Biometrics:</b> Gaussian 2D jitter &amp; log-normal human latency
+    caption_text = f"""👑 🛡️ <b>Ai Marco coc v7.0 (Ultimate Hermes Edition)</b>
+📦 <b>File:</b> Ai-Marco-coc-v7.0.apk ({file_size_str})
+🛡️ <b>Anti-Ban Biometrics:</b> 2D Gaussian touch jitter &amp; log-normal human latency
 🔄 <b>Supercell ID Switcher:</b> Auto-rotates multiple accounts on schedule
 🧱 <b>Dedicated Wall Builder:</b> Auto-dumps full loot into wall upgrades
 🎯 <b>Dead Base Hunter:</b> Surgical outside collector strip on dead bases
@@ -44,7 +44,7 @@ def main():
         "-F", f"chat_id={chat_id}",
         "-F", "parse_mode=HTML",
         "-F", f"caption=<{caption_file}",
-        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v6.6.apk",
+        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v7.0.apk",
         f"https://api.telegram.org/bot{bot_token}/sendDocument"
     ]
 

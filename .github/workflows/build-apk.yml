@@ -38,7 +38,7 @@ jobs:
           TELEGRAM_CHAT_ID: "-1004447017934"
         run: |
           if [ -n "$TELEGRAM_BOT_TOKEN" ]; then
-            curl -s "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=🚀+Ai+Marco+coc+v6.6+(Anti-Ban+%26+Supercell+ID+Switcher)+Cloud+APK+Build+Started+on+GitHub+Runner...%0ACommit:+${{ github.sha }}%0AStatus:+Compiling+Anti-Ban+Biometrics+%26+Multi-Account+Switcher" || true
+            curl -s "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=🚀+Ai+Marco+coc+v7.0+(Ultimate+Hermes+Edition)+Cloud+APK+Build+Started+on+GitHub+Runner...%0ACommit:+${{ github.sha }}%0AStatus:+Compiling+Final+Optimized+Master+Release" || true
           fi
 
       - name: Compile Commercial Debug APK
@@ -47,14 +47,14 @@ jobs:
         run: |
           gradle assembleDebug --stacktrace --no-daemon
           mkdir -p ../dist
-          cp app/build/outputs/apk/debug/app-debug.apk ../dist/Ai-Marco-coc-v6.6.apk
+          cp app/build/outputs/apk/debug/app-debug.apk ../dist/Ai-Marco-coc-v7.0.apk
 
       - name: Upload APK to GitHub Artifacts
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: Ai-Marco-coc-v6.6-APK
-          path: dist/Ai-Marco-coc-v6.6.apk
+          name: Ai-Marco-coc-v7.0-APK
+          path: dist/Ai-Marco-coc-v7.0.apk
           retention-days: 30
 
       - name: Send APK to Telegram Channel on Success
