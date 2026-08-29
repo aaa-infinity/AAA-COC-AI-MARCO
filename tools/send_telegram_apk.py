@@ -23,11 +23,12 @@ def main():
     file_size_str = f"{file_size_mb:.2f} MB"
     print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id}...")
 
-    caption_text = f"""🏛️ 🌾 <b>Ai Marco coc v6.5 (Dead Base Hunter &amp; Wall Maxer)</b>
-📦 <b>File:</b> Ai-Marco-coc-v6.5.apk ({file_size_str})
-🏡 <b>100% Home Village Focus:</b> Pure fast loot farming &amp; wall upgrades
-🎯 <b>Dead Base Hunter:</b> Surgical outside collector strip on dead bases
+    caption_text = f"""🛡️ 🌾 <b>Ai Marco coc v6.6 (Anti-Ban &amp; Multi-Account Supercell ID)</b>
+📦 <b>File:</b> Ai-Marco-coc-v6.6.apk ({file_size_str})
+🛡️ <b>Anti-Ban Biometrics:</b> Gaussian 2D jitter &amp; log-normal human latency
+🔄 <b>Supercell ID Switcher:</b> Auto-rotates multiple accounts on schedule
 🧱 <b>Dedicated Wall Builder:</b> Auto-dumps full loot into wall upgrades
+🎯 <b>Dead Base Hunter:</b> Surgical outside collector strip on dead bases
 ⚡ <b>0-Cost Quick Train:</b> Root Riders, Zap Dragons &amp; Sneaky Goblins
 🔍 <b>Smart Nexting Search:</b> 500k+ Gold &amp; Elixir hunter
 🖐️ <b>Multi-Touch Raid:</b> 4-Finger Line Wave &amp; 2-Finger Funnel
@@ -43,7 +44,7 @@ def main():
         "-F", f"chat_id={chat_id}",
         "-F", "parse_mode=HTML",
         "-F", f"caption=<{caption_file}",
-        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v6.5.apk",
+        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v6.6.apk",
         f"https://api.telegram.org/bot{bot_token}/sendDocument"
     ]
 

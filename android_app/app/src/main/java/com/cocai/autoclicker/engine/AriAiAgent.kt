@@ -9,15 +9,14 @@ import com.cocai.autoclicker.service.AutoClickAccessibilityService
 import kotlin.random.Random
 
 /**
- * 🏛️ ARI AI AGENT (Dedicated Home Village Loot Farmer & Wall Upgrader)
+ * 🏛️ ARI AI AGENT (Anti-Ban Humanized Home Village Farmer & Supercell ID Switcher)
  *
- * 100% Pure Focus:
- * 1. Harvest Home Village Mines, Drills & Treasury
- * 2. Dump Farmed Gold & Elixir into Wall Upgrades (Free Builder)
- * 3. 0-Cost Pro Meta Quick Train
- * 4. Smart Matchmaking Nexting Search (500k+ Loot Bases)
- * 5. 4-Finger Multi-Touch Deployment & Core Giga Protection
- * 6. Continuous 24/7 Loot Accumulation & Wall Maxing
+ * 🛡️ Anti-Ban Protections:
+ * 1. 2D Gaussian Coordinate Jitter (sigma = 4.2px) so touches never hit the exact same pixel
+ * 2. Log-Normal Reaction Timing (210ms - 480ms human cognitive latency)
+ * 3. Human Idle Breathers & Village Inspection swipes
+ * 4. Supercell ID Multi-Account Switcher (Cycles across multiple accounts)
+ * 5. Dedicated 1 Free Builder Wall Upgrade Dump
  */
 class AriAiAgent(
     private val context: Context,
@@ -42,7 +41,10 @@ class AriAiAgent(
     val gigaProtection = TownHallGigaProtectionEngine(accessibilityService)
     val neuralVision = OnDeviceNeuralVisionEngine(context)
     val deadBaseHunter = DeadBaseCollectorHunter()
+    val antiBan = AntiBanHumanSimulationEngine()
+    val accountSwitcher = SupercellIdAccountSwitcher(accessibilityService)
 
+    var totalAccounts: Int = 1
     var isAgentActive: Boolean = false
         private set
 
@@ -55,12 +57,13 @@ class AriAiAgent(
 
     /**
      * Startup:
-     * Initializes Supervisor and the Pure Home Village Farming & Wall Upgrade Loop.
+     * Initializes Supervisor and the Anti-Ban Humanized Home Village Farming Loop.
      */
-    fun startAgent(strategy: CocStrategy = CocStrategy.ROOT_RIDER_OVERGROWTH_SMASH) {
+    fun startAgent(strategy: CocStrategy = CocStrategy.ROOT_RIDER_OVERGROWTH_SMASH, accountsCount: Int = 1) {
         currentStrategy = strategy
+        totalAccounts = accountsCount
         isAgentActive = true
-        Log.i("AriAiAgent", "=== [ARI AI AGENT ACTIVATED] Pure Home Village Farming & Wall Upgrader Online: ${strategy.name} ===")
+        Log.i("AriAiAgent", "=== [ARI AI AGENT ONLINE] Anti-Ban Humanized Home Village Farmer Active (Accounts: $totalAccounts) ===")
 
         supervisor.startSupervisor()
 
@@ -82,20 +85,14 @@ class AriAiAgent(
 
     private fun scheduleNextStep(delayMs: Long, action: () -> Unit) {
         if (!isAgentActive) return
-        val randomizedDelay = delayMs + Random.nextLong(100L, 250L)
+        val humanDelay = antiBan.generateHumanReactionDelay(delayMs)
         handler.postDelayed({
             if (isAgentActive) action()
-        }, randomizedDelay)
+        }, humanDelay)
     }
 
     /**
-     * 🚜 PURE HOME VILLAGE FARM & WALL UPGRADE LOOP:
-     * Step 1. Harvest Home Village (Mines, Collectors, Drills, Treasury)
-     * Step 2. Dump Farmed Gold & Elixir into Walls (1-3 Walls per cycle)
-     * Step 3. Queue 0-Cost Pro Meta Armies
-     * Step 4. Smart Matchmaking Search (Next until 500k+ Loot found)
-     * Step 5. 4-Finger Multi-Touch Raid & Core Defense Neutralization
-     * Step 6. Return Home, Record Loot, Upgrade Walls, Repeat!
+     * 🚜 PURE HOME VILLAGE FARM & DEDICATED WALL DUMP LOOP:
      */
     private fun pureHomeVillageFarmLoop() {
         if (!isAgentActive) return
@@ -126,9 +123,10 @@ class AriAiAgent(
         var idx = 0
         fun tapNext() {
             if (idx < tapPoints.size && isAgentActive) {
-                val pt = tapPoints[idx++]
-                accessibilityService.performTap(pt.x, pt.y) {
-                    scheduleNextStep(300L) { tapNext() }
+                val rawPt = tapPoints[idx++]
+                val jitteredPt = antiBan.humanizeCoordinate(rawPt)
+                accessibilityService.performTap(jitteredPt.x, jitteredPt.y) {
+                    scheduleNextStep(320L) { tapNext() }
                 }
             } else {
                 onComplete()
@@ -147,14 +145,18 @@ class AriAiAgent(
 
     private fun trainProArmy(onComplete: () -> Unit) {
         Log.i("AriAiAgent", "⚡ [HOME FARM] Queuing 0-Cost Pro Meta Army...")
-        accessibilityService.performTap(90f, 830f) {
-            scheduleNextStep(800L) {
-                accessibilityService.performTap(1350f, 150f) {
-                    scheduleNextStep(600L) {
-                        accessibilityService.performTap(1580f, 380f) {
-                            scheduleNextStep(600L) {
-                                accessibilityService.performTap(1820f, 85f) {
-                                    scheduleNextStep(700L, onComplete)
+        val armyBtn = antiBan.humanizeCoordinate(PointF(90f, 830f))
+        accessibilityService.performTap(armyBtn.x, armyBtn.y) {
+            scheduleNextStep(750L) {
+                val trainTab = antiBan.humanizeCoordinate(PointF(1350f, 150f))
+                accessibilityService.performTap(trainTab.x, trainTab.y) {
+                    scheduleNextStep(580L) {
+                        val quickTrain = antiBan.humanizeCoordinate(PointF(1580f, 380f))
+                        accessibilityService.performTap(quickTrain.x, quickTrain.y) {
+                            scheduleNextStep(580L) {
+                                val closeBtn = antiBan.humanizeCoordinate(PointF(1820f, 85f))
+                                accessibilityService.performTap(closeBtn.x, closeBtn.y) {
+                                    scheduleNextStep(650L, onComplete)
                                 }
                             }
                         }
@@ -173,8 +175,9 @@ class AriAiAgent(
 
                 if (profile.distribution == BaseLootDistribution.DEAD_BASE_OUTSIDE_COLLECTORS && currentStrategy == CocStrategy.SNEAKY_GOBLIN_ORE_FARM) {
                     // Surgical perimeter collector harvest
-                    accessibilityService.performTap(200f, 980f)
-                    accessibilityService.performMultiTouchTaps(profile.perimeterDropZones)
+                    val slot1 = antiBan.humanizeCoordinate(PointF(200f, 980f))
+                    accessibilityService.performTap(slot1.x, slot1.y)
+                    accessibilityService.performMultiTouchTaps(profile.perimeterDropZones.map { antiBan.humanizeCoordinate(it) })
                     scheduleNextStep(14000L) {
                         finishRaidAndReflect()
                     }
@@ -186,7 +189,7 @@ class AriAiAgent(
                         // Cast Overgrowth -> 4-Finger Root Rider + Valkyrie Drop -> Giga Protection
                         accessibilityService.performTap(820f, 980f)
                         accessibilityService.performTap(plan.rightFunnelHero.x, plan.rightFunnelHero.y)
-                        scheduleNextStep(800L) {
+                        scheduleNextStep(750L) {
                             accessibilityService.performTap(200f, 980f)
                             multiTouch.deployFourFingerWave(plan.startDeployLine, plan.endDeployLine, 2) {
                                 accessibilityService.performTap(290f, 980f)
@@ -242,7 +245,7 @@ class AriAiAgent(
                             PointF(1300f, 200f), PointF(1500f, 300f), PointF(1600f, 600f)
                         )
                         accessibilityService.performTap(200f, 980f)
-                        accessibilityService.performMultiTouchTaps(perimeter)
+                        accessibilityService.performMultiTouchTaps(perimeter.map { antiBan.humanizeCoordinate(it) })
                         scheduleNextStep(12000L) {
                             finishRaidAndReflect()
                         }
@@ -254,21 +257,26 @@ class AriAiAgent(
 
     private fun deployHeroes(dropCoord: PointF) {
         for (slotX in listOf(300f, 400f, 500f, 600f)) {
-            accessibilityService.performTap(slotX, 980f)
-            accessibilityService.performTap(dropCoord.x, dropCoord.y)
+            val slotPt = antiBan.humanizeCoordinate(PointF(slotX, 980f))
+            val targetPt = antiBan.humanizeCoordinate(dropCoord)
+            accessibilityService.performTap(slotPt.x, slotPt.y)
+            accessibilityService.performTap(targetPt.x, targetPt.y)
         }
     }
 
     /**
-     * 📊 End of Raid -> Return Home -> Dump Farmed Loot into Walls -> Loop!
+     * 📊 End of Raid -> Return Home -> Dump Farmed Loot into Walls -> Switch Account or Repeat!
      */
     private fun finishRaidAndReflect() {
         Log.i("AriAiAgent", "🏆 [RAID FINISHED] Returning Home to dump loot into walls...")
-        accessibilityService.performTap(120f, 880f) {
+        val returnBtn = antiBan.humanizeCoordinate(PointF(120f, 880f))
+        accessibilityService.performTap(returnBtn.x, returnBtn.y) {
             scheduleNextStep(700L) {
-                accessibilityService.performTap(1100f, 680f) {
+                val okayBtn = antiBan.humanizeCoordinate(PointF(1100f, 680f))
+                accessibilityService.performTap(okayBtn.x, okayBtn.y) {
                     scheduleNextStep(1800L) {
-                        accessibilityService.performTap(960f, 920f) {
+                        val homeBtn = antiBan.humanizeCoordinate(PointF(960f, 920f))
+                        accessibilityService.performTap(homeBtn.x, homeBtn.y) {
                             totalRaids++
                             val goldGained = Random.nextLong(550000L, 980000L)
                             val elixirGained = Random.nextLong(550000L, 980000L)
@@ -291,16 +299,28 @@ class AriAiAgent(
 
                             // Dispatch Real-time Telegram Telemetry Report
                             telegramNotifier.sendRaidReport(
-                                strategy = "🌾 Home Village Farm & Wall Dump (" + currentStrategy.name + ")",
+                                strategy = "🌾 Humanized Home Farm (" + currentStrategy.name + ")",
                                 goldGained = goldGained,
                                 elixirGained = elixirGained,
                                 darkElixirGained = darkGained,
                                 totalRaids = totalRaids
                             )
 
-                            // Immediate Wall Upgrade & Next Raid Cycle
-                            scheduleNextStep(2500L) {
-                                pureHomeVillageFarmLoop()
+                            // Anti-Ban Breather or Account Switch after every 3 raids
+                            if (totalAccounts > 1 && totalRaids % 3 == 0) {
+                                Log.i("AriAiAgent", "🔄 [ACCOUNT ROTATION] Rotating to next Supercell ID account...")
+                                accountSwitcher.switchToNextAccount(totalAccounts) {
+                                    pureHomeVillageFarmLoop()
+                                }
+                            } else if (antiBan.shouldTakeHumanBreather(totalRaids)) {
+                                val breather = antiBan.getBreatherDurationMs()
+                                handler.postDelayed({
+                                    pureHomeVillageFarmLoop()
+                                }, breather)
+                            } else {
+                                scheduleNextStep(2200L) {
+                                    pureHomeVillageFarmLoop()
+                                }
                             }
                         }
                     }
