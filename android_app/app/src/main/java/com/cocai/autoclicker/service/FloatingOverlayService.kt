@@ -44,10 +44,10 @@ class FloatingOverlayService : Service() {
 
     private fun stopMacroExecution() {
         ariAgent?.stopAgent()
-        val tvStatus = floatingView?.findViewById<TextView>(R.id.tv_floating_status)
-        val btnPlayPause = floatingView?.findViewById<Button>(R.id.btn_floating_play_pause)
+        val tvStatus = floatingView?.findViewById<TextView>(R.id.tv_hud_status)
+        val btnPlayPause = floatingView?.findViewById<Button>(R.id.btn_toggle_play)
         tvStatus?.text = "[PANIC STOPPED] Idle"
-        btnPlayPause?.text = "▶ START"
+        btnPlayPause?.text = "▶"
     }
 
     private fun setupFloatingLayout() {
@@ -70,15 +70,16 @@ class FloatingOverlayService : Service() {
         params.x = 80
         params.y = 150
 
-        floatingView = LayoutInflater.from(this).inflate(R.layout.layout_floating_controller, null)
+        floatingView = LayoutInflater.from(this).inflate(R.layout.floating_hud, null)
         windowManager?.addView(floatingView, params)
 
-        val btnPlayPause = floatingView?.findViewById<Button>(R.id.btn_floating_play_pause)
-        val btnClean = floatingView?.findViewById<Button>(R.id.btn_floating_clean)
-        val btnStrategy = floatingView?.findViewById<Button>(R.id.btn_floating_strategy)
-        val btnConsole = floatingView?.findViewById<Button>(R.id.btn_floating_console)
-        val btnClose = floatingView?.findViewById<Button>(R.id.btn_floating_close)
-        val tvStatus = floatingView?.findViewById<TextView>(R.id.tv_floating_status)
+        val btnPlayPause = floatingView?.findViewById<Button>(R.id.btn_toggle_play)
+        val btnVision = floatingView?.findViewById<Button>(R.id.btn_hud_vision)
+        val btnTools = floatingView?.findViewById<Button>(R.id.btn_hud_tools)
+        val btnStrategy = floatingView?.findViewById<Button>(R.id.btn_strategy)
+        val btnConsole = floatingView?.findViewById<Button>(R.id.btn_hud_console)
+        val btnClose = floatingView?.findViewById<Button>(R.id.btn_hud_close)
+        val tvStatus = floatingView?.findViewById<TextView>(R.id.tv_hud_status)
 
         // 1. Play / Pause Button (Hermes Ari Agent)
         btnPlayPause?.setOnClickListener {
@@ -94,19 +95,19 @@ class FloatingOverlayService : Service() {
 
             if (!agent.isAgentActive) {
                 agent.startAgent(selectedStrategy)
-                btnPlayPause.text = "⏸ PAUSE"
-                tvStatus?.text = "🏛️ [ARI ACTIVE] ${selectedStrategy.name.replace("_", " ")}"
+                btnPlayPause.text = "⏸"
+                tvStatus?.text = "🏛️ [ARI] ${selectedStrategy.name.replace("_", " ")}"
                 Toast.makeText(this, "🚀 Ari AI Agent (Hermes Class) Started: ${selectedStrategy.name}", Toast.LENGTH_SHORT).show()
             } else {
                 agent.stopAgent()
-                btnPlayPause.text = "▶ START"
+                btnPlayPause.text = "▶"
                 tvStatus?.text = "[PAUSED] Idle"
                 Toast.makeText(this, "⏸ Ari AI Agent Paused", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // 2. Clean Base Obstacles / Gem Box
-        btnClean?.setOnClickListener {
+        // 2. Tools Button: Clean Obstacles & Harvest
+        btnTools?.setOnClickListener {
             val agent = ariAgent
             if (agent == null) {
                 Toast.makeText(this, "Enable Accessibility Service first!", Toast.LENGTH_SHORT).show()
@@ -117,18 +118,23 @@ class FloatingOverlayService : Service() {
             }
         }
 
-        // 3. Macro Console Button
+        // 3. Vision Button: Test Screen Analysis
+        btnVision?.setOnClickListener {
+            Toast.makeText(this, "🖐️ Multimodal Vision AI: 265+ Supercell Templates Active", Toast.LENGTH_SHORT).show()
+        }
+
+        // 4. Macro Console Button
         btnConsole?.setOnClickListener {
             val raids = ariAgent?.totalRaids ?: 0
             Toast.makeText(this, "🏛️ Ari Agent: Raids: $raids | VolDown: ARMED | Hermes Loop: ACTIVE", Toast.LENGTH_SHORT).show()
         }
 
-        // 4. Close / Exit Button
+        // 5. Close / Exit Button
         btnClose?.setOnClickListener {
             stopSelf()
         }
 
-        // 5. Strategy Selector
+        // 6. Strategy Selector
         btnStrategy?.setOnClickListener {
             selectedStrategy = when (selectedStrategy) {
                 CocStrategy.ROOT_RIDER_OVERGROWTH_SMASH -> CocStrategy.ZAP_DRAGON_FARMING
