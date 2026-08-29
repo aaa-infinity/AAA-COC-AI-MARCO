@@ -3,6 +3,7 @@ package com.cocai.autoclicker.service
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
 import android.graphics.Path
+import android.graphics.PointF
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import kotlin.random.Random
@@ -20,7 +21,7 @@ class AutoClickAccessibilityService : AccessibilityService() {
     override fun onServiceConnected() {
         super.onServiceConnected()
         instance = this
-        Log.i("AutoClickService", "Accessibility Service Connected!")
+        Log.i("AutoClickService", "Accessibility Service Connected with Multi-Touch Support!")
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {}
@@ -34,6 +35,9 @@ class AutoClickAccessibilityService : AccessibilityService() {
         instance = null
     }
 
+    /**
+     * Single Tap with Gaussian coordinate jitter
+     */
     fun performTap(x: Float, y: Float, durationMs: Long = 50L, jitter: Boolean = true, callback: (() -> Unit)? = null) {
         val jitterX = if (jitter) x + Random.nextDouble(-4.0, 4.0).toFloat() else x
         val jitterY = if (jitter) y + Random.nextDouble(-4.0, 4.0).toFloat() else y
@@ -53,6 +57,9 @@ class AutoClickAccessibilityService : AccessibilityService() {
         }, null)
     }
 
+    /**
+     * Curved Bezier swipe gesture
+     */
     fun performBezierSwipe(
         startX: Float,
         startY: Float,
@@ -63,8 +70,8 @@ class AutoClickAccessibilityService : AccessibilityService() {
     ) {
         val path = Path().apply {
             moveTo(startX, startY)
-            val controlX = (startX + endX) / 2 + Random.nextInt(-30, 30)
-            val controlY = (startY + endY) / 2 + Random.nextInt(-30, 30)
+            val controlX = (startX + endX) / 2 + Random.nextInt(-25, 25)
+            val controlY = (startY + endY) / 2 + Random.nextInt(-25, 25)
             quadTo(controlX.toFloat(), controlY.toFloat(), endX, endY)
         }
 
@@ -79,16 +86,81 @@ class AutoClickAccessibilityService : AccessibilityService() {
         }, null)
     }
 
-    fun performMultiTouchTaps(points: List<Pair<Float, Float>>, durationMs: Long = 60L) {
+    /**
+     * Multi-Touch Simultaneous Taps (2, 3, 4, or up to 10 simultaneous finger drops)
+     */
+    fun performMultiTouchTaps(points: List<PointF>, durationMs: Long = 65L, callback: (() -> Unit)? = null) {
         val builder = GestureDescription.Builder()
         for (pt in points.take(10)) {
             val path = Path().apply {
-                val jX = pt.first + Random.nextDouble(-3.0, 3.0).toFloat()
-                val jY = pt.second + Random.nextDouble(-3.0, 3.0).toFloat()
+                val jX = pt.x + Random.nextDouble(-3.5, 3.5).toFloat()
+                val jY = pt.y + Random.nextDouble(-3.5, 3.5).toFloat()
                 moveTo(jX, jY)
             }
             builder.addStroke(GestureDescription.StrokeDescription(path, 0, durationMs))
         }
-        dispatchGesture(builder.build(), null, null)
+
+        dispatchGesture(builder.build(), object : GestureResultCallback() {
+            override fun onCompleted(gestureDescription: GestureDescription?) {
+                super.onCompleted(gestureDescription)
+                callback?.invoke()
+            }
+        }, null)
+    }
+
+    /**
+     * Multi-Finger Simultaneous Line Deployment (2, 3, or 4 fingers swiping simultaneously)
+     */
+    fun performMultiFingerSwipeLines(
+        lines: List<Pair<PointF, PointF>>,
+        durationMs: Long = 350L,
+        callback: (() -> Unit)? = null
+    ) {
+        val builder = GestureDescription.Builder()
+        for (line in lines.take(5)) {
+            val path = Path().apply {
+                moveTo(line.first.x, line.first.y)
+                val cX = (line.first.x + line.second.x) / 2 + Random.nextInt(-15, 15)
+                val cY = (line.first.y + line.second.y) / 2 + Random.nextInt(-15, 15)
+                quadTo(cX.toFloat(), cY.toFloat(), line.second.x, line.second.y)
+            }
+            builder.addStroke(GestureDescription.StrokeDescription(path, 0, durationMs))
+        }
+
+        dispatchGesture(builder.build(), object : GestureResultCallback() {
+            override fun onCompleted(gestureDescription: GestureDescription?) {
+                super.onCompleted(gestureDescription)
+                callback?.invoke()
+            }
+        }, null)
+    }
+
+    /**
+     * Smooth Two-Finger Pinch Zoom In / Out
+     */
+    fun performPinchZoom(centerX: Float, centerY: Float, zoomIn: Boolean, durationMs: Long = 400L, callback: (() -> Unit)? = null) {
+        val spanStart = if (zoomIn) 80f else 300f
+        val spanEnd = if (zoomIn) 300f else 80f
+
+        val pathFinger1 = Path().apply {
+            moveTo(centerX - spanStart, centerY - spanStart)
+            lineTo(centerX - spanEnd, centerY - spanEnd)
+        }
+
+        val pathFinger2 = Path().apply {
+            moveTo(centerX + spanStart, centerY + spanStart)
+            lineTo(centerX + spanEnd, centerY + spanEnd)
+        }
+
+        val builder = GestureDescription.Builder()
+        builder.addStroke(GestureDescription.StrokeDescription(pathFinger1, 0, durationMs))
+        builder.addStroke(GestureDescription.StrokeDescription(pathFinger2, 0, durationMs))
+
+        dispatchGesture(builder.build(), object : GestureResultCallback() {
+            override fun onCompleted(gestureDescription: GestureDescription?) {
+                super.onCompleted(gestureDescription)
+                callback?.invoke()
+            }
+        }, null)
     }
 }

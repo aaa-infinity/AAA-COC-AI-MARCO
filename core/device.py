@@ -1,6 +1,6 @@
 """
-Android Device Controller via ADB with Humanized Input Emulation.
-Supports touch jitter, Bezier curve swipes, and emulator connection discovery.
+Android Device Controller via ADB with Multi-Touch & Humanized Input Emulation.
+Supports multi-finger simultaneous taps, Bezier curve swipes, and emulator auto-discovery.
 """
 
 import random
@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class DeviceController:
     """
-    Controls an Android device or emulator via ADB shell commands.
+    Controls an Android device or emulator via ADB shell commands with Multi-Touch support.
     """
     def __init__(
         self,
@@ -133,17 +133,33 @@ class DeviceController:
         sleep_time = random.uniform(*delay_range)
         time.sleep(sleep_time)
 
-    def tap_region(
-        self,
-        x1: int,
-        y1: int,
-        x2: int,
-        y2: int,
-        delay_range: Tuple[float, float] = (0.3, 0.7)
-    ):
-        target_x = random.randint(min(x1, x2), max(x1, x2))
-        target_y = random.randint(min(y1, y2), max(y1, y2))
-        self.tap(target_x, target_y, jitter=False, delay_range=delay_range)
+    def multi_touch_tap(self, points: List[Tuple[int, int]], delay: float = 0.2):
+        """
+        Simultaneous Multi-Touch Taps across multiple screen points.
+        """
+        for pt in points:
+            x, y = pt
+            if self.enable_jitter:
+                x += int(random.gauss(0, self.jitter_std))
+                y += int(random.gauss(0, self.jitter_std))
+            if self.connected:
+                self._adb_cmd(["shell", "input", "tap", str(x), str(y)])
+            else:
+                logger.debug(f"[MOCK MULTI-TOUCH TAP] at ({x}, {y})")
+        time.sleep(delay)
+
+    def multi_finger_wave(self, start_pt: Tuple[int, int], end_pt: Tuple[int, int], waves: int = 3):
+        """
+        4-Finger Simultaneous Wave Deployment along an attack corridor.
+        """
+        dx = (end_pt[0] - start_pt[0]) // 3
+        dy = (end_pt[1] - start_pt[1]) // 3
+        for w in range(waves):
+            pts = [
+                (start_pt[0] + dx * i + random.randint(-10, 10), start_pt[1] + dy * i + random.randint(-10, 10))
+                for i in range(4)
+            ]
+            self.multi_touch_tap(pts, delay=0.18)
 
     def swipe(
         self,

@@ -15,6 +15,7 @@ import android.widget.Toast
 import com.cocai.autoclicker.R
 import com.cocai.autoclicker.engine.AntiAfkPatrolEngine
 import com.cocai.autoclicker.engine.AutoDonateEngine
+import com.cocai.autoclicker.engine.AutonomousSupervisor
 import com.cocai.autoclicker.engine.CocFarmingEngine
 import com.cocai.autoclicker.engine.CocStrategy
 
@@ -25,6 +26,7 @@ class FloatingOverlayService : Service() {
     private var farmingEngine: CocFarmingEngine? = null
     private var donateEngine: AutoDonateEngine? = null
     private var antiAfkEngine: AntiAfkPatrolEngine? = null
+    private var supervisor: AutonomousSupervisor? = null
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -37,6 +39,8 @@ class FloatingOverlayService : Service() {
             farmingEngine = CocFarmingEngine(accService)
             donateEngine = AutoDonateEngine(accService)
             antiAfkEngine = AntiAfkPatrolEngine(accService)
+            supervisor = AutonomousSupervisor(this, accService)
+            supervisor?.startSupervisor()
         }
 
         setupFloatingView()
@@ -72,8 +76,8 @@ class FloatingOverlayService : Service() {
 
         // 1. Vision Snap / Target Selection
         btnVision?.setOnClickListener {
-            Toast.makeText(this, "📸 Vision AI: Screenshot-to-Code analysis triggered!", Toast.LENGTH_SHORT).show()
-            tvStatus?.text = "[VISION] Base Analyzed"
+            Toast.makeText(this, "📸 Vision AI: Multi-Touch Screenshot-to-Code triggered!", Toast.LENGTH_SHORT).show()
+            tvStatus?.text = "[VISION] 4-Finger Wave Ready"
         }
 
         // 2. Play / Pause Button
@@ -89,7 +93,7 @@ class FloatingOverlayService : Service() {
                     engine.startEngine(selectedStrategy)
                     btnToggle.text = "⏸"
                     btnToggle.setBackgroundColor(0xFFF59E0B.toInt())
-                    tvStatus?.text = "[FARMING] ${selectedStrategy.name.replace("_", " ")}"
+                    tvStatus?.text = "[4-FINGER MT] ${selectedStrategy.name.replace("_", " ")}"
                 }
             } else {
                 tvStatus?.text = "[ERR: ACCESSIBILITY]"
@@ -99,26 +103,24 @@ class FloatingOverlayService : Service() {
 
         // 3. Settings Button
         btnSettings?.setOnClickListener {
-            Toast.makeText(this, "⚙️ Min Gold: 500k | Min Elixir: 500k | Strategy: ${selectedStrategy.name}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "⚙️ Multi-Touch: 4-FINGER | Min Gold: 500k | Min Elixir: 500k | Strategy: ${selectedStrategy.name}", Toast.LENGTH_LONG).show()
         }
 
-        // 4. Tools: Auto Donate & Anti-AFK
+        // 4. Tools: Auto Donate, CC Request & Anti-AFK
         btnTools?.setOnClickListener {
             val donate = donateEngine
-            val afk = antiAfkEngine
+            val sup = supervisor
             if (donate != null && !donate.isDonating) {
-                Toast.makeText(this, "🛠️ Running Clan Auto-Donate...", Toast.LENGTH_SHORT).show()
-                tvStatus?.text = "[DONATE] Scanning Clan Chat"
+                Toast.makeText(this, "🛠️ Running Clan Chat Auto-Donate & CC Request...", Toast.LENGTH_SHORT).show()
+                tvStatus?.text = "[TOOLS] Donating Troops"
                 donate.startAutoDonate {
-                    tvStatus?.text = "[IDLE] Done Donating"
+                    sup?.performClanCastleRequest {
+                        tvStatus?.text = "[IDLE] Clan Routines Complete"
+                    }
                 }
-            } else if (afk != null) {
-                if (afk.isPatrolling) {
-                    afk.stopPatrol()
-                    Toast.makeText(this, "Anti-AFK Patrol Paused", Toast.LENGTH_SHORT).show()
-                } else {
-                    afk.startPatrol()
-                    Toast.makeText(this, "Anti-AFK Patrol Active (every 30s)", Toast.LENGTH_SHORT).show()
+            } else {
+                sup?.cleanBaseObstacles {
+                    Toast.makeText(this, "Base Obstacles & Gem Boxes Cleaned!", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -126,7 +128,7 @@ class FloatingOverlayService : Service() {
         // 5. Macro Console Button
         btnConsole?.setOnClickListener {
             val raids = farmingEngine?.raidsCompleted ?: 0
-            Toast.makeText(this, "💻 Macro Console: Raids Completed: $raids | AI Loop: ACTIVE", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "💻 Macro Console: Raids: $raids | Multi-Touch: 4-FINGER ACTIVE | Supervisor: WATCHDOG ON", Toast.LENGTH_SHORT).show()
         }
 
         // 6. Close / Exit Button
@@ -180,6 +182,7 @@ class FloatingOverlayService : Service() {
         super.onDestroy()
         farmingEngine?.stopEngine()
         antiAfkEngine?.stopPatrol()
+        supervisor?.stopSupervisor()
         if (floatingView != null) {
             windowManager.removeView(floatingView)
         }

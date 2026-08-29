@@ -40,7 +40,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Autonomous Macro • Vision AI &amp; Auto-Donate"
+                android:text="Multi-Touch • 260+ Real Assets • Self-Independent Supervisor"
                 android:textColor="#38BDF8"
                 android:textSize="10sp" />
         </LinearLayout>
@@ -70,7 +70,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="#2563EB"
-            android:text="🏰 BOT DASHBOARD"
+            android:text="🏰 BOT &amp; MULTI-TOUCH"
             android:textColor="#FFFFFF"
             android:textSize="11sp"
             android:textStyle="bold" />
@@ -163,7 +163,7 @@
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
-                <!-- AI Self-Improving Stats Card -->
+                <!-- Multi-Touch Engine Card -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -175,7 +175,33 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📊 Real-Time Battle Statistics &amp; AI Memory"
+                        android:text="🖐️ Multi-Touch Gestures Engine"
+                        android:textColor="#10B981"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="• 4-Finger Wave: Simultaneous dragon &amp; balloon line drop&#10;• 2-Finger Funnel: King &amp; Queen corner drops in 1 millisecond&#10;• Multi-Line Swipes &amp; Smooth Pinch Zoom"
+                        android:textColor="#E2E8F0"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <!-- Autonomous Supervisor & AI Memory Card -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="#131C2E"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🛡️ Self-Independent Supervisor &amp; Auto-Healing"
                         android:textColor="#38BDF8"
                         android:textSize="12sp"
                         android:textStyle="bold" />
@@ -185,34 +211,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
-                        android:text="Total Raids: 0 | Win Rate: 100% | Optimal Angle: BOTTOM_LEFT&#10;Anti-Ban Jitter: ACTIVE | Anti-AFK Patrol: READY"
+                        android:text="• Auto-Crash &amp; Sync Error Recovery: ACTIVE&#10;• Clan Castle Auto-Request: READY&#10;• Obstacle &amp; Gem Box Cleaner: READY&#10;• 260+ Real Datamined Assets: LOADED"
                         android:textColor="#E2E8F0"
-                        android:textSize="11sp" />
-                </LinearLayout>
-
-                <!-- Macrorify Pro Tools Card -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:background="#131C2E"
-                    android:orientation="vertical"
-                    android:padding="12dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🛠️ Autonomous Pro Tools"
-                        android:textColor="#F59E0B"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="• Auto-Donate troops in Clan Chat stream&#10;• Anti-AFK camera sweeps (prevents inactivity disconnect)&#10;• 0-Cost Dragon Quick-Train &amp; Ore Bonus collection"
-                        android:textColor="#94A3B8"
                         android:textSize="11sp" />
                 </LinearLayout>
 

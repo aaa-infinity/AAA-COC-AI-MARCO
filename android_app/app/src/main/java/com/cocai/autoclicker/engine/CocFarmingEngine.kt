@@ -1,5 +1,6 @@
 package com.cocai.autoclicker.engine
 
+import android.graphics.PointF
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -7,10 +8,10 @@ import com.cocai.autoclicker.service.AutoClickAccessibilityService
 import kotlin.random.Random
 
 enum class CocStrategy {
-    ZAP_DRAGON_FARMING,      // Premier Home Village Dragon & Zap Attack
+    ZAP_DRAGON_FARMING,      // Premier Home Village Dragon & Zap Attack with 4-Finger Multi-Touch
     ELECTRO_DRAGON_SPAM,     // Chain Lightning E-Drag core wipeout
     DRAGON_RIDER_SMASH,      // High TH Dragon + Dragon Rider air assault
-    SNEAKY_GOBLIN_ORE_FARM   // Quick 1-Star & Ores
+    SNEAKY_GOBLIN_ORE_FARM   // Quick 1-Star & Ores with Multi-Touch Perimeter Drop
 }
 
 class CocFarmingEngine(
@@ -18,6 +19,7 @@ class CocFarmingEngine(
 ) {
     private val handler = Handler(Looper.getMainLooper())
     val modernFeatures = ModernCocFeatures(accessibilityService)
+    val multiTouch = MultiTouchDeployer(accessibilityService)
 
     var isRunning: Boolean = false
         private set
@@ -31,7 +33,7 @@ class CocFarmingEngine(
     fun startEngine(strategy: CocStrategy = CocStrategy.ZAP_DRAGON_FARMING) {
         currentStrategy = strategy
         isRunning = true
-        Log.i("CocEngine", "Starting Home Village Dragon Farming Engine with: " + strategy.name)
+        Log.i("CocEngine", "Starting Home Village Autonomous Farming Engine with Multi-Touch: " + strategy.name)
         scheduleNextStep(800L) {
             runHomeVillageLoop()
         }
@@ -40,7 +42,7 @@ class CocFarmingEngine(
     fun stopEngine() {
         isRunning = false
         handler.removeCallbacksAndMessages(null)
-        Log.i("CocEngine", "Dragon Farming Engine stopped.")
+        Log.i("CocEngine", "Autonomous Farming Engine stopped.")
     }
 
     private fun scheduleNextStep(delayMs: Long, action: () -> Unit) {
@@ -52,12 +54,12 @@ class CocFarmingEngine(
     }
 
     /**
-     * Complete Home Village Loop:
+     * Complete Home Village Autonomous Loop:
      * 1. Collect Mines, Pumps, Drills, Treasury, Ores
      * 2. 0-Cost Quick Train Dragon Army
      * 3. Multiplayer Matchmaking
-     * 4. Execute Dragon Battle Deployment
-     * 5. Return Home & Loop
+     * 4. Multi-Touch Simultaneous Deployment (4-Finger Wave + 2-Finger Funnel)
+     * 5. Return Home & Self-Independent Loop
      */
     private fun runHomeVillageLoop() {
         Log.i("CocEngine", "=== [HOME VILLAGE] Collecting Resources & Daily Ores ===")
@@ -76,18 +78,18 @@ class CocFarmingEngine(
 
     private fun collectHomeVillageResources(onComplete: () -> Unit) {
         val tapPoints = listOf(
-            Pair(750f, 450f),   // Gold Mine
-            Pair(950f, 520f),   // Elixir Collector
-            Pair(1150f, 480f),  // Dark Elixir Drill
-            Pair(850f, 650f),   // Gem Mine
-            Pair(1600f, 900f)   // Treasury & Star Bonus Ores
+            PointF(750f, 450f),   // Gold Mine
+            PointF(950f, 520f),   // Elixir Collector
+            PointF(1150f, 480f),  // Dark Elixir Drill
+            PointF(850f, 650f),   // Gem Mine
+            PointF(1600f, 900f)   // Treasury & Star Bonus Ores
         )
 
         var idx = 0
         fun tapNext() {
             if (idx < tapPoints.size && isRunning) {
                 val pt = tapPoints[idx++]
-                accessibilityService.performTap(pt.first, pt.second) {
+                accessibilityService.performTap(pt.x, pt.y) {
                     scheduleNextStep(350L) { tapNext() }
                 }
             } else {
@@ -121,72 +123,78 @@ class CocFarmingEngine(
     }
 
     /**
-     * Dedicated Home Village Zap Dragon Attack:
+     * Dedicated Home Village Zap Dragon Attack with Multi-Touch:
      * 1. Zap Lightning Spells on top Air Defenses
-     * 2. Funnel King & Queen on outer corners
-     * 3. Spread Dragons in a clean line
-     * 4. Drop Balloons & Grand Warden behind Dragons
+     * 2. 2-Finger Simultaneous Corner Funnel (King Left, Queen Right)
+     * 3. 4-Finger Simultaneous Dragon Wave Line
+     * 4. Multi-Touch Balloon & Grand Warden drop
      * 5. Activate Grand Warden & Hero Equipment
      * 6. Collect 100% Home Village loot
      */
     private fun executeZapDragonAttack() {
-        Log.i("CocEngine", "Starting Home Village Zap Dragon Raid...")
+        Log.i("CocEngine", "Starting Home Village Multi-Touch Zap Dragon Raid...")
         startMultiplayerMatchmaking {
             scheduleNextStep(4500L) {
                 // Step 1: Zap Air Defenses (Slot 5: Lightning Spells)
                 Log.i("CocEngine", "Step 1: Destroying Air Defenses with Lightning Spells...")
                 accessibilityService.performTap(620f, 980f) // Slot 5: Lightning Spell
-                val ad1 = Pair(750f, 480f)
-                val ad2 = Pair(1170f, 480f)
+                val ad1 = PointF(750f, 480f)
+                val ad2 = PointF(1170f, 480f)
                 
-                accessibilityService.performTap(ad1.first, ad1.second)
-                scheduleNextStep(200L) { accessibilityService.performTap(ad1.first, ad1.second) }
-                scheduleNextStep(400L) { accessibilityService.performTap(ad1.first, ad1.second) }
-                scheduleNextStep(600L) { accessibilityService.performTap(ad2.first, ad2.second) }
-                scheduleNextStep(800L) { accessibilityService.performTap(ad2.first, ad2.second) }
-                scheduleNextStep(1000L) { accessibilityService.performTap(ad2.first, ad2.second) }
+                accessibilityService.performTap(ad1.x, ad1.y)
+                scheduleNextStep(200L) { accessibilityService.performTap(ad1.x, ad1.y) }
+                scheduleNextStep(400L) { accessibilityService.performTap(ad1.x, ad1.y) }
+                scheduleNextStep(600L) { accessibilityService.performTap(ad2.x, ad2.y) }
+                scheduleNextStep(800L) { accessibilityService.performTap(ad2.x, ad2.y) }
+                scheduleNextStep(1000L) { accessibilityService.performTap(ad2.x, ad2.y) }
 
                 scheduleNextStep(1500L) {
-                    // Step 2: Funnel Corner Heroes (King & Queen on opposite corners)
-                    Log.i("CocEngine", "Step 2: Creating corner funnels with Heroes...")
-                    accessibilityService.performTap(300f, 980f) // King
-                    accessibilityService.performTap(450f, 850f)
-                    accessibilityService.performTap(400f, 980f) // Queen
-                    accessibilityService.performTap(1450f, 850f)
+                    // Step 2: 2-Finger Simultaneous Corner Funnel
+                    Log.i("CocEngine", "Step 2: 2-Finger Simultaneous Hero Funnel...")
+                    accessibilityService.performTap(300f, 980f) // Select King
+                    multiTouch.deployTwoFingerFunnel(
+                        leftCorner = PointF(450f, 850f),
+                        rightCorner = PointF(1450f, 850f),
+                        taps = 2
+                    ) {
+                        scheduleNextStep(1000L) {
+                            // Step 3: 4-Finger Simultaneous Dragon Wave (Slot 1)
+                            Log.i("CocEngine", "Step 3: 4-Finger Simultaneous Dragon Wave...")
+                            accessibilityService.performTap(200f, 980f) // Slot 1: Dragons
+                            multiTouch.deployFourFingerWave(
+                                startCorner = PointF(550f, 830f),
+                                endCorner = PointF(1380f, 830f),
+                                waves = 3
+                            ) {
+                                scheduleNextStep(800L) {
+                                    // Step 4: Multi-Touch Balloons (Slot 2) & Grand Warden
+                                    Log.i("CocEngine", "Step 4: Deploying Balloons & Grand Warden...")
+                                    accessibilityService.performTap(290f, 980f) // Slot 2: Balloons
+                                    multiTouch.deployFourFingerWave(
+                                        startCorner = PointF(650f, 840f),
+                                        endCorner = PointF(1280f, 840f),
+                                        waves = 2
+                                    ) {
+                                        accessibilityService.performTap(500f, 980f) // Grand Warden
+                                        accessibilityService.performTap(960f, 850f)
 
-                    scheduleNextStep(1000L) {
-                        // Step 3: Line Deployment of Dragons (Slot 1)
-                        Log.i("CocEngine", "Step 3: Spreading Dragons in wide line...")
-                        val dragonLine = listOf(
-                            Pair(600f, 820f), Pair(750f, 830f), Pair(900f, 840f),
-                            Pair(1050f, 840f), Pair(1200f, 830f), Pair(1350f, 820f)
-                        )
-                        accessibilityService.performTap(200f, 980f) // Slot 1: Dragons
-                        accessibilityService.performMultiTouchTaps(dragonLine)
+                                        // Step 5: Rage Spell into base core (Slot 6)
+                                        scheduleNextStep(7000L) {
+                                            Log.i("CocEngine", "Step 5: Casting Rage Spell in core...")
+                                            accessibilityService.performTap(720f, 980f)
+                                            accessibilityService.performTap(960f, 540f)
 
-                        scheduleNextStep(1200L) {
-                            // Step 4: Drop Balloons (Slot 2) & Grand Warden behind dragons
-                            Log.i("CocEngine", "Step 4: Deploying Balloons & Grand Warden...")
-                            accessibilityService.performTap(290f, 980f) // Slot 2: Balloons
-                            accessibilityService.performMultiTouchTaps(dragonLine)
+                                            // Step 6: Trigger Hero Equipment & Warden Ability
+                                            scheduleNextStep(7000L) {
+                                                Log.i("CocEngine", "Step 6: Triggering Hero Equipment abilities...")
+                                                modernFeatures.triggerHeroEquipmentCombos()
 
-                            accessibilityService.performTap(500f, 980f) // Grand Warden
-                            accessibilityService.performTap(960f, 850f)
-
-                            // Step 5: Rage Spell into base core (Slot 6)
-                            scheduleNextStep(8000L) {
-                                Log.i("CocEngine", "Step 5: Casting Rage Spell in core...")
-                                accessibilityService.performTap(720f, 980f)
-                                accessibilityService.performTap(960f, 540f)
-
-                                // Step 6: Trigger Hero Equipment & Warden Ability
-                                scheduleNextStep(8000L) {
-                                    Log.i("CocEngine", "Step 6: Triggering Hero Equipment abilities...")
-                                    modernFeatures.triggerHeroEquipmentCombos()
-
-                                    // Wait for dragon destruction & exit
-                                    scheduleNextStep(38000L) {
-                                        surrenderAndReturnHome()
+                                                // Wait for dragon destruction & exit
+                                                scheduleNextStep(38000L) {
+                                                    surrenderAndReturnHome()
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -198,18 +206,22 @@ class CocFarmingEngine(
     }
 
     private fun executeElectroDragonAttack() {
-        Log.i("CocEngine", "Starting Electro Dragon Attack...")
+        Log.i("CocEngine", "Starting Electro Dragon Attack with Multi-Touch...")
         startMultiplayerMatchmaking {
             scheduleNextStep(4500L) {
-                val eDragLine = listOf(Pair(650f, 820f), Pair(850f, 840f), Pair(1070f, 840f), Pair(1270f, 820f))
                 accessibilityService.performTap(200f, 980f) // E-Drags
-                accessibilityService.performMultiTouchTaps(eDragLine)
-                scheduleNextStep(1500L) {
-                    deployHeroes(Pair(960f, 850f))
-                    scheduleNextStep(15000L) {
-                        modernFeatures.triggerHeroEquipmentCombos()
-                        scheduleNextStep(40000L) {
-                            surrenderAndReturnHome()
+                multiTouch.deployFourFingerWave(
+                    startCorner = PointF(600f, 830f),
+                    endCorner = PointF(1350f, 830f),
+                    waves = 2
+                ) {
+                    scheduleNextStep(1200L) {
+                        deployHeroes(PointF(960f, 850f))
+                        scheduleNextStep(14000L) {
+                            modernFeatures.triggerHeroEquipmentCombos()
+                            scheduleNextStep(40000L) {
+                                surrenderAndReturnHome()
+                            }
                         }
                     }
                 }
@@ -218,20 +230,21 @@ class CocFarmingEngine(
     }
 
     private fun executeDragonRiderAttack() {
-        Log.i("CocEngine", "Starting Dragon Rider Attack...")
+        Log.i("CocEngine", "Starting Dragon Rider Attack with Multi-Touch...")
         startMultiplayerMatchmaking {
             scheduleNextStep(4500L) {
-                val line = listOf(Pair(700f, 800f), Pair(900f, 820f), Pair(1100f, 820f), Pair(1300f, 800f))
                 accessibilityService.performTap(200f, 980f) // Dragons
-                accessibilityService.performMultiTouchTaps(line)
-                accessibilityService.performTap(290f, 980f) // Dragon Riders
-                accessibilityService.performMultiTouchTaps(line)
-                scheduleNextStep(1500L) {
-                    deployHeroes(Pair(960f, 850f))
-                    scheduleNextStep(14000L) {
-                        modernFeatures.triggerHeroEquipmentCombos()
-                        scheduleNextStep(38000L) {
-                            surrenderAndReturnHome()
+                multiTouch.deployFourFingerWave(PointF(650f, 830f), PointF(1300f, 830f), 2) {
+                    accessibilityService.performTap(290f, 980f) // Dragon Riders
+                    multiTouch.deployFourFingerWave(PointF(700f, 840f), PointF(1250f, 840f), 2) {
+                        scheduleNextStep(1200L) {
+                            deployHeroes(PointF(960f, 850f))
+                            scheduleNextStep(14000L) {
+                                modernFeatures.triggerHeroEquipmentCombos()
+                                scheduleNextStep(38000L) {
+                                    surrenderAndReturnHome()
+                                }
+                            }
                         }
                     }
                 }
@@ -243,8 +256,8 @@ class CocFarmingEngine(
         startMultiplayerMatchmaking {
             scheduleNextStep(4000L) {
                 val perimeter = listOf(
-                    Pair(400f, 300f), Pair(600f, 200f), Pair(960f, 150f),
-                    Pair(1300f, 200f), Pair(1500f, 300f), Pair(1600f, 600f)
+                    PointF(400f, 300f), PointF(600f, 200f), PointF(960f, 150f),
+                    PointF(1300f, 200f), PointF(1500f, 300f), PointF(1600f, 600f)
                 )
                 accessibilityService.performTap(200f, 980f)
                 accessibilityService.performMultiTouchTaps(perimeter)
@@ -265,10 +278,10 @@ class CocFarmingEngine(
         }
     }
 
-    private fun deployHeroes(dropCoord: Pair<Float, Float>) {
+    private fun deployHeroes(dropCoord: PointF) {
         for (slotX in listOf(300f, 400f, 500f, 600f)) {
             accessibilityService.performTap(slotX, 980f)
-            accessibilityService.performTap(dropCoord.first, dropCoord.second)
+            accessibilityService.performTap(dropCoord.x, dropCoord.y)
         }
     }
 
