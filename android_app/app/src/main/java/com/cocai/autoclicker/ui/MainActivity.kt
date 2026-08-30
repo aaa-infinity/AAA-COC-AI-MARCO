@@ -12,12 +12,11 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.cocai.autoclicker.R
 import com.cocai.autoclicker.ai.*
-import com.cocai.autoclicker.engine.TelegramBotManager
 import com.cocai.autoclicker.service.AutoClickAccessibilityService
 import com.cocai.autoclicker.service.FloatingHUDService
 
 /**
- * 👑 Ai Marco coc - Main Setup Wizard & Cyber Hub
+ * 👑 Ai Marco coc - Vibrant Luxury Hub & Setup Wizard
  */
 class MainActivity : AppCompatActivity() {
 
@@ -33,9 +32,7 @@ class MainActivity : AppCompatActivity() {
     private var spinnerLiveModels: Spinner? = null
     private var etApiKeyInput: EditText? = null
     private var tvPingResult: TextView? = null
-
-    private var etTelegramToken: EditText? = null
-    private var etTelegramChatId: EditText? = null
+    private var tvRecordedStatus: TextView? = null
 
     private val providers = arrayOf(
         "Google Gemini (Official / Recommended)",
@@ -55,7 +52,6 @@ class MainActivity : AppCompatActivity() {
             bindViews()
             setupPermissionControls()
             setupAiProviderHub()
-            setupTelegramControls()
             setupLaunchController()
         } catch (e: Exception) {
             Log.e("MainActivity", "Error in onCreate: ${e.message}", e)
@@ -79,14 +75,7 @@ class MainActivity : AppCompatActivity() {
         spinnerLiveModels = findViewById(R.id.spinner_live_models)
         etApiKeyInput = findViewById(R.id.et_api_key_input)
         tvPingResult = findViewById(R.id.tv_ping_result)
-
-        etTelegramToken = findViewById(R.id.et_telegram_bot_token)
-        etTelegramChatId = findViewById(R.id.et_telegram_chat_id)
-
-        val savedToken = appPrefs.getString("tg_token", "8779968206:AAEE8lhp1ASBvrLiApEgXObYMQlXasWRSKI")
-        val savedChatId = appPrefs.getString("tg_chat_id", "@aaafreecloud")
-        etTelegramToken?.setText(savedToken)
-        etTelegramChatId?.setText(savedChatId)
+        tvRecordedStatus = findViewById(R.id.tv_recorded_status)
     }
 
     private fun updatePermissionButtonStates() {
@@ -196,24 +185,6 @@ class MainActivity : AppCompatActivity() {
                     tvPingResult?.setTextColor(0xFFEF4444.toInt())
                 }
             )
-        }
-    }
-
-    private fun setupTelegramControls() {
-        findViewById<Button>(R.id.btn_send_telegram_test)?.setOnClickListener {
-            val token = etTelegramToken?.text?.toString()?.trim() ?: ""
-            val chatId = etTelegramChatId?.text?.toString()?.trim() ?: ""
-            if (token.isNotEmpty() && chatId.isNotEmpty()) {
-                appPrefs.edit().putString("tg_token", token).putString("tg_chat_id", chatId).apply()
-                val bot = TelegramBotManager(this, token, chatId)
-                bot.sendMessage("👑 <b>[Ai Marco coc]</b> Connected! Send <code>/status</code>, <code>/pause</code>, <code>/resume</code>, <code>/attack</code>, <code>/walls</code>, <code>/schedule</code>.") { ok ->
-                    if (ok) {
-                        Toast.makeText(this, "✓ Telegram Test Ping Dispatched!", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(this, "⚠️ Telegram Notice: Ensure bot is Admin in channel.", Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
         }
     }
 
