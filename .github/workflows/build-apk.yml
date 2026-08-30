@@ -7,9 +7,13 @@ on:
     branches: [ "main", "master" ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   build-and-monitor:
-    name: Cloud Compilation & Automated Telegram Dispatch
+    name: Cloud Compilation & Automated Dispatch
     runs-on: ubuntu-latest
     timeout-minutes: 25
 
@@ -31,16 +35,6 @@ jobs:
         with:
           gradle-version: '8.7'
 
-      - name: Notify Telegram Build Started
-        if: always()
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN || '8841143616:AAGbcJKf3MLTN17-tpmwhZKZQIIbErDT1PA' }}
-          TELEGRAM_CHAT_ID: "-1004447017934"
-        run: |
-          if [ -n "$TELEGRAM_BOT_TOKEN" ]; then
-            curl -s "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=🚀+Ai+Marco+coc+v1.0+(Apex+Vision+%26+Pure+Loot+Edition)+Cloud+APK+Build+Started+on+GitHub+Runner...%0ACommit:+${{ github.sha }}%0AStatus:+Compiling+ML+Kit+OCR,+On-Device+Vision,+Macrorify+8-Button+HUD+%26+24/7+Foreground+Service" || true
-          fi
-
       - name: Compile Commercial Debug APK
         id: gradle_build
         working-directory: android_app
@@ -50,27 +44,39 @@ jobs:
           cp app/build/outputs/apk/debug/app-debug.apk ../dist/Ai-Marco-coc-v1.0.apk
 
       - name: Upload APK to GitHub Artifacts
-        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: Ai-Marco-coc-v1.0-APK
           path: dist/Ai-Marco-coc-v1.0.apk
           retention-days: 30
 
-      - name: Send APK to Telegram Channel on Success
-        if: success()
+      - name: Create or Update GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/main'
+        with:
+          tag_name: v1.0
+          name: "Ai Marco coc v1.0 (Apex Vision & Pure Loot Edition)"
+          body: |
+            👑 **Ai Marco coc v1.0 (Apex Vision & Pure Loot Edition)**
+            
+            ### 🚀 Highlights:
+            - 🎨 **New Brand Identity:** Pro Cyber Crown App Icon & Logo
+            - 👁️ **On-Device Vision & OCR:** ML Kit instant Gold/Elixir reading
+            - 🧠 **Pure Loot Farming AI:** 100% resource extraction (Zero trophy worry)
+            - 🎯 **Macrorify 8-Button Floating HUD:** 42dp bubble, pill bar, in-game ⚙ modal
+            - 🛠️ **AMOLED Black Screen Saver:** Dims screen to 0% to save battery & prevent burn-in
+            - ⚡ **0-Training Time Loops:** Instant back-to-back attacks
+            - ⏩ **Battle Fast-Forward:** Auto-taps in-game speed multiplier
+            - 🧱 **Builder Wall Dump:** Spends excess loot to walls via Builder Overview
+            - 🤝 **Clan Chat Auto-Donate & CC Request Loop**
+            - 🔑 **100% Dynamic Multi-Key Live Models:** Gemini / OpenRouter / Groq / DeepSeek
+            - 🤖 **2-Way Telegram Remote:** `/status`, `/pause`, `/resume`, `/attack`, `/walls`, `/schedule`
+            - 🛡️ **24/7 Foreground Service:** Persistent notification prevents OS kills
+          files: |
+            dist/Ai-Marco-coc-v1.0.apk
         env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN || '8841143616:AAGbcJKf3MLTN17-tpmwhZKZQIIbErDT1PA' }}
-          TELEGRAM_CHAT_ID: "-1004447017934"
-        run: |
-          python3 tools/send_telegram_apk.py
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Send Diagnostic Error Report to Telegram on Failure
-        if: failure()
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN || '8841143616:AAGbcJKf3MLTN17-tpmwhZKZQIIbErDT1PA' }}
-          TELEGRAM_CHAT_ID: "-1004447017934"
+      - name: Send APK to Telegram Channel (If configured)
         run: |
-          if [ -n "$TELEGRAM_BOT_TOKEN" ]; then
-            curl -s "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=❌+[Ai+Marco+coc]+Cloud+APK+Build+Failed!%0A⚠️+Reason:+Compilation+Error%0A🔍+Commit:+${{ github.sha }}" || true
-          fi
+          python3 tools/send_telegram_apk.py || true
