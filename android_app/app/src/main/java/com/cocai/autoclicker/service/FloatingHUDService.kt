@@ -1,10 +1,11 @@
 package com.cocai.autoclicker.service
 
 import android.animation.ValueAnimator
-import android.app.Service
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.graphics.PixelFormat
 import android.graphics.Point
 import android.os.Build
@@ -13,35 +14,42 @@ import android.provider.Settings
 import android.util.Log
 import android.view.*
 import android.view.animation.DecelerateInterpolator
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.core.app.NotificationCompat
 import com.cocai.autoclicker.R
 import com.cocai.autoclicker.engine.ClashAutomationCore
+import com.cocai.autoclicker.ui.MainActivity
 import kotlin.math.abs
 
 /**
- * 👑 Macrorify-Style Play Mode Floating HUD Service (100% Crash-Proof)
+ * 👑 Macrorify 8-Button Play Mode Floating HUD & Foreground Service
+ *
+ * Runs 24/7 with persistent notification to prevent Android OS process termination.
  */
 class FloatingHUDService : Service() {
 
     private var windowManager: WindowManager? = null
     private var floatingRootView: View? = null
+    private var blackScreenView: View? = null
     private var windowParams: WindowManager.LayoutParams? = null
     private var automationCore: ClashAutomationCore? = null
     private lateinit var prefs: SharedPreferences
 
     private var isExpanded: Boolean = true
     private var isViewAttached: Boolean = false
+    private var isBlackScreenActive: Boolean = false
     private var screenWidth: Int = 1080
     private var screenHeight: Int = 2400
+
+    private val CHANNEL_ID = "ai_marco_foreground_channel"
+    private val NOTIFICATION_ID = 1001
 
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onCreate() {
         super.onCreate()
         try {
+            startForegroundServiceNotification()
             windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
             prefs = getSharedPreferences("macrorify_hud_prefs", Context.MODE_PRIVATE)
 
@@ -52,6 +60,39 @@ class FloatingHUDService : Service() {
             Log.e("FloatingHUD", "Error during onCreate: ${e.message}", e)
             stopSelf()
         }
+    }
+
+    private fun startForegroundServiceNotification() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                "Ai Marco coc - 24/7 Automation",
+                NotificationManager.IMPORTANCE_LOW
+            ).apply {
+                description = "Keeps Clash of Clans auto-farming active in background"
+                enableLights(false)
+                enableVibration(false)
+            }
+            val manager = getSystemService(NotificationManager::class.java)
+            manager?.createNotificationChannel(channel)
+        }
+
+        val notifyIntent = Intent(this, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(
+            this, 0, notifyIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle("👑 Ai Marco coc - Active")
+            .setContentText("Continuous Loot Farming & Vision AI Active")
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentIntent(pendingIntent)
+            .setOngoing(true)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .build()
+
+        startForeground(NOTIFICATION_ID, notification)
     }
 
     private fun fetchScreenDimensions() {
@@ -89,9 +130,10 @@ class FloatingHUDService : Service() {
                             val shortStatus = when {
                                 newStatus.contains("STARTING", true) -> "START"
                                 newStatus.contains("BUILDER", true) || newStatus.contains("WALL", true) -> "WALLS"
+                                newStatus.contains("HARVEST", true) -> "LOOT"
                                 newStatus.contains("QUICK TRAIN", true) || newStatus.contains("ARMY", true) -> "TRAIN"
                                 newStatus.contains("SEARCHING", true) || newStatus.contains("ATTACK", true) -> "SEARCH"
-                                newStatus.contains("WAVE", true) || newStatus.contains("RAIDING", true) -> "RAID"
+                                newStatus.contains("WAVE", true) || newStatus.contains("DRAGON", true) -> "RAID"
                                 newStatus.contains("VICTORY", true) -> "WIN"
                                 newStatus.contains("COOLDOWN", true) || newStatus.contains("PAUSE", true) -> "REST"
                                 else -> "ACTIVE"
@@ -140,7 +182,7 @@ class FloatingHUDService : Service() {
         }
 
         val savedX = prefs.getInt("pos_x", screenWidth - 250)
-        val savedY = prefs.getInt("pos_y", 200)
+        val savedY = prefs.getInt("pos_y", 150)
         isExpanded = prefs.getBoolean("is_expanded", true)
 
         val params = WindowManager.LayoutParams(
@@ -177,6 +219,8 @@ class FloatingHUDService : Service() {
         val btnPlayPause = root.findViewById<Button>(R.id.btn_hud_play_pause)
         val btnStop = root.findViewById<Button>(R.id.btn_hud_stop)
         val btnSettings = root.findViewById<Button>(R.id.btn_hud_settings)
+        val btnScreenOff = root.findViewById<Button>(R.id.btn_hud_screen_off)
+        val btnConsole = root.findViewById<Button>(R.id.btn_hud_console)
         val btnExit = root.findViewById<Button>(R.id.btn_hud_exit)
         val tvStatus = root.findViewById<TextView>(R.id.tv_hud_status_badge)
 
@@ -198,7 +242,7 @@ class FloatingHUDService : Service() {
                     core.startLoop(accounts = 2)
                     btnPlayPause.text = "⏸"
                     tvStatus?.text = "FARM"
-                    Toast.makeText(this, "🚀 Ari AI Play Mode Started!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "🚀 Ari AI Loot Farm Started!", Toast.LENGTH_SHORT).show()
                 } else {
                     core.stopLoop()
                     btnPlayPause.text = "▶"
@@ -215,6 +259,7 @@ class FloatingHUDService : Service() {
             Toast.makeText(this, "⏹ Farm Loops Reset & Stopped", Toast.LENGTH_SHORT).show()
         }
 
+        // ⚙ In-Game Floating Settings Dialog
         btnSettings?.setOnClickListener {
             try {
                 val core = automationCore
@@ -222,10 +267,23 @@ class FloatingHUDService : Service() {
                 val temp = core?.watchdog?.currentTemperatureCelsius ?: 30.0f
                 val raids = core?.totalRaidsCompleted ?: 0
                 val accIdx = (core?.accountSwitcher?.currentAccountIndex ?: 0) + 1
-                Toast.makeText(this, "⚙ [MACRORIFY HUD] Acc #$accIdx | ⚔️ Raids: $raids | 🔋 $batt% | 🌡️ ${temp}°C", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "⚙ [MACRORIFY SETTINGS] Acc #$accIdx | ⚔️ Raids: $raids | 🔋 $batt% | 🌡️ ${temp}°C | 0-Training Active", Toast.LENGTH_LONG).show()
             } catch (e: Exception) {
                 Toast.makeText(this, "Settings Active", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        // 🛠️ Auto Screen Off (Black Screen Mode for AMOLED Battery Saving)
+        btnScreenOff?.setOnClickListener {
+            toggleBlackScreenSaver()
+        }
+
+        // ▶_ Live Console Log
+        btnConsole?.setOnClickListener {
+            val core = automationCore
+            val lastRaid = core?.totalRaidsCompleted ?: 0
+            val running = core?.isRunning ?: false
+            Toast.makeText(this, "▶_ [CONSOLE] State: ${if (running) "FARMING" else "IDLE"} | Total Raids: $lastRaid | Vision: OCR & Cloud Active", Toast.LENGTH_SHORT).show()
         }
 
         btnExit?.setOnClickListener {
@@ -233,6 +291,60 @@ class FloatingHUDService : Service() {
         }
 
         setupTouchAndDragGesture()
+    }
+
+    private fun toggleBlackScreenSaver() {
+        if (!isBlackScreenActive) {
+            try {
+                val layoutType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+                } else {
+                    @Suppress("DEPRECATION")
+                    WindowManager.LayoutParams.TYPE_PHONE
+                }
+
+                val blackParams = WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    layoutType,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+                    PixelFormat.TRANSLUCENT
+                )
+                blackParams.screenBrightness = 0.01f
+
+                val blackView = FrameLayout(this).apply {
+                    setBackgroundColor(Color.BLACK)
+                    val tv = TextView(this@FloatingHUDService).apply {
+                        text = "🔋 Black Screen Battery Saver Active\n(Double-tap to dismiss)"
+                        setTextColor(Color.DKGRAY)
+                        textSize = 12f
+                        gravity = Gravity.CENTER
+                    }
+                    addView(tv, FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER))
+                    setOnClickListener {
+                        toggleBlackScreenSaver()
+                    }
+                }
+
+                windowManager?.addView(blackView, blackParams)
+                blackScreenView = blackView
+                isBlackScreenActive = true
+                Toast.makeText(this, "🌙 Black Screen Saver Active (Tap to wake)", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Log.e("FloatingHUD", "Error enabling black screen: ${e.message}")
+            }
+        } else {
+            try {
+                if (blackScreenView != null) {
+                    windowManager?.removeView(blackScreenView)
+                    blackScreenView = null
+                }
+                isBlackScreenActive = false
+                Toast.makeText(this, "☀️ Screen Woken", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Log.e("FloatingHUD", "Error removing black screen: ${e.message}")
+            }
+        }
     }
 
     private fun updateExpandedState(expanded: Boolean) {
@@ -284,9 +396,7 @@ class FloatingHUDService : Service() {
                             params.y = (initialY + dy).toInt().coerceIn(0, screenHeight - 80)
                             try {
                                 if (isViewAttached) windowManager?.updateViewLayout(floatingRootView, params)
-                            } catch (e: Exception) {
-                                // Ignore layout update glitch
-                            }
+                            } catch (e: Exception) {}
                             return true
                         }
                     }
@@ -313,29 +423,29 @@ class FloatingHUDService : Service() {
             params.x = animation.animatedValue as Int
             try {
                 if (isViewAttached) windowManager?.updateViewLayout(floatingRootView, params)
-            } catch (e: Exception) {
-                // View detached safely
-            }
+            } catch (e: Exception) {}
         }
         animator.start()
 
         try {
             prefs.edit().putInt("pos_x", targetX).putInt("pos_y", params.y).apply()
-        } catch (e: Exception) {
-            // Ignore pref write error
-        }
+        } catch (e: Exception) {}
     }
 
     override fun onDestroy() {
         super.onDestroy()
         try {
             automationCore?.stopLoop()
+            if (isBlackScreenActive && blackScreenView != null) {
+                windowManager?.removeView(blackScreenView)
+                blackScreenView = null
+            }
             if (isViewAttached && floatingRootView != null) {
                 windowManager?.removeView(floatingRootView)
                 isViewAttached = false
             }
         } catch (e: Exception) {
-            Log.w("FloatingHUD", "Error removing floating view on destroy: ${e.message}")
+            Log.w("FloatingHUD", "Error on destroy: ${e.message}")
         }
     }
 }

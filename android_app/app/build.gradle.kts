@@ -11,8 +11,8 @@ android {
         applicationId = "com.cocai.autoclicker"
         minSdk = 24
         targetSdk = 34
-        versionCode = 15
-        versionName = "15.0-TitanFinal"
+        versionCode = 1
+        versionName = "1.0-ApexVision"
     }
 
     buildTypes {

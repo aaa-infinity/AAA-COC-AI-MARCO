@@ -24,19 +24,20 @@ def main():
     print(f"Uploading APK: {apk_path} ({file_size_str}) to Telegram {chat_id}...")
 
     # Telegram caption limit is 1024 characters
-    caption_text = f"""👑 🛡️ <b>Ai Marco coc v15.0 (Titan Final Edition)</b>
-📦 <b>File:</b> Ai-Marco-coc-v15.0.apk ({file_size_str})
-🧹 <b>Startup Popup Dismiss:</b> Auto-dismisses defense logs &amp; event sheets
-🐉 <b>Pure Dragon Farming:</b> Zap Air Defenses -> 4-finger line -> Warden Tome
-🧱 <b>Builder Wall Dump:</b> Dumps excess loot into walls via Builder Overview
-🔑 <b>100% Dynamic Live Models:</b> Queries /models endpoint on your API key
-🎯 <b>Macrorify Floating HUD:</b> 44dp bubble + edge snapping &amp; pill toolbar
-🤖 <b>2-Way Telegram Remote:</b> /status, /pause, /resume, /attack, /walls &amp; /schedule
-⏰ <b>Smart Sleep Scheduler:</b> Humanized farming windows &amp; rest breaks
-⚡ <b>Snapshot Fast-Skipper:</b> Instant HSV detection without cloud delays
-🎯 <b>Gaussian Motion Jitter:</b> Organic touch mechanics &amp; anti-detection
-⚡ <b>API Key Test Ping:</b> Live ms latency check on your loaded models
-🔄 <b>Supercell ID Auto-Cycle:</b> 4-account rotation"""
+    caption_text = f"""👑 🛡️ <b>Ai Marco coc v1.0 (Apex Vision &amp; Pure Loot Edition)</b>
+📦 <b>File:</b> Ai-Marco-coc-v1.0.apk ({file_size_str})
+🎨 <b>New Brand Identity:</b> Pro Cyber Crown App Icon &amp; Logo
+👁️ <b>On-Device Vision &amp; OCR:</b> ML Kit instant Gold/Elixir reading
+🧠 <b>Pure Loot Farming AI:</b> 100% resource extraction (Zero trophy worry)
+🎯 <b>Macrorify 8-Button Floating HUD:</b> 42dp bubble, pill bar, in-game ⚙ modal
+🛠️ <b>AMOLED Black Screen Saver:</b> Dims screen to 0% to save battery &amp; prevent burn-in
+⚡ <b>0-Training Time Loops:</b> Instant back-to-back attacks
+⏩ <b>Battle Fast-Forward:</b> Auto-taps in-game speed multiplier
+🧱 <b>Builder Wall Dump:</b> Spends excess loot to walls via Builder Overview
+🤝 <b>Clan Chat Auto-Donate &amp; CC Request Loop</b>
+🔑 <b>100% Dynamic Multi-Key Live Models:</b> Gemini / OpenRouter / Groq / DeepSeek
+🤖 <b>2-Way Telegram Remote:</b> /status, /pause, /resume, /attack, /walls, /schedule
+🛡️ <b>24/7 Foreground Service:</b> Persistent notification prevents OS kills"""
 
     caption_file = "/tmp/telegram_caption.txt"
     with open(caption_file, "w", encoding="utf-8") as f:
@@ -47,7 +48,7 @@ def main():
         "-F", f"chat_id={chat_id}",
         "-F", "parse_mode=HTML",
         "-F", f"caption=<{caption_file}",
-        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v15.0.apk",
+        "-F", f"document=@{apk_path};filename=Ai-Marco-coc-v1.0.apk",
         f"https://api.telegram.org/bot{bot_token}/sendDocument"
     ]
 
