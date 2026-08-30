@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#070B14"
+    android:background="#0A0E1A"
     android:fillViewport="true">
 
     <LinearLayout
@@ -11,23 +11,24 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- ==================== HEADER BRANDING ==================== -->
+        <!-- ==================== VIBRANT HEADER ==================== -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/bg_card_cyber_active"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingBottom="12dp">
+            android:padding="14dp">
 
             <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
                 android:src="@mipmap/ic_launcher" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="14dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -35,13 +36,13 @@
                     android:layout_height="wrap_content"
                     android:text="👑 Ai Marco coc"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp"
+                    android:textSize="22sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Autonomous Vision AI • Pure Loot Farming • 0-Training"
+                    android:text="Real-Game Template Vision • Gesture Recorder • Pure Loot"
                     android:textColor="#38BDF8"
                     android:textSize="11sp" />
             </LinearLayout>
@@ -51,8 +52,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:background="@drawable/bg_card_cyber_active"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_card_cyber"
             android:orientation="vertical"
             android:padding="14dp">
 
@@ -68,11 +69,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="Grant required Android services to enable the floating HUD &amp; gestures."
+                android:text="Grant Overlay &amp; Accessibility to enable the floating HUD &amp; gestures."
                 android:textColor="#94A3B8"
                 android:textSize="11sp" />
 
-            <!-- Permission Buttons Row -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
                 <Button
                     android:id="@+id/btn_grant_overlay"
                     android:layout_width="0dp"
-                    android:layout_height="42dp"
+                    android:layout_height="44dp"
                     android:layout_weight="1"
                     android:background="@drawable/bg_btn_primary"
                     android:text="1. OVERLAY"
@@ -93,7 +93,7 @@
                 <Button
                     android:id="@+id/btn_grant_accessibility"
                     android:layout_width="0dp"
-                    android:layout_height="42dp"
+                    android:layout_height="44dp"
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:background="@drawable/bg_btn_primary"
@@ -104,7 +104,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- ==================== 2. AI VISION & LIVE MODEL HUB ==================== -->
+        <!-- ==================== 2. GESTURE RECORDER & ATTACK STRATEGY ==================== -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -116,7 +116,45 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🧠 2. AI VISION ENGINE &amp; LIVE MODELS"
+                android:text="🎬 2. ATTACK GESTURE RECORDER"
+                android:textColor="#EC4899"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Record your own custom attack gestures directly in-game or use AI pure loot assault."
+                android:textColor="#94A3B8"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/tv_recorded_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="#1E1B4B"
+                android:padding="8dp"
+                android:text="⚡ Status: AI Pure Loot Extraction Mode Active"
+                android:textColor="#F472B6"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- ==================== 3. AI VISION & LIVE MODEL HUB ==================== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_card_cyber"
+            android:orientation="vertical"
+            android:padding="14dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🧠 3. LIVE MULTIMODAL AI HUB"
                 android:textColor="#F59E0B"
                 android:textSize="13sp"
                 android:textStyle="bold" />
@@ -125,15 +163,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="Zero fixed models — queries live /models on your API key with latency ping."
-                android:textColor="#94A3B8"
-                android:textSize="11sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Select AI Provider:"
+                android:text="Queries live /models on your API key with real-time millisecond latency ping."
                 android:textColor="#94A3B8"
                 android:textSize="11sp" />
 
@@ -141,23 +171,15 @@
                 android:id="@+id/spinner_provider"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/bg_input_field"
                 android:padding="8dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Live Models on Key:"
-                android:textColor="#94A3B8"
-                android:textSize="11sp" />
 
             <Spinner
                 android:id="@+id/spinner_live_models"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="6dp"
                 android:background="@drawable/bg_input_field"
                 android:padding="8dp" />
 
@@ -165,7 +187,7 @@
                 android:id="@+id/et_api_key_input"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="6dp"
                 android:background="@drawable/bg_input_field"
                 android:hint="Paste Gemini / OpenRouter / Groq / DeepSeek Key"
                 android:paddingHorizontal="10dp"
@@ -173,11 +195,10 @@
                 android:textColorHint="#64748B"
                 android:textSize="12sp" />
 
-            <!-- Key Action Buttons -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="8dp"
                 android:orientation="horizontal">
 
                 <Button
@@ -198,7 +219,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_weight="1.4"
                     android:background="@drawable/bg_btn_emerald"
-                    android:text="⚡ FETCH LIVE MODELS &amp; PING"
+                    android:text="⚡ FETCH LIVE &amp; PING"
                     android:textColor="#FFFFFF"
                     android:textSize="11sp"
                     android:textStyle="bold" />
@@ -217,132 +238,11 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- ==================== 3. PURE LOOT TARGETS ==================== -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/bg_card_cyber"
-            android:orientation="vertical"
-            android:padding="14dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="💰 3. PURE LOOT TARGETS (NO TROPHY LIMITS)"
-                android:textColor="#10B981"
-                android:textSize="13sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="On-Device OCR &amp; Vision targets collectors/storages for instant loot extraction."
-                android:textColor="#94A3B8"
-                android:textSize="11sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Min Gold: 500k"
-                    android:textColor="#FBBF24"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Min Elixir: 500k"
-                    android:textColor="#EC4899"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Min Dark: 4k"
-                    android:textColor="#38BDF8"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <!-- ==================== 4. 2-WAY TELEGRAM REMOTE ==================== -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/bg_card_cyber"
-            android:orientation="vertical"
-            android:padding="14dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="🤖 4. 2-WAY TELEGRAM REMOTE CONTROL"
-                android:textColor="#38BDF8"
-                android:textSize="13sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="Control your farming bot via /status, /pause, /resume, /attack, /walls, /schedule"
-                android:textColor="#94A3B8"
-                android:textSize="11sp" />
-
-            <EditText
-                android:id="@+id/et_telegram_bot_token"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/bg_input_field"
-                android:hint="Telegram Bot Token"
-                android:paddingHorizontal="10dp"
-                android:textColor="#FFFFFF"
-                android:textColorHint="#64748B"
-                android:textSize="11sp" />
-
-            <EditText
-                android:id="@+id/et_telegram_chat_id"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/bg_input_field"
-                android:hint="Telegram Chat ID (e.g. @aaafreecloud)"
-                android:paddingHorizontal="10dp"
-                android:textColor="#FFFFFF"
-                android:textColorHint="#64748B"
-                android:textSize="11sp" />
-
-            <Button
-                android:id="@+id/btn_send_telegram_test"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/bg_btn_primary"
-                android:text="DISPATCH TELEGRAM TEST PING"
-                android:textColor="#FFFFFF"
-                android:textSize="11sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <!-- ==================== 5. LAUNCH PLAY MODE ==================== -->
+        <!-- ==================== 4. LAUNCH CONTROLLER ==================== -->
         <Button
             android:id="@+id/btn_start_floating_hud"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
+            android:layout_height="54dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="24dp"
             android:background="@drawable/bg_btn_emerald"

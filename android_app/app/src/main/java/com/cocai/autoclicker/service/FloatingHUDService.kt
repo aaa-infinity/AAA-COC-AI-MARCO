@@ -18,11 +18,13 @@ import android.widget.*
 import androidx.core.app.NotificationCompat
 import com.cocai.autoclicker.R
 import com.cocai.autoclicker.engine.ClashAutomationCore
+import com.cocai.autoclicker.engine.GestureRecorderEngine
 import com.cocai.autoclicker.ui.MainActivity
 import kotlin.math.abs
 
 /**
  * 👑 Macrorify 8-Button Floating HUD & 24/7 Foreground Service
+ * Landscape & Game Engine Calibrated with Gesture Recorder & In-Game Settings Modal
  */
 class FloatingHUDService : Service() {
 
@@ -31,13 +33,14 @@ class FloatingHUDService : Service() {
     private var blackScreenView: View? = null
     private var windowParams: WindowManager.LayoutParams? = null
     private var automationCore: ClashAutomationCore? = null
+    private var gestureRecorder: GestureRecorderEngine? = null
     private lateinit var prefs: SharedPreferences
 
     private var isExpanded: Boolean = true
     private var isViewAttached: Boolean = false
     private var isBlackScreenActive: Boolean = false
-    private var screenWidth: Int = 1080
-    private var screenHeight: Int = 2400
+    private var screenWidth: Int = 2400
+    private var screenHeight: Int = 1080
 
     private val CHANNEL_ID = "ai_marco_foreground_channel"
     private val NOTIFICATION_ID = 1001
@@ -83,7 +86,7 @@ class FloatingHUDService : Service() {
 
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("👑 Ai Marco coc - Active")
-            .setContentText("Continuous Loot Farming & Vision AI Active")
+            .setContentText("Continuous Loot Farming & Real Vision Active")
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentIntent(pendingIntent)
             .setOngoing(true)
@@ -98,20 +101,22 @@ class FloatingHUDService : Service() {
             val windowMgr = windowManager ?: return
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 val metrics = windowMgr.currentWindowMetrics
-                screenWidth = metrics.bounds.width()
-                screenHeight = metrics.bounds.height()
+                val w = metrics.bounds.width()
+                val h = metrics.bounds.height()
+                screenWidth = maxOf(w, h)
+                screenHeight = minOf(w, h)
             } else {
                 @Suppress("DEPRECATION")
                 val display = windowMgr.defaultDisplay
                 val size = Point()
                 @Suppress("DEPRECATION")
                 display.getSize(size)
-                screenWidth = size.x
-                screenHeight = size.y
+                screenWidth = maxOf(size.x, size.y)
+                screenHeight = minOf(size.x, size.y)
             }
         } catch (e: Exception) {
-            screenWidth = 1080
-            screenHeight = 2400
+            screenWidth = 2400
+            screenHeight = 1080
         }
     }
 
@@ -120,6 +125,7 @@ class FloatingHUDService : Service() {
             val acc = AutoClickAccessibilityService.instance
             if (acc != null) {
                 automationCore = ClashAutomationCore(this, acc)
+                gestureRecorder = GestureRecorderEngine(this, acc)
 
                 automationCore?.onStatusUpdate = { newStatus ->
                     floatingRootView?.post {
@@ -178,8 +184,8 @@ class FloatingHUDService : Service() {
             WindowManager.LayoutParams.TYPE_PHONE
         }
 
-        val savedX = prefs.getInt("pos_x", screenWidth - 250)
-        val savedY = prefs.getInt("pos_y", 150)
+        val savedX = prefs.getInt("pos_x", screenWidth - 300)
+        val savedY = prefs.getInt("pos_y", 120)
         isExpanded = prefs.getBoolean("is_expanded", true)
 
         val params = WindowManager.LayoutParams(
@@ -239,7 +245,7 @@ class FloatingHUDService : Service() {
                     core.startLoop(accounts = 1)
                     btnPlayPause.text = "⏸"
                     tvStatus?.text = "FARM"
-                    Toast.makeText(this, "🚀 Ari AI Loot Farm Started!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "🚀 Ari AI Loot Farm Started in Landscape!", Toast.LENGTH_SHORT).show()
                 } else {
                     core.stopLoop()
                     btnPlayPause.text = "▶"
@@ -262,7 +268,8 @@ class FloatingHUDService : Service() {
                 val batt = core?.watchdog?.batteryPercentage ?: 100
                 val temp = core?.watchdog?.currentTemperatureCelsius ?: 30.0f
                 val raids = core?.totalRaidsCompleted ?: 0
-                Toast.makeText(this, "⚙ [MACRORIFY SETTINGS] ⚔️ Raids: $raids | 🔋 $batt% | 🌡️ ${temp}°C | 0-Training Active", Toast.LENGTH_LONG).show()
+                val recActive = gestureRecorder?.hasSavedAttack() ?: false
+                Toast.makeText(this, "⚙ [SETTINGS] Raids: $raids | 🔋 $batt% | 🌡️ ${temp}°C | Custom Attack: ${if (recActive) "ON" else "AI"}", Toast.LENGTH_LONG).show()
             } catch (e: Exception) {
                 Toast.makeText(this, "Settings Active", Toast.LENGTH_SHORT).show()
             }
@@ -276,7 +283,7 @@ class FloatingHUDService : Service() {
             val core = automationCore
             val lastRaid = core?.totalRaidsCompleted ?: 0
             val running = core?.isRunning ?: false
-            Toast.makeText(this, "▶_ [CONSOLE] State: ${if (running) "FARMING" else "IDLE"} | Total Raids: $lastRaid | Vision: OCR & Cloud Active", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "▶_ [CONSOLE] State: ${if (running) "FARMING" else "IDLE"} | Raids: $lastRaid | Vision & Landscape Active", Toast.LENGTH_SHORT).show()
         }
 
         btnExit?.setOnClickListener {
