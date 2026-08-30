@@ -7,59 +7,40 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.view.View
+import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.cocai.autoclicker.R
 import com.cocai.autoclicker.engine.*
 import com.cocai.autoclicker.service.AutoClickAccessibilityService
 import com.cocai.autoclicker.service.FloatingHUDService
-import com.cocai.autoclicker.service.FloatingOverlayService
 
+/**
+ * 👑 Ai Marco coc - Main Setup Wizard & Cyber Hub
+ */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var keyRotator: ApiKeyRotator
-    private lateinit var memoryEngine: AiMemoryEngine
     private lateinit var appPrefs: SharedPreferences
     private val pingEngine = ApiKeyPingEngine()
+    private val modelDiscovery = ModelDiscoveryClient()
 
-    private lateinit var tabBtnDashboard: Button
-    private lateinit var tabBtnStrategy: Button
-    private lateinit var tabBtnClan: Button
-    private lateinit var tabBtnAi: Button
+    private var btnGrantAccessibility: Button? = null
+    private var btnGrantOverlay: Button? = null
 
-    private lateinit var tabContentDashboard: LinearLayout
-    private lateinit var tabContentStrategy: LinearLayout
-    private lateinit var tabContentClan: LinearLayout
-    private lateinit var tabContentAi: LinearLayout
+    private var spinnerProvider: Spinner? = null
+    private var spinnerLiveModels: Spinner? = null
+    private var etApiKeyInput: EditText? = null
+    private var tvPingResult: TextView? = null
 
-    private lateinit var btnGrantAccessibility: Button
-    private lateinit var btnGrantOverlay: Button
-
-    private lateinit var spinnerProvider: Spinner
-    private lateinit var spinnerLiveModels: Spinner
-    private lateinit var spinnerStrategyPicker: Spinner
-    private lateinit var etApiKeyInput: EditText
-    private lateinit var tvActiveKeysCount: TextView
-    private lateinit var tvVisionStatus: TextView
-    private lateinit var tvPingResult: TextView
-
-    private lateinit var etTelegramToken: EditText
-    private lateinit var etTelegramChatId: EditText
+    private var etTelegramToken: EditText? = null
+    private var etTelegramChatId: EditText? = null
 
     private val providers = arrayOf(
         "Google Gemini (Official / Recommended)",
-        "Groq Fast Inference (Llama 3.3)",
-        "OpenRouter Multi-Model",
-        "DeepSeek API (V3 / R1)"
-    )
-
-    private val strategies = arrayOf(
-        "TH17 Root Rider + Overgrowth Smash",
-        "TH11-TH14 Zap Dragon Farming",
-        "Electro Dragon Perimeter Spam",
-        "TH15-TH16 Dragon Rider Smash",
-        "Sneaky Goblin Ore & Resource Farm"
+        "OpenRouter Multi-Model Vision",
+        "Groq Fast Vision Inference",
+        "DeepSeek / OpenAI Compatible"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,15 +49,15 @@ class MainActivity : AppCompatActivity() {
             setContentView(R.layout.activity_main)
 
             appPrefs = getSharedPreferences("app_settings_prefs", Context.MODE_PRIVATE)
-            initEngines()
+            keyRotator = ApiKeyRotator(this)
+
             bindViews()
-            setupTabSwitching()
-            setupDashboardControls()
-            setupStrategyTab()
-            setupClanTab()
-            setupAiProviderTab()
+            setupPermissionControls()
+            setupAiProviderHub()
+            setupTelegramControls()
+            setupLaunchController()
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e("MainActivity", "Error in onCreate: ${e.message}", e)
         }
     }
 
@@ -85,249 +66,107 @@ class MainActivity : AppCompatActivity() {
         try {
             updatePermissionButtonStates()
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.w("MainActivity", "Error updating permissions: ${e.message}")
         }
     }
 
-    private fun initEngines() {
-        keyRotator = ApiKeyRotator(this)
-        memoryEngine = AiMemoryEngine(this)
-    }
-
     private fun bindViews() {
-        tabBtnDashboard = findViewById(R.id.tab_btn_dashboard)
-        tabBtnStrategy = findViewById(R.id.tab_btn_strategy)
-        tabBtnClan = findViewById(R.id.tab_btn_clan)
-        tabBtnAi = findViewById(R.id.tab_btn_ai)
-
-        tabContentDashboard = findViewById(R.id.tab_content_dashboard)
-        tabContentStrategy = findViewById(R.id.tab_content_strategy)
-        tabContentClan = findViewById(R.id.tab_content_clan)
-        tabContentAi = findViewById(R.id.tab_content_ai)
-
         btnGrantAccessibility = findViewById(R.id.btn_grant_accessibility)
         btnGrantOverlay = findViewById(R.id.btn_grant_overlay)
 
         spinnerProvider = findViewById(R.id.spinner_provider)
         spinnerLiveModels = findViewById(R.id.spinner_live_models)
-        spinnerStrategyPicker = findViewById(R.id.spinner_strategy_picker)
         etApiKeyInput = findViewById(R.id.et_api_key_input)
-        tvActiveKeysCount = findViewById(R.id.tv_active_keys_count)
-        tvVisionStatus = findViewById(R.id.tv_vision_status)
         tvPingResult = findViewById(R.id.tv_ping_result)
 
         etTelegramToken = findViewById(R.id.et_telegram_bot_token)
         etTelegramChatId = findViewById(R.id.et_telegram_chat_id)
 
-        // Restore saved Telegram configs
-        val savedToken = appPrefs.getString("tg_token", "8841143616:AAGbcJKf3MLTN17-tpmwhZKZQIIbErDT1PA")
-        val savedChatId = appPrefs.getString("tg_chat_id", "-1004447017934")
-        etTelegramToken.setText(savedToken)
-        etTelegramChatId.setText(savedChatId)
+        val savedToken = appPrefs.getString("tg_token", "8779968206:AAEE8lhp1ASBvrLiApEgXObYMQlXasWRSKI")
+        val savedChatId = appPrefs.getString("tg_chat_id", "@aaafreecloud")
+        etTelegramToken?.setText(savedToken)
+        etTelegramChatId?.setText(savedChatId)
     }
 
     private fun updatePermissionButtonStates() {
         if (AutoClickAccessibilityService.isServiceRunning) {
-            btnGrantAccessibility.text = "✓ ACCESSIBILITY"
-            btnGrantAccessibility.setBackgroundResource(R.drawable.bg_btn_emerald)
+            btnGrantAccessibility?.text = "✓ 2. ACCESSIBILITY ON"
+            btnGrantAccessibility?.setBackgroundResource(R.drawable.bg_btn_emerald)
         } else {
-            btnGrantAccessibility.text = "ACCESSIBILITY"
-            btnGrantAccessibility.setBackgroundResource(R.drawable.bg_btn_primary)
+            btnGrantAccessibility?.text = "2. ACCESSIBILITY"
+            btnGrantAccessibility?.setBackgroundResource(R.drawable.bg_btn_primary)
         }
 
         val overlayOk = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) Settings.canDrawOverlays(this) else true
         if (overlayOk) {
-            btnGrantOverlay.text = "✓ OVERLAY PERM"
-            btnGrantOverlay.setBackgroundResource(R.drawable.bg_btn_emerald)
+            btnGrantOverlay?.text = "✓ 1. OVERLAY ON"
+            btnGrantOverlay?.setBackgroundResource(R.drawable.bg_btn_emerald)
         } else {
-            btnGrantOverlay.text = "OVERLAY PERM"
-            btnGrantOverlay.setBackgroundResource(R.drawable.bg_btn_primary)
+            btnGrantOverlay?.text = "1. OVERLAY"
+            btnGrantOverlay?.setBackgroundResource(R.drawable.bg_btn_primary)
         }
     }
 
-    private fun setupDashboardControls() {
-        btnGrantAccessibility.setOnClickListener {
+    private fun setupPermissionControls() {
+        btnGrantOverlay?.setOnClickListener {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+                val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "✓ Overlay permission already active!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        btnGrantAccessibility?.setOnClickListener {
             val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
             startActivity(intent)
             Toast.makeText(this, "Enable 'Ai Marco coc' Accessibility Service", Toast.LENGTH_LONG).show()
         }
-
-        btnGrantOverlay.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
-                val intent = Intent(
-                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    Uri.parse("package:$packageName")
-                )
-                startActivity(intent)
-            } else {
-                Toast.makeText(this, "Overlay permission already granted!", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        findViewById<Button>(R.id.btn_start_floating_hud).setOnClickListener {
-            if (!AutoClickAccessibilityService.isServiceRunning) {
-                Toast.makeText(this, "Please enable Accessibility Service first!", Toast.LENGTH_LONG).show()
-                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                startActivity(intent)
-                return@setOnClickListener
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
-                Toast.makeText(this, "Please grant Overlay Permission!", Toast.LENGTH_LONG).show()
-                val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
-                startActivity(intent)
-                return@setOnClickListener
-            }
-
-            // Start Floating Macrorify HUD Service
-            startService(Intent(this, FloatingHUDService::class.java))
-
-            val launchIntent = packageManager.getLaunchIntentForPackage("com.supercell.clashofclans")
-            if (launchIntent != null) {
-                launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(launchIntent)
-                Toast.makeText(this, "🚀 Launching Clash of Clans Home Village...", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "🚀 Macrorify Controller Launched! Open Clash of Clans.", Toast.LENGTH_SHORT).show()
-                moveTaskToBack(true)
-            }
-        }
     }
 
-    private fun setupTabSwitching() {
-        val buttons = listOf(tabBtnDashboard, tabBtnStrategy, tabBtnClan, tabBtnAi)
-        val contents = listOf(tabContentDashboard, tabContentStrategy, tabContentClan, tabContentAi)
-
-        for (i in buttons.indices) {
-            buttons[i].setOnClickListener {
-                for (j in contents.indices) {
-                    if (i == j) {
-                        contents[j].visibility = View.VISIBLE
-                        buttons[j].setBackgroundResource(R.drawable.bg_tab_active_pill)
-                        buttons[j].setTextColor(0xFF38BDF8.toInt())
-                    } else {
-                        contents[j].visibility = View.GONE
-                        buttons[j].setBackgroundResource(android.R.color.transparent)
-                        buttons[j].setTextColor(0xFF94A3B8.toInt())
-                    }
-                }
-            }
-        }
-    }
-
-    private fun setupStrategyTab() {
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, strategies)
-        spinnerStrategyPicker.adapter = adapter
-    }
-
-    private fun setupClanTab() {
-        findViewById<Button>(R.id.btn_trigger_collect_loot).setOnClickListener {
-            val service = AutoClickAccessibilityService.instance
-            if (service == null) {
-                Toast.makeText(this, "Accessibility Service is not running!", Toast.LENGTH_SHORT).show()
-            } else {
-                val daily = DailyRewardsCollectorEngine(service)
-                daily.collectAllDailyRewards {
-                    Toast.makeText(this, "💰 Harvested Mines & Treasury!", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-
-        findViewById<Button>(R.id.btn_trigger_upgrade_walls).setOnClickListener {
-            val service = AutoClickAccessibilityService.instance
-            if (service == null) {
-                Toast.makeText(this, "Accessibility Service is not running!", Toast.LENGTH_SHORT).show()
-            } else {
-                val wallEngine = WallUpgradeEngine(service)
-                wallEngine.performWallUpgrades(wallsToUpgrade = 3) {
-                    Toast.makeText(this, "🧱 Upgraded 3 Walls with Free Builder!", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-
-        findViewById<Button>(R.id.btn_trigger_donate_now).setOnClickListener {
-            Toast.makeText(this, "🤝 Auto-Donating to Clan members...", Toast.LENGTH_SHORT).show()
-        }
-
-        findViewById<Button>(R.id.btn_trigger_cc_request).setOnClickListener {
-            Toast.makeText(this, "🛡️ Requested Clan Castle reinforcements!", Toast.LENGTH_SHORT).show()
-        }
-
-        findViewById<Button>(R.id.btn_trigger_clean_obstacles).setOnClickListener {
-            val service = AutoClickAccessibilityService.instance
-            if (service == null) {
-                Toast.makeText(this, "Accessibility Service is not running!", Toast.LENGTH_SHORT).show()
-            } else {
-                val daily = DailyRewardsCollectorEngine(service)
-                daily.cleanObstaclesForGems {
-                    Toast.makeText(this, "💎 Harvested Obstacles for Gems!", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-
-        findViewById<Button>(R.id.btn_send_telegram_test).setOnClickListener {
-            val token = etTelegramToken.text.toString().trim()
-            val chatId = etTelegramChatId.text.toString().trim()
-            if (token.isNotEmpty() && chatId.isNotEmpty()) {
-                appPrefs.edit().putString("tg_token", token).putString("tg_chat_id", chatId).apply()
-                val bot = TelegramBotManager(this, token, chatId)
-                bot.sendMessage("👑 <b>[Ai Marco coc]</b> 2-Way Telegram Remote Connected! Send <code>/status</code>, <code>/pause</code>, <code>/resume</code>, <code>/attack</code>, <code>/walls</code>, or <code>/schedule</code>.") { ok ->
-                    if (ok) {
-                        Toast.makeText(this, "✓ Telegram Test Ping Dispatched!", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(this, "❌ Telegram Error. Verify Token/Chat ID.", Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
-        }
-    }
-
-    private fun setupAiProviderTab() {
+    private fun setupAiProviderHub() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, providers)
-        spinnerProvider.adapter = adapter
+        spinnerProvider?.adapter = adapter
 
-        val modelDiscovery = ModelDiscoveryClient()
-
-        // Add Key to Pool
-        findViewById<Button>(R.id.btn_add_api_key).setOnClickListener {
-            val key = etApiKeyInput.text.toString().trim()
+        // Add Key
+        findViewById<Button>(R.id.btn_add_api_key)?.setOnClickListener {
+            val key = etApiKeyInput?.text?.toString()?.trim() ?: ""
             if (key.isNotEmpty()) {
                 keyRotator.addKey(key)
-                etApiKeyInput.text.clear()
-                updateKeyPoolCount()
+                etApiKeyInput?.text?.clear()
                 Toast.makeText(this, "✓ Key added to auto-rotation pool!", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(this, "Please paste an API key first", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // Test Ping & Dynamically Fetch All Live Models
-        findViewById<Button>(R.id.btn_ping_api_key).setOnClickListener {
-            val inputKey = etApiKeyInput.text.toString().trim()
+        // Fetch Live Models & Test Ping
+        findViewById<Button>(R.id.btn_ping_api_key)?.setOnClickListener {
+            val inputKey = etApiKeyInput?.text?.toString()?.trim() ?: ""
             val activeKey = if (inputKey.isNotEmpty()) inputKey else (keyRotator.getActiveKey() ?: "")
 
             if (activeKey.isEmpty()) {
-                Toast.makeText(this, "Enter or add an API key first!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Paste an API key first!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val selectedProviderIdx = spinnerProvider.selectedItemPosition
-            val providerEnum = when (selectedProviderIdx) {
+            val selectedIdx = spinnerProvider?.selectedItemPosition ?: 0
+            val providerEnum = when (selectedIdx) {
                 0 -> AiProviderEnum.GOOGLE_AI_STUDIO
-                1 -> AiProviderEnum.GROQ
-                2 -> AiProviderEnum.OPENROUTER
+                1 -> AiProviderEnum.OPENROUTER
+                2 -> AiProviderEnum.GROQ
                 else -> AiProviderEnum.CUSTOM_OPENAI
             }
 
-            tvPingResult.text = "⏳ Querying ${providerEnum.displayName} for live models..."
-            tvPingResult.setTextColor(0xFFF59E0B.toInt())
+            tvPingResult?.text = "⏳ Connecting to ${providerEnum.displayName} for live models..."
+            tvPingResult?.setTextColor(0xFFF59E0B.toInt())
 
             modelDiscovery.fetchLiveModels(
                 provider = providerEnum,
                 apiKey = activeKey,
                 onSuccess = { liveModels ->
-                    // Populate dropdown with ONLY real live models from API key
                     val liveAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, liveModels)
-                    spinnerLiveModels.adapter = liveAdapter
+                    spinnerLiveModels?.adapter = liveAdapter
 
                     val firstModel = liveModels.firstOrNull() ?: "gemini-2.0-flash"
                     val providerUrl = when (providerEnum) {
@@ -342,36 +181,74 @@ class MainActivity : AppCompatActivity() {
                         apiKey = activeKey,
                         modelName = firstModel,
                         onSuccess = { latency, _ ->
-                            tvPingResult.text = "⚡ Loaded ${liveModels.size} Live Models | Ping: ${latency}ms ($firstModel)"
-                            tvPingResult.setTextColor(0xFF34D399.toInt())
+                            tvPingResult?.text = "⚡ Loaded ${liveModels.size} Live Models | Ping: ${latency}ms ($firstModel)"
+                            tvPingResult?.setTextColor(0xFF34D399.toInt())
                         },
                         onError = { errMsg ->
-                            tvPingResult.text = "⚡ Loaded ${liveModels.size} Live Models ($firstModel) | $errMsg"
-                            tvPingResult.setTextColor(0xFF38BDF8.toInt())
+                            tvPingResult?.text = "⚡ Loaded ${liveModels.size} Live Models ($firstModel) | $errMsg"
+                            tvPingResult?.setTextColor(0xFF38BDF8.toInt())
                         }
                     )
                 },
                 onError = { err ->
-                    tvPingResult.text = "❌ Error fetching models: $err"
-                    tvPingResult.setTextColor(0xFFEF4444.toInt())
+                    tvPingResult?.text = "❌ Error: $err"
+                    tvPingResult?.setTextColor(0xFFEF4444.toInt())
                 }
             )
         }
-
-        // Clear Key Pool
-        findViewById<Button>(R.id.btn_clear_keys).setOnClickListener {
-            keyRotator.clearAllKeys()
-            updateKeyPoolCount()
-            tvPingResult.text = "⚡ Status: Key pool cleared"
-            tvPingResult.setTextColor(0xFF94A3B8.toInt())
-            Toast.makeText(this, "Key pool cleared.", Toast.LENGTH_SHORT).show()
-        }
-
-        updateKeyPoolCount()
     }
 
-    private fun updateKeyPoolCount() {
-        val keys = keyRotator.getAllKeys()
-        tvActiveKeysCount.text = "Active Keys in Pool: ${keys.size} Key(s) Loaded (Auto-Rotation Active)"
+    private fun setupTelegramControls() {
+        findViewById<Button>(R.id.btn_send_telegram_test)?.setOnClickListener {
+            val token = etTelegramToken?.text?.toString()?.trim() ?: ""
+            val chatId = etTelegramChatId?.text?.toString()?.trim() ?: ""
+            if (token.isNotEmpty() && chatId.isNotEmpty()) {
+                appPrefs.edit().putString("tg_token", token).putString("tg_chat_id", chatId).apply()
+                val bot = TelegramBotManager(this, token, chatId)
+                bot.sendMessage("👑 <b>[Ai Marco coc]</b> Connected! Send <code>/status</code>, <code>/pause</code>, <code>/resume</code>, <code>/attack</code>, <code>/walls</code>, <code>/schedule</code>.") { ok ->
+                    if (ok) {
+                        Toast.makeText(this, "✓ Telegram Test Ping Dispatched!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "⚠️ Telegram Notice: Ensure bot is Admin in channel.", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setupLaunchController() {
+        findViewById<Button>(R.id.btn_start_floating_hud)?.setOnClickListener {
+            if (!AutoClickAccessibilityService.isServiceRunning) {
+                Toast.makeText(this, "Please enable Accessibility Service first!", Toast.LENGTH_LONG).show()
+                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                return@setOnClickListener
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+                Toast.makeText(this, "Please grant Overlay Permission!", Toast.LENGTH_LONG).show()
+                startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName")))
+                return@setOnClickListener
+            }
+
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    startForegroundService(Intent(this, FloatingHUDService::class.java))
+                } else {
+                    startService(Intent(this, FloatingHUDService::class.java))
+                }
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error launching FloatingHUDService: ${e.message}")
+            }
+
+            val launchIntent = packageManager.getLaunchIntentForPackage("com.supercell.clashofclans")
+            if (launchIntent != null) {
+                launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(launchIntent)
+                Toast.makeText(this, "🚀 Launching Clash of Clans...", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "🚀 Macrorify Controller Launched! Open Clash of Clans.", Toast.LENGTH_SHORT).show()
+                moveTaskToBack(true)
+            }
+        }
     }
 }
